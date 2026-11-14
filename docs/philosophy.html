@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Philosophy of the package (for developers)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-base-philosophy-of-the-package">The base philosophy of the package</a></li>
@@ -74,10 +77,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -153,20 +156,10 @@ The definitions of the potential sections are in
 </section>
 <section id="outputs">
 <h3><a class="reference internal" href="auto/ase2sprkkr.outputs.html#module-ase2sprkkr.outputs" title="ase2sprkkr.outputs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">outputs</span></code></a><a class="headerlink" href="#outputs" title="Link to this heading"></a></h3>
-<p>Each input file also prescribes the type of the reader: object, that
-reads and possibly parses the output of the SPR-KKR. These readers
-(located at <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.html#module-ase2sprkkr.outputs.readers" title="ase2sprkkr.outputs.readers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.outputs.readers</span></code></a>) are
-just simply objects, that read the output line by line, searching
-for a regex pattern and parsing selected lines of the file (skipping
-the rest) to obtain some values (e.g. convergence results from iterations).
-The parsed values are then returned as the result of the calculations.</p>
-<p>In order to be capable of parsing both standard output and error
-output stream of SPR-KKR, asyncio is employed for the readers.</p>
-<p>In version 1.0 of the package, only the output reader of SCF task
-is implemented, results of the other tasks are read by the dummy <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" title="ase2sprkkr.outputs.readers.default.DefaultOutputReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">default</span> <span class="pre">reader</span></code></a>, which does not parse anything
-from the output.</p>
-<p>Note, that some parts of the output can and are parsed using the generated
-grammar, as it is described above, see e.g. <code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output()</span></code>.</p>
+<p>The outputs layer resolves task-owned readers and constructs scientific
+<code class="docutils literal notranslate"><span class="pre">TaskResult</span></code> objects from captured execution outputs. Reader and result-file
+registries belong to ASE2SPRKKR. They are separate from generic process
+execution, transfer and durable lifecycle handling in KKRunner.</p>
 </section>
 <section id="sprkkr">
 <h3><a class="reference internal" href="auto/ase2sprkkr.sprkkr.html#module-ase2sprkkr.sprkkr" title="ase2sprkkr.sprkkr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sprkkr</span></code></a><a class="headerlink" href="#sprkkr" title="Link to this heading"></a></h3>
@@ -180,7 +173,7 @@ method, which is either called automatically when any Atoms object is passed to
 ase2sprkkr routines, or can be called manually if it is needed.</p>
 </section>
 <section id="tools">
-<h3><a class="reference internal" href="auto/ase2sprkkr.tools.html#module-ase2sprkkr.tools" title="ase2sprkkr.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code></a><a class="headerlink" href="#tools" title="Link to this heading"></a></h3>
+<h3><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code><a class="headerlink" href="#tools" title="Link to this heading"></a></h3>
 <p>Scripts for postprocessing of the SPRKRR results.</p>
 </section>
 </section>
@@ -202,18 +195,20 @@ If a potential file is parsed, then the third phase occurs: the ASE Atoms object
 </section>
 <section id="running-the-program">
 <h2>Running the program<a class="headerlink" href="#running-the-program" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>When SPR-KKR calculation is to be invoked, the calculator:</dt><dd><ul class="simple">
-<li><p>creates or updates the potential from the Atoms object (however, it is possible to run calculation just
-according to the given potential, without an Atoms object)</p></li>
-<li><p>(if the task is given by its name) creates the InputParameters object</p></li>
-<li><p>saves the potential file and the input file</p></li>
-<li><p>runs the executable (given by the definition object of the InputParameters)</p></li>
-<li><p>creates the OutputReader (again, the type is given by the definition object of the InputParameters)</p></li>
-<li><p>let the OutputReader read and parse the results from the output of the run executable</p></li>
-</ul>
-</dd>
-</dl>
+<p>The calculator resolves application defaults, and <code class="docutils literal notranslate"><span class="pre">sprkkr._preparation</span></code>
+materializes the input and potential files. <code class="docutils literal notranslate"><span class="pre">PreparedCalculation</span></code> owns the
+prepared resources, resolves the task’s complete file footprint, and builds a
+KKRunner execution specification. The selected backend executes the command.
+The outputs layer then interprets the outcome using the task’s reader and
+constructs the scientific result.</p>
+<p>KKRunner owns run records, manifest reservations, transfers, supervision and
+reconnect. ASE2SPRKKR owns task definitions, template resolution, scientific
+metadata and historical result reconstruction. Project-backed execution is
+explicit; preserving project definitions and selecting the new run-store
+namespace are application storage policy.</p>
+<p>See <a class="reference internal" href="execution.html"><span class="doc">Execution, persistent runs and KKRunner</span></a> for the current application API and the
+<a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/architecture.html">KKRunner architecture</a>
+for its internal package boundaries and lifecycle contracts.</p>
 </section>
 </section>
 

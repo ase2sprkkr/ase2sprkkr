@@ -1,0 +1,60 @@
+executables
+===========
+
+Full name: **ase2sprkkr.sprkkr.executables**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.executables.ExecutableDefinition  ase2sprkkr.sprkkr.executables._ExecutableRegistry 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.executables
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _nonblank_string
+      _normalize_reader_name
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ExecutableDefinition
+      _ExecutableRegistry
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

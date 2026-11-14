@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.sprkkr.calculation &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Execution, persistence and remote runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.sprkkr.calculation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.sprkkr.calculation</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Prepared SPR-KKR calculations and their execution adapter.</span>
+
+<span class="sd">``SPRKKR`` supplies user defaults; ``_preparation`` resolves state and writes</span>
+<span class="sd">files. This module orchestrates preparation, owns the resulting resources,</span>
+<span class="sd">and adapts prepared calculations to the generic execution subsystem.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExitStack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.file_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Directory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.output_printing</span><span class="w"> </span><span class="kn">import</span> <span class="n">output_listeners</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.runs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExecutionResources</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.projects</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve_project_manager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.runs</span><span class="w"> </span><span class="kn">import</span> <span class="n">Run</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters.input_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">_preparation</span> <span class="k">as</span> <span class="n">preparation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._preparation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilenameTemplator</span> <span class="k">as</span> <span class="n">FilenameTemplator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRProfile</span><span class="p">,</span> <span class="n">executor_from_profile</span>
+
+
+<div class="viewcode-block" id="PreparedCalculation">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculation.PreparedCalculation.html#ase2sprkkr.sprkkr.calculation.PreparedCalculation">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PreparedCalculation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""One fully materialized SPR-KKR calculation.</span>
+
+<span class="sd">    Instances own the concrete parameter snapshot, path-backed calculation</span>
+<span class="sd">    files and, when applicable, an entered temporary working-directory context.</span>
+<span class="sd">    Ownership can be transferred to a runner, explicitly released for the</span>
+<span class="sd">    legacy ``save_input(return_files=True)`` API, or terminated with</span>
+<span class="sd">    :meth:`close`.</span>
+
+<span class="sd">    :meth:`prepare` is the canonical factory because it resolves all public</span>
+<span class="sd">    calculator sentinels and establishes these invariants. The generated</span>
+<span class="sd">    dataclass constructor validates path-backed file invariants as well, so it</span>
+<span class="sd">    cannot silently create an execution-incompatible instance.</span>
+<span class="sd">    """</span>
+
+    <span class="n">input_parameters</span><span class="p">:</span> <span class="n">InputParameters</span>
+    <span class="n">input_file</span><span class="p">:</span> <span class="nb">object</span>
+    <span class="n">potential_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">output_file</span><span class="p">:</span> <span class="nb">object</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">counter</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">_file_resources</span><span class="p">:</span> <span class="n">ExitStack</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">_directory_resources</span><span class="p">:</span> <span class="n">ExitStack</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">_temporary_potential</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_temporary_directory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_closed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">preparation</span><span class="o">.</span><span class="n">require_named_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span> <span class="s2">"input_file"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">preparation</span><span class="o">.</span><span class="n">require_named_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">"output_file"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_file</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"SPR-KKR potential_file must be backed by a filesystem path"</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">))</span>
+
+<div class="viewcode-block" id="PreparedCalculation.prepare">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculation.PreparedCalculation.html#ase2sprkkr.sprkkr.calculation.PreparedCalculation.prepare">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">default_atoms</span><span class="p">,</span>
+        <span class="n">default_potential</span><span class="p">,</span>
+        <span class="n">default_input_parameters</span><span class="p">,</span>
+        <span class="n">default_input_file</span><span class="p">,</span>
+        <span class="n">default_potential_file</span><span class="p">,</span>
+        <span class="n">default_output_file</span><span class="p">,</span>
+        <span class="n">default_directory</span><span class="p">,</span>
+        <span class="n">default_empty_spheres</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">,</span>
+        <span class="n">counter</span><span class="p">,</span>
+        <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">empty_spheres</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">allow_temporary_files</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">restart_scf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PreparedCalculation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Materialize all state and files required for one SPR-KKR run.</span>
+
+<span class="sd">        ``default_*`` arguments are supplied by the calculator facade; explicit</span>
+<span class="sd">        per-call arguments override them. On success the returned object owns</span>
+<span class="sd">        every resource opened by preparation. On failure every resource</span>
+<span class="sd">        acquired up to that point is released before the original exception is</span>
+<span class="sd">        propagated.</span>
+
+<span class="sd">        Relative filenames and references inside input parameters use the</span>
+<span class="sd">        calculation directory as their base. Files opened here have absolute</span>
+<span class="sd">        names; filename mappings serialize references relative to that</span>
+<span class="sd">        directory, including when the input file is stored in a subdirectory.</span>
+<span class="sd">        """</span>
+        <span class="n">directory_resources</span> <span class="o">=</span> <span class="n">ExitStack</span><span class="p">()</span>
+        <span class="n">file_resources</span> <span class="o">=</span> <span class="n">ExitStack</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">directory_context</span> <span class="o">=</span> <span class="n">Directory</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_directory</span><span class="p">)</span>
+            <span class="n">work_directory</span> <span class="o">=</span> <span class="n">directory_resources</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">directory_context</span><span class="p">)</span><span class="o">.</span><span class="n">path</span>
+            <span class="n">work_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">work_directory</span><span class="p">))</span>
+
+            <span class="n">resolved_potential</span> <span class="o">=</span> <span class="n">preparation</span><span class="o">.</span><span class="n">resolve_potential_and_atoms</span><span class="p">(</span>
+                <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span>
+                <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span>
+                <span class="n">potential_file</span><span class="o">=</span><span class="n">potential_file</span><span class="p">,</span>
+                <span class="n">default_potential</span><span class="o">=</span><span class="n">default_potential</span><span class="p">,</span>
+                <span class="n">default_atoms</span><span class="o">=</span><span class="n">default_atoms</span><span class="p">,</span>
+                <span class="n">restart_scf</span><span class="o">=</span><span class="n">restart_scf</span><span class="p">,</span>
+                <span class="n">directory</span><span class="o">=</span><span class="n">work_directory</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">resolved_input</span> <span class="o">=</span> <span class="n">preparation</span><span class="o">.</span><span class="n">resolve_input_parameters</span><span class="p">(</span>
+                <span class="n">input_parameters</span><span class="o">=</span><span class="n">input_parameters</span><span class="p">,</span>
+                <span class="n">default_input_parameters</span><span class="o">=</span><span class="n">default_input_parameters</span><span class="p">,</span>
+                <span class="n">input_file</span><span class="o">=</span><span class="n">input_file</span><span class="p">,</span>
+                <span class="n">potential</span><span class="o">=</span><span class="n">resolved_potential</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+                <span class="n">directory</span><span class="o">=</span><span class="n">work_directory</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">parameters</span> <span class="o">=</span> <span class="n">resolved_input</span><span class="o">.</span><span class="n">parameters</span>
+            <span class="n">atoms</span> <span class="o">=</span> <span class="n">resolved_potential</span><span class="o">.</span><span class="n">atoms</span>
+            <span class="n">task_name</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">task_definition_required</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">preparation</span><span class="o">.</span><span class="n">validate_restart</span><span class="p">(</span><span class="n">resolved_potential</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span> <span class="n">task_name</span><span class="p">,</span> <span class="n">restart_scf</span><span class="p">)</span>
+            <span class="n">preparation</span><span class="o">.</span><span class="n">resolve_empty_spheres</span><span class="p">(</span>
+                <span class="n">input_parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+                <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span>
+                <span class="n">empty_spheres</span><span class="o">=</span><span class="n">empty_spheres</span><span class="p">,</span>
+                <span class="n">default_empty_spheres</span><span class="o">=</span><span class="n">default_empty_spheres</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">templator</span> <span class="o">=</span> <span class="n">preparation</span><span class="o">.</span><span class="n">FilenameTemplator</span><span class="p">(</span>
+                <span class="n">label</span><span class="p">,</span>
+                <span class="n">counter</span><span class="p">,</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="n">task_name</span><span class="p">,</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="n">preparation</span><span class="o">.</span><span class="n">symbols_for_filenames</span><span class="p">(</span>
+                    <span class="n">atoms</span><span class="p">,</span>
+                    <span class="n">parameters</span><span class="p">,</span>
+                    <span class="n">resolved_input</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+                    <span class="n">resolved_input</span><span class="o">.</span><span class="n">potential_file</span><span class="p">,</span>
+                    <span class="n">default_input_file</span><span class="p">,</span>
+                    <span class="n">default_potential_file</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="n">preparation</span><span class="o">.</span><span class="n">CalculationFiles</span><span class="p">(</span>
+                <span class="n">work_directory</span><span class="p">,</span>
+                <span class="n">templator</span><span class="p">,</span>
+                <span class="n">file_resources</span><span class="p">,</span>
+                <span class="n">allow_temporary</span><span class="o">=</span><span class="n">allow_temporary_files</span><span class="p">,</span>
+                <span class="n">create_subdirs</span><span class="o">=</span><span class="n">create_subdirs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">opened_input</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">open_input</span><span class="p">(</span><span class="n">resolved_input</span><span class="p">,</span> <span class="n">default_input_file</span><span class="p">)</span>
+            <span class="n">reused_input</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">resolved_input</span><span class="o">.</span><span class="n">write</span> <span class="k">else</span> <span class="n">preparation</span><span class="o">.</span><span class="n">named_file_name</span><span class="p">(</span><span class="n">opened_input</span><span class="p">)</span>
+
+            <span class="n">potential_file</span><span class="p">,</span> <span class="n">temporary_potential</span> <span class="o">=</span> <span class="n">preparation</span><span class="o">.</span><span class="n">write_potential</span><span class="p">(</span>
+                <span class="n">resolved_potential</span><span class="p">,</span>
+                <span class="n">resolved_input</span><span class="o">.</span><span class="n">potential_file</span><span class="p">,</span>
+                <span class="n">files</span><span class="p">,</span>
+                <span class="n">default_filename</span><span class="o">=</span><span class="n">default_potential_file</span><span class="p">,</span>
+                <span class="n">task_name</span><span class="o">=</span><span class="n">task_name</span><span class="p">,</span>
+                <span class="n">restart_scf</span><span class="o">=</span><span class="n">restart_scf</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">preparation</span><span class="o">.</span><span class="n">write_input</span><span class="p">(</span><span class="n">resolved_input</span><span class="p">,</span> <span class="n">opened_input</span><span class="p">,</span> <span class="n">potential_file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
+
+            <span class="n">opened_output</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">open_output</span><span class="p">(</span>
+                <span class="n">output_file</span><span class="p">,</span>
+                <span class="n">default_filename</span><span class="o">=</span><span class="n">default_output_file</span><span class="p">,</span>
+                <span class="n">reused_input</span><span class="o">=</span><span class="n">reused_input</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+                <span class="n">input_parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+                <span class="n">input_file</span><span class="o">=</span><span class="n">opened_input</span><span class="p">,</span>
+                <span class="n">potential_file</span><span class="o">=</span><span class="n">potential_file</span><span class="p">,</span>
+                <span class="n">output_file</span><span class="o">=</span><span class="n">opened_output</span><span class="p">,</span>
+                <span class="n">directory</span><span class="o">=</span><span class="n">work_directory</span><span class="p">,</span>
+                <span class="n">counter</span><span class="o">=</span><span class="n">templator</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span>
+                <span class="n">_file_resources</span><span class="o">=</span><span class="n">file_resources</span><span class="p">,</span>
+                <span class="n">_directory_resources</span><span class="o">=</span><span class="n">directory_resources</span><span class="p">,</span>
+                <span class="n">_temporary_potential</span><span class="o">=</span><span class="n">temporary_potential</span><span class="p">,</span>
+                <span class="n">_temporary_directory</span><span class="o">=</span><span class="n">directory_context</span><span class="o">.</span><span class="n">dir</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">file_resources</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">directory_resources</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="PreparedCalculation.create_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculation.PreparedCalculation.html#ase2sprkkr.sprkkr.calculation.PreparedCalculation.create_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">result_context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">:</span> <span class="n">SPRKKRProfile</span><span class="p">,</span>
+        <span class="n">executor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">project</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">read_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">error_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Create an unstarted runner and transfer this calculation's resources.</span>
+
+<span class="sd">        The prepared calculation does not depend on the calculator facade.</span>
+<span class="sd">        ``result_context`` is optional runtime context for output readers; the</span>
+<span class="sd">        :class:`SPRKKR` facade supplies itself so result convenience APIs can</span>
+<span class="sd">        construct follow-up calculations, while standalone prepared runs may</span>
+<span class="sd">        leave the context unset.</span>
+
+<span class="sd">        ``error_file=None`` stores stderr as ``&lt;output_file&gt;.err``. ``True``</span>
+<span class="sd">        explicitly merges stderr into ``output_file``; ``False`` requests a</span>
+<span class="sd">        managed temporary stderr file; a path or file object is used directly.</span>
+<span class="sd">        Tracked runs require persistent working-directory and stderr paths so</span>
+<span class="sd">        they can be recovered after the client exits.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">_create_sprkkr_run</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">result_context</span><span class="o">=</span><span class="n">result_context</span><span class="p">,</span>
+            <span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span>
+            <span class="n">executor</span><span class="o">=</span><span class="n">executor</span><span class="p">,</span>
+            <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span>
+            <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span>
+            <span class="n">read_callback</span><span class="o">=</span><span class="n">read_callback</span><span class="p">,</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
+            <span class="n">gdb</span><span class="o">=</span><span class="n">gdb</span><span class="p">,</span>
+            <span class="n">error_file</span><span class="o">=</span><span class="n">error_file</span><span class="p">,</span>
+            <span class="n">create_subdirs</span><span class="o">=</span><span class="n">create_subdirs</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Whether this object has relinquished or closed all owned resources."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">temporary_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Whether POTFIL is a managed temporary pathname."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temporary_potential</span>
+
+<div class="viewcode-block" id="PreparedCalculation.release_file_ownership">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculation.PreparedCalculation.html#ase2sprkkr.sprkkr.calculation.PreparedCalculation.release_file_ownership">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">release_file_ownership</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Transfer ownership of open input/output files to the caller.</span>
+
+<span class="sd">        The files themselves are not closed. This supports the legacy</span>
+<span class="sd">        ``save_input(return_files=True)`` API. A temporary POTFIL cannot be</span>
+<span class="sd">        transferred by that API because it returns only its pathname; callers</span>
+<span class="sd">        must supply a persistent POTFIL name in that case.</span>
+<span class="sd">        """</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_resources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_resources</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">stack</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">pop_all</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_closed_state</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PreparedCalculation.close_directory_context">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculation.PreparedCalculation.html#ase2sprkkr.sprkkr.calculation.PreparedCalculation.close_directory_context">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close_directory_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Close the entered working-directory context after file transfer."""</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directory_resources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_directory_resources</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">stack</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_closed_state</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PreparedCalculation._update_closed_state">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculation.PreparedCalculation.html#ase2sprkkr.sprkkr.calculation.PreparedCalculation._update_closed_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_closed_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_resources</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directory_resources</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="PreparedCalculation.close">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculation.PreparedCalculation.html#ase2sprkkr.sprkkr.calculation.PreparedCalculation.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Close all resources still owned by this prepared calculation."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">file_resources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_resources</span>
+        <span class="n">directory_resources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directory_resources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_resources</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_directory_resources</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">file_resources</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">file_resources</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="n">exc</span>
+        <span class="k">if</span> <span class="n">directory_resources</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">directory_resources</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">error</span> <span class="o">=</span> <span class="n">exc</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">error</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_prepare_error_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculation._prepare_error_file.html#ase2sprkkr.sprkkr.calculation._prepare_error_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_prepare_error_file</span><span class="p">(</span><span class="n">error_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">create_subdirs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Materialize stderr for one run without changing preparation semantics."""</span>
+    <span class="k">if</span> <span class="n">error_file</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">error_file</span> <span class="ow">is</span> <span class="n">output_file</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">output_file</span><span class="p">,</span> <span class="kc">False</span>
+
+    <span class="n">output_name</span> <span class="o">=</span> <span class="n">preparation</span><span class="o">.</span><span class="n">named_file_name</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">error_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">output_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="n">error_file</span> <span class="o">=</span> <span class="n">output_name</span> <span class="o">+</span> <span class="s2">".err"</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error_file</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">))</span> <span class="ow">and</span> <span class="n">output_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">error_name</span> <span class="o">=</span> <span class="n">preparation</span><span class="o">.</span><span class="n">calculation_path</span><span class="p">(</span><span class="n">error_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">output_name</span><span class="p">)</span> <span class="o">==</span> <span class="n">error_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">output_file</span><span class="p">,</span> <span class="kc">False</span>
+
+    <span class="n">opened_error</span> <span class="o">=</span> <span class="n">preparation</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span>
+        <span class="n">error_file</span><span class="p">,</span>
+        <span class="n">directory</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">"wb"</span><span class="p">,</span>
+        <span class="n">allow_temporary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">create_subdirs</span><span class="o">=</span><span class="n">create_subdirs</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">preparation</span><span class="o">.</span><span class="n">require_named_file</span><span class="p">(</span><span class="n">opened_error</span><span class="p">,</span> <span class="s2">"error_file"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">opened_error</span><span class="p">,</span> <span class="n">opened_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">output_file</span></div>
+
+
+
+<div class="viewcode-block" id="_create_sprkkr_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculation._create_sprkkr_run.html#ase2sprkkr.sprkkr.calculation._create_sprkkr_run">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_sprkkr_run</span><span class="p">(</span>
+    <span class="n">prepared</span><span class="p">:</span> <span class="n">PreparedCalculation</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">result_context</span><span class="p">,</span>
+    <span class="n">profile</span><span class="p">:</span> <span class="n">SPRKKRProfile</span><span class="p">,</span>
+    <span class="n">executor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">project</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">read_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">error_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Adapt a prepared SPR-KKR calculation to the execution subsystem.</span>
+
+<span class="sd">    This SPR-KKR layer owns task metadata, reader construction and TaskResult</span>
+<span class="sd">    reconstruction. Executors see only :class:`ExecutionSpec` and produce raw</span>
+<span class="sd">    :class:`ExecutionOutcome` values; the generic postprocessing layer merely</span>
+<span class="sd">    invokes the callable defined here.</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">opened_error</span><span class="p">,</span> <span class="n">owns_error</span> <span class="o">=</span> <span class="n">_prepare_error_file</span><span class="p">(</span>
+            <span class="n">error_file</span><span class="p">,</span>
+            <span class="n">prepared</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span>
+            <span class="n">prepared</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+            <span class="n">create_subdirs</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+        <span class="n">prepared</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span>
+
+    <span class="n">resources</span> <span class="o">=</span> <span class="n">ExecutionResources</span><span class="p">(</span>
+        <span class="n">prepared</span><span class="p">,</span>
+        <span class="n">opened_error</span> <span class="k">if</span> <span class="n">owns_error</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">handed_off</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">input_parameters</span> <span class="o">=</span> <span class="n">prepared</span><span class="o">.</span><span class="n">input_parameters</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">listeners</span><span class="p">,</span> <span class="n">print_info</span> <span class="o">=</span> <span class="n">output_listeners</span><span class="p">(</span><span class="n">print_output</span><span class="p">)</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">task_definition_required</span><span class="p">()</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">output_reader</span><span class="p">(</span>
+            <span class="n">input_parameters</span><span class="o">=</span><span class="n">input_parameters</span><span class="p">,</span>
+            <span class="n">calculator</span><span class="o">=</span><span class="n">result_context</span><span class="p">,</span>
+            <span class="n">print_info</span><span class="o">=</span><span class="n">print_info</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">prepared</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">executor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">executor</span> <span class="o">=</span> <span class="n">executor_from_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="n">resolve_project_manager</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">manager</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Run metadata requires a persistent project"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">"ase2sprkkr"</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The 'ase2sprkkr' run metadata namespace is reserved"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">prepared</span><span class="p">,</span> <span class="s2">"_temporary_directory"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Tracked runs require a persistent calculation directory; pass directory=path"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">error_file</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Tracked runs require persistent stderr; use error_file=None or a pathname"</span><span class="p">)</span>
+
+        <span class="n">input_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">file</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="n">prepared</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span>
+                <span class="n">prepared</span><span class="o">.</span><span class="n">potential_file</span><span class="p">,</span>
+                <span class="o">*</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">input_files</span><span class="p">(</span><span class="n">prepared</span><span class="o">.</span><span class="n">directory</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">output_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">file</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="n">prepared</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span>
+                <span class="n">opened_error</span> <span class="k">if</span> <span class="n">opened_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">prepared</span><span class="o">.</span><span class="n">output_file</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="o">*</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">output_files</span><span class="p">(</span><span class="n">prepared</span><span class="o">.</span><span class="n">directory</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">cache_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">file</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">cache_files</span><span class="p">(</span><span class="n">prepared</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">create_execution</span><span class="p">(</span>
+            <span class="n">task</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+            <span class="n">prepared</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span>
+            <span class="n">prepared</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span>
+            <span class="n">prepared</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+            <span class="n">error_file</span><span class="o">=</span><span class="n">opened_error</span><span class="p">,</span>
+            <span class="n">input_files</span><span class="o">=</span><span class="n">input_files</span><span class="p">,</span>
+            <span class="n">output_files</span><span class="o">=</span><span class="n">output_files</span><span class="p">,</span>
+            <span class="n">cache_files</span><span class="o">=</span><span class="n">cache_files</span><span class="p">,</span>
+            <span class="n">mpi_supported</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">mpi</span><span class="p">,</span>
+            <span class="n">gdb</span><span class="o">=</span><span class="n">gdb</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">flush_listeners</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="n">listeners</span><span class="p">:</span>
+                <span class="n">listener</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">process_result</span><span class="p">(</span><span class="n">outcome</span><span class="p">):</span>
+            <span class="n">flush_listeners</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">reader</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span>
+                <span class="n">outcome</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span>
+                <span class="n">outcome</span><span class="o">.</span><span class="n">error_file</span><span class="p">,</span>
+                <span class="n">return_code</span><span class="o">=</span><span class="p">(</span>
+                    <span class="mi">0</span> <span class="k">if</span> <span class="n">outcome</span><span class="o">.</span><span class="n">return_code</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">outcome</span><span class="o">.</span><span class="n">return_code</span>
+                <span class="p">),</span>
+                <span class="n">input_file</span><span class="o">=</span><span class="n">outcome</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">finalized</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">run_record</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">flush_listeners</span><span class="p">()</span>
+            <span class="c1"># Run owns and releases ExecutionResources after completion.</span>
+            <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="n">record_options</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">record_options</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="o">**</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span> <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}),</span>
+                <span class="s2">"ase2sprkkr"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"task"</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="s2">"input_definition"</span><span class="p">:</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">definition_name</span><span class="p">,</span>
+                    <span class="s2">"dataset"</span><span class="p">:</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">DATASET</span><span class="o">.</span><span class="n">result</span><span class="p">,</span>
+                    <span class="s2">"profile"</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="n">runner</span> <span class="o">=</span> <span class="n">Run</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">executor</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span>
+            <span class="n">persistent</span><span class="o">=</span><span class="n">manager</span> <span class="k">if</span> <span class="n">manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">process_result</span><span class="o">=</span><span class="n">process_result</span><span class="p">,</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">finalized</span><span class="p">,</span>
+            <span class="n">owned_resources</span><span class="o">=</span><span class="n">resources</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">record_options</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">handed_off</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="n">listeners</span><span class="p">:</span>
+                <span class="n">runner</span><span class="o">.</span><span class="n">add_output_listener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">read_callback</span><span class="p">:</span>
+                <span class="n">runner</span><span class="o">.</span><span class="n">add_output_listener</span><span class="p">(</span><span class="n">read_callback</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="c1"># An unstarted Run can release resources it already owns.</span>
+            <span class="n">runner</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span>
+        <span class="k">return</span> <span class="n">runner</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">handed_off</span><span class="p">:</span>
+            <span class="n">resources</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

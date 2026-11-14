@@ -1,0 +1,36 @@
+BSFInputParametersDefinition
+============================
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.definitions.bsf
+
+.. autoclass:: BSFInputParametersDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

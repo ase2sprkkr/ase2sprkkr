@@ -1,0 +1,8 @@
+primitive\_site\_groups
+=======================
+
+Full name: **ase2sprkkr.bindings.spglib.primitive\_site\_groups**
+
+.. currentmodule:: ase2sprkkr.bindings.spglib
+
+.. autofunction:: primitive_site_groups

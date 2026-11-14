@@ -1,0 +1,36 @@
+GeneratedConfigValueDefinition
+==============================
+
+
+.. currentmodule:: ase2sprkkr.configuration
+
+.. autoclass:: GeneratedConfigValueDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.configuration.GeneratedConfigValueDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

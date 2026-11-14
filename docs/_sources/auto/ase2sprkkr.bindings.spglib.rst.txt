@@ -5,6 +5,14 @@ Full name: **ase2sprkkr.bindings.spglib**
 
 
 
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.bindings.spglib.TransformedCell  ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper 
+      :parts: 1
+
+|
+
+
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.bindings.spglib
@@ -22,14 +30,25 @@ Full name: **ase2sprkkr.bindings.spglib**
       :toctree:
       :template: custom-base-template.rst
    
-      spglib_dataset
-      spglib_dataset_wrapper
-      tag_sites
+      idealize_cell
+      primitive_site_groups
+      symmetry_dataset
+      symmetry_site_permutations
+      transform_cell
    
    
 
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TransformedCell
+      _SpglibCompatibilityWrapper
    
    
 

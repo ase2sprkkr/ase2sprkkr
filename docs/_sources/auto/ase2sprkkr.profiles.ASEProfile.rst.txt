@@ -1,0 +1,36 @@
+ASEProfile
+==========
+
+
+.. currentmodule:: ase2sprkkr.profiles
+
+.. autoclass:: ASEProfile
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.profiles.ASEProfile
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

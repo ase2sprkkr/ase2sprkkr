@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,25 +62,32 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.file_provenance.html">file_provenance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.project_results.html">project_results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html">reader_registry</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.arpes.html">arpes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
@@ -95,8 +105,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -133,25 +144,26 @@
 <h1>scf<a class="headerlink" href="#scf" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.readers.scf</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-3bc2009215cfa258d4a34788790b871362489373.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.scf.PlottableValue, ase2sprkkr.outputs.readers.scf.RealOrStars, ase2sprkkr.outputs.readers.scf.ScfOutputParser, ase2sprkkr.outputs.readers.scf.ScfOutputReader, ase2sprkkr.outputs.readers.scf.ScfResult" usemap="#inheritancecb74887816" class="inheritance graphviz" /></div>
-<map id="inheritancecb74887816" name="inheritancecb74887816">
+<div class="graphviz"><img src="../_images/inheritance-28bc1893cda44133aee4b5ac21da816a946d21e7.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.scf.PlottableValue, ase2sprkkr.outputs.readers.scf.RealOrStars, ase2sprkkr.outputs.readers.scf.ScfOutputParser, ase2sprkkr.outputs.readers.scf.ScfOutputReader, ase2sprkkr.outputs.readers.scf.ScfProgressParser, ase2sprkkr.outputs.readers.scf.ScfResult" usemap="#inheritancebba6488c15" class="inheritance graphviz" /></div>
+<map id="inheritancebba6488c15" name="inheritancebba6488c15">
 <area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="25,213,141,241"/>
 <area shape="rect" id="node11" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="194,213,337,241"/>
 <area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="26,161,140,189"/>
 <area shape="rect" id="node5" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="TypedGrammarType" alt="" coords="190,161,341,189"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="16,109,150,137"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Parse SPR&#45;KKR output streams into a TaskResult." alt="" coords="16,109,150,137"/>
 <area shape="rect" id="node15" href="ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader" target="_top" title="ScfOutputReader" alt="" coords="200,109,331,137"/>
 <area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="397,161,470,189"/>
 <area shape="rect" id="node10" href="ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real" target="_top" title="A real value" alt="" coords="572,161,644,189"/>
 <area shape="rect" id="node6" href="ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="525,213,690,241"/>
 <area shape="rect" id="node8" href="ase2sprkkr.outputs.readers.scf.PlottableValue.html#ase2sprkkr.outputs.readers.scf.PlottableValue" target="_top" title="PlottableValue" alt="" coords="719,213,834,241"/>
 <area shape="rect" id="node7" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="373,213,494,241"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,57,161,85"/>
+<area shape="rect" id="node9" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" target="_top" title="Parse asynchronous stdout/stderr streams." alt="" coords="5,57,161,85"/>
 <area shape="rect" id="node14" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" target="_top" title="SprKkrOutputParser" alt="" coords="192,57,340,85"/>
 <area shape="rect" id="node12" href="ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars" target="_top" title="A real value, where ``****`` means ``NaN``" alt="" coords="728,161,826,189"/>
 <area shape="rect" id="node13" href="ase2sprkkr.outputs.readers.scf.ScfOutputParser.html#ase2sprkkr.outputs.readers.scf.ScfOutputParser" target="_top" title="This class reads and parses the output of the SCF task of the SPR&#45;KKR." alt="" coords="371,57,496,85"/>
-<area shape="rect" id="node16" href="ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult" target="_top" title="Objects of this class holds the results of a self&#45;consistent cycle and its iterations." alt="" coords="224,5,307,33"/>
-<area shape="rect" id="node17" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="37,5,129,33"/>
+<area shape="rect" id="node16" href="ase2sprkkr.outputs.readers.scf.ScfProgressParser.html#ase2sprkkr.outputs.readers.scf.ScfProgressParser" target="_top" title="Incrementally read *completed* iterations from a growing SCF output." alt="" coords="539,57,676,85"/>
+<area shape="rect" id="node17" href="ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult" target="_top" title="Objects of this class holds the results of a self&#45;consistent cycle and its iterations." alt="" coords="224,5,307,33"/>
+<area shape="rect" id="node18" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="37,5,129,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -174,13 +186,16 @@
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars" title="ase2sprkkr.outputs.readers.scf.RealOrStars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RealOrStars</span></code></a>([prefix, postfix, format, ...])</p></td>
 <td><p>A real value, where <code class="docutils literal notranslate"><span class="pre">****</span></code> means <code class="docutils literal notranslate"><span class="pre">NaN</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.ScfOutputParser.html#ase2sprkkr.outputs.readers.scf.ScfOutputParser" title="ase2sprkkr.outputs.readers.scf.ScfOutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScfOutputParser</span></code></a>([print_output, read_callback])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.ScfOutputParser.html#ase2sprkkr.outputs.readers.scf.ScfOutputParser" title="ase2sprkkr.outputs.readers.scf.ScfOutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScfOutputParser</span></code></a>([print_info])</p></td>
 <td><p>This class reads and parses the output of the SCF task of the SPR-KKR.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader" title="ase2sprkkr.outputs.readers.scf.ScfOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScfOutputReader</span></code></a>(input_parameters, ...[, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult" title="ase2sprkkr.outputs.readers.scf.ScfResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScfResult</span></code></a>(input_parameters, calculator, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.ScfProgressParser.html#ase2sprkkr.outputs.readers.scf.ScfProgressParser" title="ase2sprkkr.outputs.readers.scf.ScfProgressParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScfProgressParser</span></code></a>([on_info])</p></td>
+<td><p>Incrementally read <em>completed</em> iterations from a growing SCF output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult" title="ase2sprkkr.outputs.readers.scf.ScfResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScfResult</span></code></a>(input_parameters, calculator, ...)</p></td>
 <td><p>Objects of this class holds the results of a self-consistent cycle and its iterations.</p></td>
 </tr>
 </tbody>

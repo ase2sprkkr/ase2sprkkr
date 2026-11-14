@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="output_definitions" href="ase2sprkkr.outputs.output_definitions.html" />
-    <link rel="prev" title="Separator" href="ase2sprkkr.output_files.output_files_definitions.Separator.html" /> 
+    <link rel="next" title="file_provenance" href="ase2sprkkr.outputs.file_provenance.html" />
+    <link rel="prev" title="output_files" href="ase2sprkkr.output_files.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,25 +62,32 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">outputs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.file_provenance.html">file_provenance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.project_results.html">project_results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html">reader_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.result_options.html">result_options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a></li>
@@ -86,8 +96,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -122,24 +133,33 @@
 <h1>outputs<a class="headerlink" href="#outputs" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs</strong></p>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.outputs">This package contains the parsers of SPR-KKR output files.</p>
+<p id="module-ase2sprkkr.outputs">SPR-KKR output readers and project-result reconstruction helpers.</p>
 <p class="rubric">Modules</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html#module-ase2sprkkr.outputs.output_definitions" title="ase2sprkkr.outputs.output_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_definitions</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.file_provenance.html#module-ase2sprkkr.outputs.file_provenance" title="ase2sprkkr.outputs.file_provenance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_provenance</span></code></a></p></td>
+<td><p>File provenance for path-backed values exposed by calculation results.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html#module-ase2sprkkr.outputs.output_definitions" title="ase2sprkkr.outputs.output_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_definitions</span></code></a></p></td>
 <td><p>This file contains the classes for definitions of parts of output files, from that the result data are obtained.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.html#module-ase2sprkkr.outputs.readers" title="ase2sprkkr.outputs.readers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">readers</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.project_results.html#module-ase2sprkkr.outputs.project_results" title="ase2sprkkr.outputs.project_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">project_results</span></code></a></p></td>
+<td><p>Rehydrate SPR-KKR results from project run records.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html#module-ase2sprkkr.outputs.reader_registry" title="ase2sprkkr.outputs.reader_registry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reader_registry</span></code></a></p></td>
+<td><p>Discovery and selection of task-specific SPR-KKR output readers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.html#module-ase2sprkkr.outputs.readers" title="ase2sprkkr.outputs.readers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">readers</span></code></a></p></td>
 <td><p>Parsers for the results of SPR-KKR tasks</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.html#module-ase2sprkkr.outputs.result_options" title="ase2sprkkr.outputs.result_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">result_options</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.html#module-ase2sprkkr.outputs.result_options" title="ase2sprkkr.outputs.result_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">result_options</span></code></a></p></td>
 <td><p>Option and section types used to expose task results.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html#module-ase2sprkkr.outputs.sprkkr_output_reader" title="ase2sprkkr.outputs.sprkkr_output_reader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr_output_reader</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html#module-ase2sprkkr.outputs.sprkkr_output_reader" title="ase2sprkkr.outputs.sprkkr_output_reader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr_output_reader</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.task_result.html#module-ase2sprkkr.outputs.task_result" title="ase2sprkkr.outputs.task_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">task_result</span></code></a></p></td>
-<td><p>This module contains classes, used by parsers of the output files</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.task_result.html#module-ase2sprkkr.outputs.task_result" title="ase2sprkkr.outputs.task_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">task_result</span></code></a></p></td>
+<td><p>This module contains classes used by parsers of SPR-KKR output files.</p></td>
 </tr>
 </tbody>
 </table>
@@ -149,8 +169,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.output_files.output_files_definitions.Separator.html" class="btn btn-neutral float-left" title="Separator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.outputs.output_definitions.html" class="btn btn-neutral float-right" title="output_definitions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.output_files.html" class="btn btn-neutral float-left" title="output_files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.outputs.file_provenance.html" class="btn btn-neutral float-right" title="file_provenance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

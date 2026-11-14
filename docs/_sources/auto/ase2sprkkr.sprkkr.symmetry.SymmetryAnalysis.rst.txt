@@ -1,0 +1,36 @@
+SymmetryAnalysis
+================
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.symmetry
+
+.. autoclass:: SymmetryAnalysis
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

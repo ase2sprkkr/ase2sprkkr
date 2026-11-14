@@ -1,0 +1,36 @@
+ModuleRegistry
+==============
+
+
+.. currentmodule:: ase2sprkkr.common.module_registry
+
+.. autoclass:: ModuleRegistry
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.module_registry.ModuleRegistry
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

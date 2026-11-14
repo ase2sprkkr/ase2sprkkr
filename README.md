@@ -9,14 +9,15 @@ structure calculation.
 
 ## Usefull links
 
-- [SPR-KKR](https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr)
-- [ASE - Atomic Simulation Environment](https://wiki.fysik.dtu.dk/ase/)
+- [SPR-KKR](https://www.sprkkr.org/)
 - [Online version of this
   documentation](https://ase2sprkkr.github.io/ase2sprkkr/)
+- [E-mail group for news and
+  discussion](https://groups.google.com/g/ase2sprkkr/)
 - [GitHub repository of the ASE2SPRKKR
   package](https://github.com/ase2sprkkr/ase2sprkkr/)
-- [SPR-KKR
-  manual](https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/)
+- [SPR-KKR manual](https://www.sprkkr.org/manual/)
+- [ASE - Atomic Simulation Environment](https://wiki.fysik.dtu.dk/ase/)
 
 ## Installation of the package using package managers
 
@@ -47,6 +48,27 @@ encounter bugs), you can install the packages from github:
 ``` bash
 pip install git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
 ```
+
+### KKRunner dependency
+
+Pip installs KKRunner as a separate runtime dependency. For source
+development, install it before ASE2SPRKKR. Run the following from the
+ASE2SPRKKR checkout:
+
+``` console
+python -m pip install -e "<path-to-kkrunner>"
+python -m pip install -e .
+```
+
+Replace `<path-to-kkrunner>` with the location of your KKRunner
+checkout.
+
+For scheduler support install `ase2sprkkr[psij]`. On an SSH target,
+install `kkrunner` (or `kkrunner[psij]` for a scheduler), SPR-KKR and
+its required MPI runtime. The target does not need ASE2SPRKKR just to
+run its executables. See the [KKRunner
+documentation](https://ase2sprkkr.github.io/kkrunner/) for backend
+requirements and installation details.
 
 ### Further notes
 
@@ -197,22 +219,9 @@ Please feel free to make a pull-request or post an issue at:
 
 ## Execution and persistent runs
 
-Execution is provided by the separate [KKRunner library](https://ase2sprkkr.github.io/kkrunner/).
-ASE2SPRKKR prepares SPR-KKR inputs and constructs scientific results; KKRunner
-owns processes, SSH/scheduler execution, manifests, transfers and durable history.
-See [the application execution guide](https://ase2sprkkr.github.io/ase2sprkkr/execution.html)
-for project runs, reconnect, profiles and historical result loading.
-
-For source development, install KKRunner first. Run the following from the
-ASE2SPRKKR checkout:
-
-```sh
-python -m pip install -e "<path-to-kkrunner>"
-python -m pip install -e .
-```
-
-Replace `<path-to-kkrunner>` with the location of your KKRunner checkout.
-A remote target needs KKRunner and SPR-KKR (plus PSI/J for scheduler execution),
-without requiring ASE2SPRKKR merely to execute the calculation.
-Its protocol CLI is `kkrunner` (for example, `kkrunner status HANDLE`).
-`ase2sprkkr remote status|follow|cancel` exposes the same user commands on that host.
+The separate [KKRunner library](https://ase2sprkkr.github.io/kkrunner/)
+owns processes, SSH/scheduler execution, manifests, transfers and
+durable history. ASE2SPRKKR prepares SPR-KKR inputs and constructs
+scientific results. See the [application execution
+guide](https://ase2sprkkr.github.io/ase2sprkkr/execution.html) for
+project runs, reconnect, profiles and historical result loading.

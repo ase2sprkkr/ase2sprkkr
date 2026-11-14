@@ -1,0 +1,72 @@
+task\_definition
+================
+
+Full name: **ase2sprkkr.input\_parameters.task\_definition**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.task_definition.InputParametersRegistry  ase2sprkkr.input_parameters.task_definition.TaskDefinition  ase2sprkkr.input_parameters.task_definition.TaskRegistry  ase2sprkkr.input_parameters.task_definition._ExtraTaskRegistry  ase2sprkkr.input_parameters.task_definition._TaskFileFormatter 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.task_definition
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _normalize_identifier
+      _normalize_task_files
+      _validate_executable
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      InputParametersRegistry
+      TaskDefinition
+      TaskRegistry
+      _ExtraTaskRegistry
+      _TaskFileFormatter
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      TaskMismatchError
+      _MissingTaskFileValue
+   
+   
+
+
+  
+  
+  

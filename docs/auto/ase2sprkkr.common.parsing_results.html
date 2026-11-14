@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="dict_from_parsed" href="ase2sprkkr.common.parsing_results.dict_from_parsed.html" />
-    <link rel="prev" title="Option" href="ase2sprkkr.common.options.Option.html" /> 
+    <link rel="prev" title="PrintMatching" href="ase2sprkkr.common.output_printing.PrintMatching.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,44 +62,55 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.async_utils.html">async_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.backward_compatibility.html">backward_compatibility</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_versions.html">file_versions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.output_printing.html">output_printing</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">parsing_results</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.dict_from_parsed.html">dict_from_parsed</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.ArrayKey.html">ArrayKey</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.DefArrayKey.html">DefArrayKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.DefDictKey.html">DefDictKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.DictKey.html">DictKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.IgnoredKey.html">IgnoredKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.Key.html">Key</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.KeyType.html">KeyType</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.RepeatedKey.html">RepeatedKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.Result.html">Result</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.SubKey.html">SubKey</a></li>
@@ -106,8 +120,9 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.temporary.html">temporary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a></li>
@@ -116,6 +131,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -123,8 +141,9 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -160,18 +179,20 @@
 <h1>parsing_results<a class="headerlink" href="#parsing-results" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.parsing_results</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-5bc1001ff8c2dd8f8595460a4cf8dd0fb69e4b05.png" alt="Inheritance diagram of ase2sprkkr.common.parsing_results.ArrayKey, ase2sprkkr.common.parsing_results.DefDictKey, ase2sprkkr.common.parsing_results.DictKey, ase2sprkkr.common.parsing_results.IgnoredKey, ase2sprkkr.common.parsing_results.Key, ase2sprkkr.common.parsing_results.RepeatedKey, ase2sprkkr.common.parsing_results.Result, ase2sprkkr.common.parsing_results.SubKey, ase2sprkkr.common.parsing_results.ValidateKey, ase2sprkkr.common.parsing_results.Values" usemap="#inheritance943fdcb82e" class="inheritance graphviz" /></div>
-<map id="inheritance943fdcb82e" name="inheritance943fdcb82e">
-<area shape="rect" id="node1" href="ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey" target="_top" title="ArrayKey" alt="" coords="243,5,324,33"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.parsing_results.SubKey.html#ase2sprkkr.common.parsing_results.SubKey" target="_top" title="A base class for items that have subkeys" alt="" coords="124,31,196,58"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.parsing_results.DictKey.html#ase2sprkkr.common.parsing_results.DictKey" target="_top" title="DictKey" alt="" coords="248,57,320,85"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.parsing_results.DefDictKey.html#ase2sprkkr.common.parsing_results.DefDictKey" target="_top" title="DefDictKey" alt="" coords="353,57,447,85"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.parsing_results.IgnoredKey.html#ase2sprkkr.common.parsing_results.IgnoredKey" target="_top" title="This key is totaly and silently ignored. Use it" alt="" coords="113,83,208,110"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key" target="_top" title="A base class for items, that have to be treated in a special way" alt="" coords="5,109,77,137"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.parsing_results.RepeatedKey.html#ase2sprkkr.common.parsing_results.RepeatedKey" target="_top" title="RepeatedKey" alt="" coords="107,135,214,162"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.parsing_results.ValidateKey.html#ase2sprkkr.common.parsing_results.ValidateKey" target="_top" title="This key is totaly and silently ignored. Use it" alt="" coords="111,187,210,214"/>
-<area shape="rect" id="node8" href="ase2sprkkr.common.parsing_results.Result.html#ase2sprkkr.common.parsing_results.Result" target="_top" title="When data are parsed, some (repeated) options can yield" alt="" coords="5,57,77,85"/>
-<area shape="rect" id="node10" href="ase2sprkkr.common.parsing_results.Values.html#ase2sprkkr.common.parsing_results.Values" target="_top" title="Result of dict_from_parsed: dictionary with list of checks on the parsed values." alt="" coords="5,5,77,33"/>
+<div class="graphviz"><img src="../_images/inheritance-37f2470880f73e3ed5dc9807b7f27d4c0a37b4fd.png" alt="Inheritance diagram of ase2sprkkr.common.parsing_results.ArrayKey, ase2sprkkr.common.parsing_results.DefArrayKey, ase2sprkkr.common.parsing_results.DefDictKey, ase2sprkkr.common.parsing_results.DictKey, ase2sprkkr.common.parsing_results.IgnoredKey, ase2sprkkr.common.parsing_results.Key, ase2sprkkr.common.parsing_results.KeyType, ase2sprkkr.common.parsing_results.RepeatedKey, ase2sprkkr.common.parsing_results.Result, ase2sprkkr.common.parsing_results.SubKey, ase2sprkkr.common.parsing_results.ValidateKey, ase2sprkkr.common.parsing_results.Values" usemap="#inheritancee662f51714" class="inheritance graphviz" /></div>
+<map id="inheritancee662f51714" name="inheritancee662f51714">
+<area shape="rect" id="node1" href="ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey" target="_top" title="ArrayKey" alt="" coords="247,57,327,85"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.parsing_results.DefArrayKey.html#ase2sprkkr.common.parsing_results.DefArrayKey" target="_top" title="Dense&#45;array key accepting both ``NAME`` and ``NAME&lt;number&gt;``." alt="" coords="356,57,460,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.parsing_results.SubKey.html#ase2sprkkr.common.parsing_results.SubKey" target="_top" title="A base class for items that have subkeys" alt="" coords="128,83,200,110"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.parsing_results.DictKey.html#ase2sprkkr.common.parsing_results.DictKey" target="_top" title="DictKey" alt="" coords="251,109,323,137"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.parsing_results.DefDictKey.html#ase2sprkkr.common.parsing_results.DefDictKey" target="_top" title="DefDictKey" alt="" coords="361,109,455,137"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.parsing_results.IgnoredKey.html#ase2sprkkr.common.parsing_results.IgnoredKey" target="_top" title="This key is totaly and silently ignored. Use it" alt="" coords="116,135,211,162"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key" target="_top" title="A base class for items, that have to be treated in a special way" alt="" coords="7,161,79,189"/>
+<area shape="rect" id="node9" href="ase2sprkkr.common.parsing_results.RepeatedKey.html#ase2sprkkr.common.parsing_results.RepeatedKey" target="_top" title="RepeatedKey" alt="" coords="110,187,217,214"/>
+<area shape="rect" id="node11" href="ase2sprkkr.common.parsing_results.ValidateKey.html#ase2sprkkr.common.parsing_results.ValidateKey" target="_top" title="Keep a named deferred validation without storing the parsed value." alt="" coords="114,239,213,266"/>
+<area shape="rect" id="node8" href="ase2sprkkr.common.parsing_results.KeyType.html#ase2sprkkr.common.parsing_results.KeyType" target="_top" title="KeyType" alt="" coords="5,109,81,137"/>
+<area shape="rect" id="node10" href="ase2sprkkr.common.parsing_results.Result.html#ase2sprkkr.common.parsing_results.Result" target="_top" title="When data are parsed, some (repeated) options can yield" alt="" coords="7,57,79,85"/>
+<area shape="rect" id="node12" href="ase2sprkkr.common.parsing_results.Values.html#ase2sprkkr.common.parsing_results.Values" target="_top" title="Parsed values with named deferred checks and their presence policy." alt="" coords="7,5,79,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -179,7 +200,7 @@
 <p class="rubric" id="module-ase2sprkkr.common.parsing_results">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.dict_from_parsed.html#ase2sprkkr.common.parsing_results.dict_from_parsed" title="ase2sprkkr.common.parsing_results.dict_from_parsed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_from_parsed</span></code></a>(values)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.dict_from_parsed.html#ase2sprkkr.common.parsing_results.dict_from_parsed" title="ase2sprkkr.common.parsing_results.dict_from_parsed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_from_parsed</span></code></a>(values, *[, allow_incomplete])</p></td>
 <td><p>Create a dictionary from the arguments.</p></td>
 </tr>
 </tbody>
@@ -190,17 +211,23 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey" title="ase2sprkkr.common.parsing_results.ArrayKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayKey</span></code></a>(key, sub)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.DefDictKey.html#ase2sprkkr.common.parsing_results.DefDictKey" title="ase2sprkkr.common.parsing_results.DefDictKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefDictKey</span></code></a>(key, sub)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.DefArrayKey.html#ase2sprkkr.common.parsing_results.DefArrayKey" title="ase2sprkkr.common.parsing_results.DefArrayKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefArrayKey</span></code></a>(key, sub)</p></td>
+<td><p>Dense-array key accepting both <code class="docutils literal notranslate"><span class="pre">NAME</span></code> and <code class="docutils literal notranslate"><span class="pre">NAME&lt;number&gt;</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.DefDictKey.html#ase2sprkkr.common.parsing_results.DefDictKey" title="ase2sprkkr.common.parsing_results.DefDictKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefDictKey</span></code></a>(key, sub)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.DictKey.html#ase2sprkkr.common.parsing_results.DictKey" title="ase2sprkkr.common.parsing_results.DictKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DictKey</span></code></a>(key, sub)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.DictKey.html#ase2sprkkr.common.parsing_results.DictKey" title="ase2sprkkr.common.parsing_results.DictKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DictKey</span></code></a>(key, sub)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.IgnoredKey.html#ase2sprkkr.common.parsing_results.IgnoredKey" title="ase2sprkkr.common.parsing_results.IgnoredKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IgnoredKey</span></code></a>(key)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.IgnoredKey.html#ase2sprkkr.common.parsing_results.IgnoredKey" title="ase2sprkkr.common.parsing_results.IgnoredKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IgnoredKey</span></code></a>(key)</p></td>
 <td><p>This key is totaly and silently ignored.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key" title="ase2sprkkr.common.parsing_results.Key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Key</span></code></a>(key)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key" title="ase2sprkkr.common.parsing_results.Key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Key</span></code></a>(key)</p></td>
 <td><p>A base class for items, that have to be treated in a special way</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.KeyType.html#ase2sprkkr.common.parsing_results.KeyType" title="ase2sprkkr.common.parsing_results.KeyType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KeyType</span></code></a></p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.RepeatedKey.html#ase2sprkkr.common.parsing_results.RepeatedKey" title="ase2sprkkr.common.parsing_results.RepeatedKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RepeatedKey</span></code></a>(key)</p></td>
 <td><p></p></td>
@@ -212,10 +239,10 @@
 <td><p>A base class for items that have subkeys</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.ValidateKey.html#ase2sprkkr.common.parsing_results.ValidateKey" title="ase2sprkkr.common.parsing_results.ValidateKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValidateKey</span></code></a>(key)</p></td>
-<td><p>This key is totaly and silently ignored.</p></td>
+<td><p>Keep a named deferred validation without storing the parsed value.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.Values.html#ase2sprkkr.common.parsing_results.Values" title="ase2sprkkr.common.parsing_results.Values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Values</span></code></a>()</p></td>
-<td><p>Result of dict_from_parsed: dictionary with list of checks on the parsed values.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.Values.html#ase2sprkkr.common.parsing_results.Values" title="ase2sprkkr.common.parsing_results.Values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Values</span></code></a>(*[, allow_incomplete])</p></td>
+<td><p>Parsed values with named deferred checks and their presence policy.</p></td>
 </tr>
 </tbody>
 </table>
@@ -225,7 +252,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.common.options.Option.html" class="btn btn-neutral float-left" title="Option" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.common.output_printing.PrintMatching.html" class="btn btn-neutral float-left" title="PrintMatching" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.common.parsing_results.dict_from_parsed.html" class="btn btn-neutral float-right" title="dict_from_parsed" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

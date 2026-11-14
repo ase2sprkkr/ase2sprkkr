@@ -1,0 +1,36 @@
+ProfilesConfigurationContainer
+==============================
+
+
+.. currentmodule:: ase2sprkkr.profiles
+
+.. autoclass:: ProfilesConfigurationContainer
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.profiles.ProfilesConfigurationContainer
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

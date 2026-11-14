@@ -39,37 +39,163 @@ Full name: **ase2sprkkr.input\_parameters.definitions**
      :recursive:
   
   
+     aes
+  
+  
+     aipes
+  
+  
+     aps
+  
+  
      arpes
   
   
-     bsfek
+     band
   
   
-     bsfkk
+     bonding
+  
+  
+     bsdosij
+  
+  
+     bsf
+  
+  
+     chi
+  
+  
+     chilandau
+  
+  
+     chixas
+  
+  
+     clpes
+  
+  
+     clxps
+  
+  
+     compton
   
   
      dos
   
   
+     ekrel
+  
+  
+     fmag
+  
+  
+     fscat
+  
+  
      gilbert
+  
+  
+     jalf
+  
+  
+     jorb
   
   
      jxc
   
   
+     mecheck
+  
+  
+     meplot
+  
+  
+     nraes
+  
+  
+     nucsscpl
+  
+  
+     optabs
+  
+  
      phagen
+  
+  
+     plot2dpot
+  
+  
+     plot2dpr
+  
+  
+     plot2drho
+  
+  
+     plotpot
+  
+  
+     plotprs
+  
+  
+     plotrho
+  
+  
+     plotsfn
+  
+  
+     posani
+  
+  
+     posaniprep
+  
+  
+     posanitau
+  
+  
+     pshift
   
   
      scf
   
   
-     sections
+     sigma
+  
+  
+     socpar
+  
+  
+     spleed
+  
+  
+     stoner
+  
+  
+     t1
+  
+  
+     tdobs
   
   
      torque
   
   
+     tutorial
+  
+  
+     vbpes
+  
+  
+     wfplot
+  
+  
      xas
+  
+  
+     xes
+  
+  
+     xrs
   
   
      marpes

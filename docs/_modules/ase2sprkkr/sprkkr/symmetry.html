@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.sprkkr.symmetry &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Execution, persistence and remote runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.sprkkr.symmetry</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.sprkkr.symmetry</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Crystal symmetry analysis without retaining or modifying input Atoms."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..bindings.spglib</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">idealize_cell</span><span class="p">,</span> <span class="n">primitive_site_groups</span><span class="p">,</span> <span class="n">symmetry_dataset</span><span class="p">,</span> <span class="n">transform_cell</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.occupations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Occupation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.site_equivalence</span><span class="w"> </span><span class="kn">import</span> <span class="n">site_equivalence_tags</span><span class="p">,</span> <span class="n">refine_partial_site_tags</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sites</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">SiteType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sprkkr_atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+
+
+<div class="viewcode-block" id="SymmetryError">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry.SymmetryError.html#ase2sprkkr.sprkkr.symmetry.SymmetryError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SymmetryError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Unable to analyse or transform a crystal."""</span></div>
+
+
+
+<div class="viewcode-block" id="_validate">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry._validate.html#ase2sprkkr.sprkkr.symmetry._validate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Expected an ASE Atoms object"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span><span class="s2">"Expected a nonempty, fully periodic 3D structure"</span><span class="p">)</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">array</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_rank</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span><span class="s2">"The cell must have three independent finite vectors"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">SPRKKRAtoms</span><span class="p">)</span> <span class="ow">and</span> <span class="n">atoms</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span><span class="s2">"Structures with AtomsRegion are not supported"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_classify_sites">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry._classify_sites.html#ase2sprkkr.sprkkr.symmetry._classify_sites">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_classify_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">equivalence</span><span class="p">,</span> <span class="n">cell</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Determine spglib species tags without creating or modifying Site objects."""</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">site_equivalence_tags</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">equivalence</span><span class="o">=</span><span class="n">equivalence</span><span class="p">)</span>
+    <span class="n">source_sites</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">equivalence</span> <span class="o">==</span> <span class="s2">"site-types"</span> <span class="ow">and</span> <span class="n">source_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="n">site</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">source_sites</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="n">preliminary</span> <span class="o">=</span> <span class="n">symmetry_dataset</span><span class="p">(</span>
+            <span class="n">cell</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span>
+            <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angle_tolerance</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">refine_partial_site_tags</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">preliminary</span><span class="p">,</span> <span class="n">source_sites</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tags</span></div>
+
+
+
+<div class="viewcode-block" id="_electronic_data_present">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry._electronic_data_present.html#ase2sprkkr.sprkkr.symmetry._electronic_data_present">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_electronic_data_present</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+    <span class="n">sites</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sites</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="n">atomic_type</span><span class="o">.</span><span class="n">potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">or</span> <span class="n">atomic_type</span><span class="o">.</span><span class="n">charge</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">or</span> <span class="n">atomic_type</span><span class="o">.</span><span class="n">moments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sites</span> <span class="k">if</span> <span class="n">site</span>
+        <span class="k">for</span> <span class="n">atomic_type</span> <span class="ow">in</span> <span class="n">site</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">atomic_types</span><span class="p">()</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_warn_electronic_data">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry._warn_electronic_data.html#ase2sprkkr.sprkkr.symmetry._warn_electronic_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_warn_electronic_data</span><span class="p">():</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">"Idealization changed the geometry; copied SPR-KKR electronic data "</span>
+        <span class="s2">"may require a new SCF calculation."</span><span class="p">,</span>
+        <span class="ne">RuntimeWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_make_sites">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry._make_sites.html#ase2sprkkr.sprkkr.symmetry._make_sites">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">source_indices</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Copy existing SPR-KKR sites, or create new sites for ordinary ASE atoms.</span>
+
+<span class="sd">    This function only reads the source. It never initializes source.sites.</span>
+<span class="sd">    Symmetry-equivalent output atoms share their new SiteType.</span>
+<span class="sd">    """</span>
+    <span class="n">source_sites</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">)</span>
+    <span class="n">known_by_orbit</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">source_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">site</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">source_sites</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">site</span><span class="p">:</span>
+                <span class="n">known_by_orbit</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">site</span><span class="p">)</span>
+
+    <span class="n">site_types</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">sites</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">source_indices</span><span class="p">:</span>
+        <span class="n">old_site</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">source_sites</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">source_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">source_sites</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="k">else</span> <span class="n">known_by_orbit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">[</span><span class="n">index</span><span class="p">]))</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">old_site</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"site-type"</span><span class="p">,</span> <span class="n">old_site</span><span class="o">.</span><span class="n">site_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">site_types</span><span class="p">:</span>
+                <span class="n">site_types</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_site</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+            <span class="n">sites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">old_site</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">site_type</span><span class="o">=</span><span class="n">site_types</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"symmetry-orbit"</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">[</span><span class="n">index</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">site_types</span><span class="p">:</span>
+                <span class="n">occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="o">.</span><span class="n">for_atom_from_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+                <span class="n">site_types</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">SiteType</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">occupation</span><span class="p">)</span>
+            <span class="n">sites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Site</span><span class="p">(</span><span class="n">site_types</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sites</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SymmetryAnalysis">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.html#ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SymmetryAnalysis</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Symmetry dataset plus small geometry arrays, never a retained Atoms.</span>
+
+<span class="sd">    Calling methods on atoms with changed positions, lattice, or site classes</span>
+<span class="sd">    raises SymmetryError; recompute the analysis for the new structure.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="SymmetryAnalysis.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.html#ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">site_tags</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+        <span class="n">equivalence</span><span class="p">,</span> <span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cell</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_positions</span> <span class="o">=</span> <span class="n">positions</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">site_tags</span> <span class="o">=</span> <span class="n">site_tags</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">equivalence</span> <span class="o">=</span> <span class="n">equivalence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symprec</span> <span class="o">=</span> <span class="n">symprec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_tolerance</span> <span class="o">=</span> <span class="n">angle_tolerance</span></div>
+
+
+<div class="viewcode-block" id="SymmetryAnalysis._check_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.html#ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis._check_atoms">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+        <span class="n">_validate</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">site_tags</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span>
+                <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positions</span><span class="p">,</span>
+                <span class="n">rtol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span>
+                <span class="s2">"Geometry changed since analysis; call analyze_symmetry(atoms) again"</span>
+            <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">_classify_sites</span><span class="p">(</span>
+                <span class="n">atoms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">equivalence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positions</span><span class="p">,</span>
+                <span class="n">symprec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angle_tolerance</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_tags</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span>
+                <span class="s2">"Site classification changed since analysis; "</span>
+                <span class="s2">"call analyze_symmetry(atoms) again"</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SymmetryAnalysis.idealize">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.html#ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.idealize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">idealize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Idealize a copy in the original basis without modifying atoms."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">atoms</span><span class="o">.</span><span class="n">constraints</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span><span class="s2">"Idealization with ASE constraints is not supported"</span><span class="p">)</span>
+        <span class="n">geometry</span><span class="p">,</span> <span class="n">changed</span> <span class="o">=</span> <span class="n">idealize_cell</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_tags</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symprec</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="n">scale_atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">set_scaled_positions</span><span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">scaled_positions</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">SPRKKRAtoms</span><span class="p">):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">changed</span> <span class="ow">and</span> <span class="n">_electronic_data_present</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+            <span class="n">_warn_electronic_data</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="SymmetryAnalysis.find_primitive">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.html#ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.find_primitive">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_primitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">idealize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ase_arrays</span><span class="o">=</span><span class="s2">"require-equal"</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Build a primitive cell from explicitly supplied atoms."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converted</span><span class="p">(</span>
+            <span class="n">atoms</span><span class="p">,</span> <span class="n">to_primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">idealize</span><span class="o">=</span><span class="n">idealize</span><span class="p">,</span> <span class="n">ase_arrays</span><span class="o">=</span><span class="n">ase_arrays</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SymmetryAnalysis.standardize">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.html#ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.standardize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">standardize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">idealize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ase_arrays</span><span class="o">=</span><span class="s2">"require-equal"</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Build a standard conventional cell from explicitly supplied atoms."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converted</span><span class="p">(</span>
+            <span class="n">atoms</span><span class="p">,</span> <span class="n">to_primitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">idealize</span><span class="o">=</span><span class="n">idealize</span><span class="p">,</span> <span class="n">ase_arrays</span><span class="o">=</span><span class="n">ase_arrays</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SymmetryAnalysis._converted">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis.html#ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis._converted">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_converted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">to_primitive</span><span class="p">,</span> <span class="n">idealize</span><span class="p">,</span> <span class="n">ase_arrays</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idealize</span><span class="p">:</span>
+            <span class="n">idealized</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idealize</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+            <span class="n">updated</span> <span class="o">=</span> <span class="n">analyze_symmetry</span><span class="p">(</span>
+                <span class="n">idealized</span><span class="p">,</span> <span class="n">equivalence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">equivalence</span><span class="p">,</span>
+                <span class="n">symprec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angle_tolerance</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">updated</span><span class="o">.</span><span class="n">_converted</span><span class="p">(</span>
+                <span class="n">idealized</span><span class="p">,</span> <span class="n">to_primitive</span><span class="o">=</span><span class="n">to_primitive</span><span class="p">,</span>
+                <span class="n">idealize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ase_arrays</span><span class="o">=</span><span class="n">ase_arrays</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ase_arrays</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"require-equal"</span><span class="p">,</span> <span class="s2">"discard"</span><span class="p">,</span> <span class="s2">"choose-first"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ase_arrays must be require-equal, discard, or choose-first"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">atoms</span><span class="o">.</span><span class="n">constraints</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span><span class="s2">"Cell conversion with ASE constraints is not supported"</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">transformed</span> <span class="o">=</span> <span class="n">transform_cell</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_tags</span><span class="p">,</span>
+                <span class="n">to_primitive</span><span class="o">=</span><span class="n">to_primitive</span><span class="p">,</span>
+                <span class="n">symprec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angle_tolerance</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">groups</span> <span class="o">=</span> <span class="n">primitive_site_groups</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_tags</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">,</span> <span class="n">transformed</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symprec</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+        <span class="n">source_sites</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">)</span>
+        <span class="n">source_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="nb">next</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">group</span> <span class="k">if</span> <span class="n">source_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">source_sites</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                <span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span>
+        <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span>
+            <span class="n">numbers</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">[</span><span class="n">source_indices</span><span class="p">],</span>
+            <span class="n">scaled_positions</span><span class="o">=</span><span class="n">transformed</span><span class="o">.</span><span class="n">scaled_positions</span><span class="p">,</span>
+            <span class="n">cell</span><span class="o">=</span><span class="n">transformed</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">symmetry</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">symmetry</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">SPRKKRAtoms</span><span class="p">)</span> <span class="k">else</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">set_sites</span><span class="p">(</span>
+            <span class="n">_make_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">source_indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">),</span>
+            <span class="n">spacegroup_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="n">key</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"spacegroup_info"</span><span class="p">,</span> <span class="s2">"occupancy"</span><span class="p">)</span>
+        <span class="p">})</span>
+
+        <span class="n">reserved</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"numbers"</span><span class="p">,</span> <span class="s2">"positions"</span><span class="p">,</span> <span class="s2">"sprkkr_sites_data"</span><span class="p">,</span> <span class="s2">"spacegroup_kinds"</span><span class="p">}</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">)</span> <span class="o">-</span> <span class="n">reserved</span>
+        <span class="k">if</span> <span class="n">ase_arrays</span> <span class="o">==</span> <span class="s2">"discard"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">names</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">"Discarded ASE arrays: "</span> <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">)),</span>
+                    <span class="ne">RuntimeWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+                <span class="n">array</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">ase_arrays</span> <span class="o">==</span> <span class="s2">"require-equal"</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+                            <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                        <span class="p">):</span>
+                            <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">"ASE array </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> differs within a primitive "</span>
+                                <span class="s2">"translation class; use ase_arrays='choose-first' "</span>
+                                <span class="s2">"or 'discard'."</span>
+                            <span class="p">)</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">array</span><span class="p">[</span><span class="n">source_indices</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="n">ase_arrays</span> <span class="o">==</span> <span class="s2">"choose-first"</span><span class="p">:</span>
+                <span class="n">lossy</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span>
+                    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+                        <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+                            <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span>
+                                <span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">i</span><span class="p">],</span>
+                                <span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                            <span class="p">)</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                        <span class="p">)</span>
+                        <span class="k">for</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">groups</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
+                <span class="k">if</span> <span class="n">lossy</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s2">"Chose the first representative for differing ASE arrays: "</span>
+                        <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">lossy</span><span class="p">)),</span>
+                        <span class="ne">RuntimeWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">equivalence</span> <span class="o">==</span> <span class="s2">"occupation"</span> <span class="ow">and</span> <span class="n">source_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">original</span> <span class="o">=</span> <span class="p">{</span><span class="n">site</span><span class="o">.</span><span class="n">site_type</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">source_sites</span> <span class="k">if</span> <span class="n">site</span><span class="p">}</span>
+            <span class="n">retained</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">source_sites</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="o">.</span><span class="n">site_type</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">source_indices</span> <span class="k">if</span> <span class="n">source_sites</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">original</span> <span class="o">-</span> <span class="n">retained</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Occupation equivalence discarded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">original</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">retained</span><span class="p">)</span><span class="si">}</span><span class="s2"> "</span>
+                    <span class="s2">"source SiteType(s) and their SPR-KKR data."</span><span class="p">,</span>
+                    <span class="ne">RuntimeWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="analyze_symmetry">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.symmetry.analyze_symmetry.html#ase2sprkkr.sprkkr.symmetry.analyze_symmetry">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_symmetry</span><span class="p">(</span>
+    <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">equivalence</span><span class="o">=</span><span class="s2">"site-types"</span><span class="p">,</span>
+    <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SymmetryAnalysis</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Analyse the supplied atoms read-only, without copying or retaining it."""</span>
+    <span class="n">_validate</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">symprec</span><span class="p">)</span> <span class="ow">or</span> <span class="n">symprec</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"symprec must be a positive finite length"</span><span class="p">)</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">array</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">_classify_sites</span><span class="p">(</span>
+            <span class="n">atoms</span><span class="p">,</span> <span class="n">equivalence</span><span class="p">,</span> <span class="n">cell</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span>
+            <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angle_tolerance</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">symmetry_dataset</span><span class="p">(</span>
+            <span class="n">cell</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span>
+            <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angle_tolerance</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">SymmetryError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">SymmetryAnalysis</span><span class="p">(</span>
+        <span class="n">cell</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">equivalence</span><span class="o">=</span><span class="n">equivalence</span><span class="p">,</span>
+        <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angle_tolerance</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

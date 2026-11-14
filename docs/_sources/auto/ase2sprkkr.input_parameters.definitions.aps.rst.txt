@@ -1,0 +1,43 @@
+aps
+===
+
+Full name: **ase2sprkkr.input\_parameters.definitions.aps**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.aps
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _validate_aps
+      input_parameters_definition
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

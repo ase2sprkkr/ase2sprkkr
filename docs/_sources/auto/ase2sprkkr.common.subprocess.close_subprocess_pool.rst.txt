@@ -1,0 +1,8 @@
+close\_subprocess\_pool
+=======================
+
+Full name: **ase2sprkkr.common.subprocess.close\_subprocess\_pool**
+
+.. currentmodule:: ase2sprkkr.common.subprocess
+
+.. autofunction:: close_subprocess_pool

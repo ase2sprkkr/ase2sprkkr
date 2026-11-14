@@ -1,0 +1,6 @@
+ase2sprkkr.common.module\_registry.RegistryLoadWarning
+======================================================
+
+.. currentmodule:: ase2sprkkr.common.module_registry
+
+.. autoexception:: RegistryLoadWarning

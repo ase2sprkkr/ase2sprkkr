@@ -45,6 +45,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
@@ -56,10 +59,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -81,6 +84,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.sprkkr.spacegroup_info</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,9 +95,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.sprkkr.spacegroup_info</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Wrapper for spglib for computing symmetry of a primitive cell</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
@@ -102,14 +106,16 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">sprkkr_atoms</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..bindings.spglib</span><span class="w"> </span><span class="kn">import</span> <span class="n">spglib_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..bindings.spglib</span><span class="w"> </span><span class="kn">import</span> <span class="n">symmetry_dataset</span><span class="p">,</span> <span class="n">symmetry_site_permutations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.site_equivalence</span><span class="w"> </span><span class="kn">import</span> <span class="n">site_equivalence_tags</span><span class="p">,</span> <span class="n">refine_partial_site_tags</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sites</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">SiteType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.unique_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
 
 
 <div class="viewcode-block" id="site_type_copier">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.site_type_copier.html#ase2sprkkr.sprkkr.spacegroup_info.site_type_copier">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">site_type_copier</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a function, that always copy the site_type&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return a function, that always copy the site_type"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="n">site</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">site</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span>
@@ -121,7 +127,7 @@
 <div class="viewcode-block" id="used_site_type_copier">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.used_site_type_copier.html#ase2sprkkr.sprkkr.spacegroup_info.used_site_type_copier">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">used_site_type_copier</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a function, that copy the site_type, if it is requested more than once&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return a function, that copy the site_type, if it is requested more than once"""</span>
     <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="n">site</span><span class="p">):</span>
@@ -141,20 +147,20 @@
 <div class="viewcode-block" id="BaseSpacegroupInfo.spacegroup_number">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.spacegroup_number">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">spacegroup_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        spacegroup</span>
 <span class="sd">          Spacegroup number or None, if there is no spacegroup.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">dataset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span>
         <span class="k">return</span> <span class="n">dataset</span><span class="o">.</span><span class="n">number</span> <span class="k">if</span> <span class="n">dataset</span> <span class="k">else</span> <span class="kc">None</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return SpgLib dataset containing informations about symmetry,</span>
-<span class="sd">        spacegroup, equivalence of sites etc...&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return SpgLib dataset containing informations about symmetry,</span>
+<span class="sd">        spacegroup, equivalence of sites etc..."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">recompute</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span>
@@ -162,7 +168,7 @@
 <div class="viewcode-block" id="BaseSpacegroupInfo.kto_kyda_table">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.kto_kyda_table">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">kto_kyda_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Build KTO_KYDA-style table, that maps the atoms before-after symmetry operations.</span>
 
 <span class="sd">        Parameters</span>
@@ -175,51 +181,20 @@
 <span class="sd">        table: (len(rotations), len(atoms) ) np.ndarray of</span>
 <span class="sd">            If table[i,j] = k, then the i-th symmetry operation maps the j-th atom</span>
 <span class="sd">            into k-th atom</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">for_atoms</span>
-        <span class="n">frac</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># (nat, 3), fractional</span>
-        <span class="n">types</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>  <span class="c1"># species</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">rotations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dataset</span> <span class="ow">or</span> <span class="n">dataset</span><span class="o">.</span><span class="n">rotations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">rotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">rotations</span>
-        <span class="n">translations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">translations</span>
-        <span class="n">sites</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">types</span><span class="p">)):</span>
-            <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">site_type</span>
-        <span class="n">B</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">array</span>  <span class="c1"># 3x3 (row-vectors); frac @ B → Cartesian</span>
 
-        <span class="n">table</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rotations</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">sites</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-
-        <span class="c1"># group atoms by species to avoid cross-species matches</span>
-        <span class="n">byType</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">typ</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">types</span><span class="p">):</span>
-            <span class="n">byType</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">byType</span> <span class="o">=</span> <span class="p">{</span><span class="n">typ</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">idxs</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">typ</span><span class="p">,</span> <span class="n">idxs</span> <span class="ow">in</span> <span class="n">byType</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="n">pos_byType</span> <span class="o">=</span> <span class="p">{</span><span class="n">typ</span><span class="p">:</span> <span class="n">frac</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="k">for</span> <span class="n">typ</span><span class="p">,</span> <span class="n">idxs</span> <span class="ow">in</span> <span class="n">byType</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-
-        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rotations</span><span class="p">)):</span>
-            <span class="n">rot</span> <span class="o">=</span> <span class="n">rotations</span><span class="p">[</span><span class="n">g</span><span class="p">]</span>
-            <span class="n">trn</span> <span class="o">=</span> <span class="n">translations</span><span class="p">[</span><span class="n">g</span><span class="p">]</span>
-            <span class="c1"># Apply op in fractional coordinates (row-vectors → use rot.T)</span>
-            <span class="n">Xp</span> <span class="o">=</span> <span class="p">(</span><span class="n">frac</span> <span class="o">@</span> <span class="n">rot</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">trn</span><span class="p">)</span> <span class="o">%</span> <span class="mf">1.0</span>
-
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)):</span>
-                <span class="n">typ</span> <span class="o">=</span> <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">idxs</span> <span class="o">=</span> <span class="n">byType</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>
-                <span class="n">cand</span> <span class="o">=</span> <span class="n">pos_byType</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span>  <span class="c1"># candidate positions (the same species)</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="n">Xp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">cand</span>
-                <span class="n">d</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>  <span class="c1"># wrap to nearest lattice image in frac</span>
-                <span class="n">d_cart</span> <span class="o">=</span> <span class="n">d</span> <span class="o">@</span> <span class="n">B</span>  <span class="c1"># compare in Cartesian space</span>
-                <span class="n">jloc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">d_cart</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">d_cart</span><span class="p">[</span><span class="n">jloc</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">symprec</span> <span class="o">+</span> <span class="mf">1e-12</span><span class="p">:</span>
-                    <span class="n">table</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">idxs</span><span class="p">[</span><span class="n">jloc</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;No match for op </span><span class="si">{</span><span class="n">g</span><span class="si">}</span><span class="s2"> atom </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> within tolerance; &quot;</span>
-                        <span class="s2">&quot;consider increasing symprec or standardizing the cell.&quot;</span>
-                    <span class="p">)</span>
-        <span class="k">return</span> <span class="n">table</span></div>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">site</span><span class="o">.</span><span class="n">site_type</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">mapping</span>
+        <span class="k">return</span> <span class="n">symmetry_site_permutations</span><span class="p">(</span>
+            <span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">(),</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(),</span> <span class="n">tags</span><span class="p">,</span>
+            <span class="n">dataset</span><span class="o">.</span><span class="n">rotations</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">translations</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">,</span>
+        <span class="p">)</span></div>
 </div>
 
 
@@ -238,7 +213,8 @@
 <div class="viewcode-block" id="RegionSpacegroupInfo.recompute">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo.recompute">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">recompute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="o">.</span><span class="n">recompute</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">recompute</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 </div>
 
 
@@ -246,12 +222,12 @@
 <div class="viewcode-block" id="SpacegroupInfo">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpacegroupInfo</span><span class="p">(</span><span class="n">BaseSpacegroupInfo</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class, that carry information about spacegroup and symmetry of a structure&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Class, that carry information about spacegroup and symmetry of a structure"""</span>
 
 <div class="viewcode-block" id="SpacegroupInfo.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        atoms</span>
@@ -264,7 +240,7 @@
 <span class="sd">          SPGLib dataset - a dictionary, containing many informations about the symmetry and</span>
 <span class="sd">          spacegroup of the structure. If it is not provided, and ``spacegroup`` is not ``None``</span>
 <span class="sd">          the spacegroup is recomputed to obtain the dataset, if the dataset is requested.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">atoms</span> <span class="o">=</span> <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
@@ -280,7 +256,7 @@
 <div class="viewcode-block" id="SpacegroupInfo.to_dict">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.to_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">,</span> <span class="s2">&quot;symmetry&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">symmetry</span><span class="p">}</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"dataset"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">,</span> <span class="s2">"symmetry"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">symmetry</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="SpacegroupInfo.info_for_region">
@@ -292,13 +268,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; ASE requires this form of name&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" ASE requires this form of name"""</span>
     <span class="n">todict</span> <span class="o">=</span> <span class="n">to_dict</span>
 
 <div class="viewcode-block" id="SpacegroupInfo.copy_for">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.copy_for">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">copy_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return copy of the object for the given atoms&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return copy of the object for the given atoms"""</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="n">out</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="kc">None</span>
@@ -308,16 +284,22 @@
 <div class="viewcode-block" id="SpacegroupInfo.check_spacegroup_kinds">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.check_spacegroup_kinds">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_spacegroup_kinds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True, if the spacegroup_kinds array match the sites info.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Returns True, if the spacegroup_kinds array match the sites info."""</span>
         <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span>
-        <span class="k">if</span> <span class="s2">&quot;spacegroup_kinds&quot;</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">arrays</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"spacegroup_kinds"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">arrays</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">kinds</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">sites</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">occ</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;occupancy&quot;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="k">for</span> <span class="n">site</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">sites</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;spacegroup_kinds&quot;</span><span class="p">)):</span>
+        <span class="n">occ</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"occupancy"</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">for</span> <span class="n">site</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">sites</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="s2">"spacegroup_kinds"</span><span class="p">]):</span>
             <span class="n">st</span> <span class="o">=</span> <span class="n">site</span><span class="o">.</span><span class="n">site_type</span>
-            <span class="k">if</span> <span class="n">kinds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">st</span><span class="p">)</span> <span class="o">!=</span> <span class="n">st</span> <span class="ow">or</span> <span class="n">sites</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span> <span class="o">!=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">occ</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">kind</span><span class="p">))</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">kinds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">st</span><span class="p">)</span> <span class="o">!=</span> <span class="n">st</span>
+                <span class="ow">or</span> <span class="n">sites</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span> <span class="o">!=</span> <span class="n">kind</span>
+                <span class="ow">or</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">occ</span>
+                <span class="ow">or</span> <span class="n">occ</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">st</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -325,10 +307,10 @@
 <div class="viewcode-block" id="SpacegroupInfo.update_spacegroup_kinds">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.update_spacegroup_kinds">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_spacegroup_kinds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">if_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">invalidate_spacegroup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the occupancy info and spagroup_kinds array&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update the occupancy info and spagroup_kinds array"""</span>
         <span class="k">if</span> <span class="n">invalidate_spacegroup</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">if_required</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_spacegroup_kinds</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">if_required</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_spacegroup_kinds</span><span class="p">():</span>
             <span class="k">return</span>
         <span class="n">sgi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">stypes</span> <span class="o">=</span> <span class="p">{}</span>
@@ -343,22 +325,22 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">sgi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stypes</span><span class="p">[</span><span class="n">st</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="s2">&quot;spacegroup_kinds&quot;</span><span class="p">,</span> <span class="n">sgi</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;occupancy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">occ</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="s2">"spacegroup_kinds"</span><span class="p">,</span> <span class="n">sgi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"occupancy"</span><span class="p">]</span> <span class="o">=</span> <span class="n">occ</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Spacegroup </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spacegroup_number</span><span class="p">()</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;None&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Spacegroup </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spacegroup_number</span><span class="p">()</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">'None'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">equivalent_sites</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return numpy array, that tags the sites by its equivalence</span>
-<span class="sd">        classes&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return numpy array, that tags the sites by its equivalence</span>
+<span class="sd">        classes"""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="s2">&quot;spacegroup_kinds&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="s2">"spacegroup_kinds"</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SpacegroupInfo.recompute">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.recompute">[docs]</a>
@@ -374,33 +356,35 @@
         <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">update_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Init the sites array: the array of Sites objects,</span>
-<span class="sd">        that holds additional SPRKKR properties and informations about site-equivalence&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Init the sites array: the array of Sites objects,</span>
+<span class="sd">        that holds additional SPRKKR properties and informations about site-equivalence"""</span>
         <span class="k">if</span> <span class="n">symmetry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">symmetry</span> <span class="o">=</span> <span class="n">symmetry</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">init</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__block</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">copy</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">update_info</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">update_info</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">if</span> <span class="n">atomic_kinds</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atomic_kinds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-                    <span class="s2">&quot;Calling recompute during _block with atomic_kinds specified is not implemented&quot;</span>
+                    <span class="s2">"Calling recompute during _block with atomic_kinds specified is not implemented"</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">consider_old</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">consider_old</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">consider_old</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">angular_precision</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">angular_precision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">angular_precision</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">do</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">return</span>
 
         <span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span>
-        <span class="k">if</span> <span class="n">init</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">atoms</span><span class="o">.</span><span class="n">are_sites_inited</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">init</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">atoms</span><span class="o">.</span><span class="n">are_sites_inited</span><span class="p">():</span>
             <span class="n">init</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">old_sites</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span>
+            <span class="c1"># ASE set_array() overwrites an existing array in place. Keep the</span>
+            <span class="c1"># previous Site instances for copying and unregistering below.</span>
+            <span class="n">old_sites</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">creator</span> <span class="o">=</span> <span class="n">SiteType</span><span class="o">.</span><span class="n">creator</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">init</span><span class="p">:</span>
             <span class="n">stype_copier</span> <span class="o">=</span> <span class="n">site_type_copier</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span> <span class="k">if</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">used_site_type_copier</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
@@ -414,40 +398,99 @@
         <span class="n">sites</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
         <span class="n">indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">))</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">set_site</span><span class="p">(</span><span class="n">sites</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">stype</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">sites</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                <span class="n">sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">unregister</span><span class="p">()</span>
-            <span class="n">sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="n">stype</span><span class="p">)</span>
+        <span class="c1"># Region membership is part of the site identity. Two sites from</span>
+        <span class="c1"># different regions must never be merged by the global symmetry pass.</span>
+        <span class="n">memberships</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">))]</span>
+        <span class="k">for</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">regions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">region</span><span class="o">.</span><span class="n">ids</span><span class="p">:</span>
+                <span class="n">memberships</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">region_name</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">set_site</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">stype</span><span class="p">,</span> <span class="n">original</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">previous</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">site</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">site_type</span><span class="o">=</span><span class="n">stype</span><span class="p">)</span> <span class="k">if</span> <span class="n">original</span> <span class="k">else</span> <span class="n">Site</span><span class="p">(</span><span class="n">stype</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">previous</span><span class="p">:</span>
+                <span class="n">previous</span><span class="o">.</span><span class="n">unregister</span><span class="p">()</span>
+            <span class="n">target</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">site</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">solve_region</span><span class="p">(</span><span class="n">region</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
             <span class="n">ssites</span> <span class="o">=</span> <span class="n">sites</span><span class="p">[</span><span class="nb">slice</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">symmetry</span> <span class="ow">or</span> <span class="n">region</span> <span class="ow">is</span> <span class="n">atoms</span><span class="p">:</span>
                 <span class="n">kinds</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">atomic_kinds</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">atomic_kinds</span><span class="p">[</span><span class="nb">slice</span><span class="p">]</span>
-                <span class="n">dataset</span> <span class="o">=</span> <span class="n">spglib_dataset</span><span class="p">(</span>
+                <span class="n">tags</span> <span class="o">=</span> <span class="n">site_equivalence_tags</span><span class="p">(</span>
                     <span class="n">region</span><span class="p">,</span>
-                    <span class="n">kinds</span><span class="p">,</span>
-                    <span class="n">consider_old</span><span class="o">=</span><span class="n">consider_old</span><span class="p">,</span>
-                    <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">,</span>
-                    <span class="n">angular_precision</span><span class="o">=</span><span class="n">angular_precision</span><span class="p">,</span>
-                    <span class="n">add</span><span class="o">=</span><span class="n">ssites</span> <span class="k">if</span> <span class="n">atoms</span><span class="o">.</span><span class="n">regions</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">equivalence</span><span class="o">=</span><span class="s2">"site-types"</span> <span class="k">if</span> <span class="n">consider_old</span> <span class="k">else</span> <span class="s2">"occupation"</span><span class="p">,</span>
+                    <span class="n">atomic_kinds</span><span class="o">=</span><span class="n">kinds</span><span class="p">,</span>
+                    <span class="n">assigned_sites</span><span class="o">=</span><span class="n">ssites</span> <span class="k">if</span> <span class="n">atoms</span><span class="o">.</span><span class="n">regions</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">region_memberships</span><span class="o">=</span><span class="p">(</span>
+                        <span class="n">memberships</span> <span class="k">if</span> <span class="n">region</span> <span class="ow">is</span> <span class="n">atoms</span> <span class="ow">and</span> <span class="n">atoms</span><span class="o">.</span><span class="n">regions</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="p">),</span>
                 <span class="p">)</span>
+
+                <span class="k">def</span><span class="w"> </span><span class="nf">get_dataset</span><span class="p">(</span><span class="n">species</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">symmetry_dataset</span><span class="p">(</span>
+                            <span class="n">region</span><span class="o">.</span><span class="n">get_cell</span><span class="p">(),</span> <span class="n">region</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(),</span> <span class="n">species</span><span class="p">,</span>
+                            <span class="n">symprec</span><span class="o">=</span><span class="n">precision</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angular_precision</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="kc">False</span>
+
+                <span class="n">dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+                <span class="n">existing</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">region</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="s2">"sprkkr_sites_data"</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="s2">"sprkkr_sites_data"</span> <span class="ow">in</span> <span class="n">region</span><span class="o">.</span><span class="n">arrays</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">consider_old</span> <span class="ow">and</span>
+                    <span class="n">existing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="n">site</span> <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">existing</span><span class="p">)):</span>
+                    <span class="n">refined</span> <span class="o">=</span> <span class="n">refine_partial_site_tags</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">existing</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">refined</span><span class="p">):</span>
+                        <span class="n">dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span><span class="n">refined</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">dataset</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="n">to_global</span> <span class="o">=</span> <span class="n">indexes</span><span class="p">[</span><span class="nb">slice</span><span class="p">]</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">previous_site</span><span class="p">(</span><span class="n">local_index</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">init</span><span class="p">:</span>
+                    <span class="n">old</span> <span class="o">=</span> <span class="n">old_sites</span><span class="p">[</span><span class="n">to_global</span><span class="p">[</span><span class="n">local_index</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="n">old</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">old</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="n">ssites</span><span class="p">[</span><span class="n">local_index</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">current</span> <span class="k">if</span> <span class="n">current</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">site_type_for</span><span class="p">(</span><span class="n">local_index</span><span class="p">):</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="n">ssites</span><span class="p">[</span><span class="n">local_index</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">region</span> <span class="ow">is</span> <span class="n">atoms</span> <span class="ow">and</span> <span class="n">atoms</span><span class="o">.</span><span class="n">regions</span> <span class="ow">and</span> <span class="n">current</span><span class="p">:</span>
+                    <span class="c1"># Preserve SiteTypes already established by a region.</span>
+                    <span class="k">return</span> <span class="n">current</span><span class="o">.</span><span class="n">site_type</span>
+                <span class="k">return</span> <span class="n">create</span><span class="p">(</span><span class="n">to_global</span><span class="p">[</span><span class="n">local_index</span><span class="p">])</span>
+
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">symmetry</span> <span class="ow">and</span> <span class="n">dataset</span><span class="p">:</span>
-                <span class="n">uniq</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">umap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="n">stypes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">uniq</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">site</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
-                    <span class="n">stypes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">to_global</span><span class="p">[</span><span class="n">site</span><span class="p">])</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">umap</span><span class="p">)):</span>
-                    <span class="n">stype</span> <span class="o">=</span> <span class="n">stypes</span><span class="p">[</span><span class="n">umap</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
-                    <span class="n">set_site</span><span class="p">(</span><span class="n">ssites</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">stype</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">umap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span>
+                    <span class="n">dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+                <span class="n">stypes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+                <span class="n">representatives</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">first</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+                    <span class="c1"># Prefer a populated Site as the source of the shared</span>
+                    <span class="c1"># SiteType, even when the first atom has no site yet.</span>
+                    <span class="n">source_index</span> <span class="o">=</span> <span class="n">first</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">init</span><span class="p">:</span>
+                        <span class="n">present</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">umap</span> <span class="o">==</span> <span class="n">group</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">old_sites</span><span class="p">[</span><span class="n">to_global</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+                        <span class="p">]</span>
+                        <span class="k">if</span> <span class="n">present</span><span class="p">:</span>
+                            <span class="n">source_index</span> <span class="o">=</span> <span class="n">present</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">representatives</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="n">previous_site</span><span class="p">(</span><span class="n">source_index</span><span class="p">)</span>
+                    <span class="n">stypes</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="n">site_type_for</span><span class="p">(</span><span class="n">source_index</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">umap</span><span class="p">):</span>
+                    <span class="n">original</span> <span class="o">=</span> <span class="n">previous_site</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="ow">or</span> <span class="n">representatives</span><span class="p">[</span><span class="n">group</span><span class="p">]</span>
+                    <span class="n">set_site</span><span class="p">(</span><span class="n">ssites</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">stypes</span><span class="p">[</span><span class="n">group</span><span class="p">],</span> <span class="n">original</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">region</span><span class="p">)):</span>
-                    <span class="n">stype</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">to_global</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-                    <span class="n">set_site</span><span class="p">(</span><span class="n">ssites</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">stype</span><span class="p">)</span>
+                    <span class="n">set_site</span><span class="p">(</span><span class="n">ssites</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">site_type_for</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">previous_site</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">dataset</span>
 
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">regions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -456,6 +499,16 @@
         <span class="n">dataset</span> <span class="o">=</span> <span class="n">solve_region</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
         <span class="n">atoms</span><span class="o">.</span><span class="n">set_sites</span><span class="p">(</span><span class="n">sites</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="n">update_info</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">init</span><span class="p">:</span>
+            <span class="c1"># Rebuilt sites are copies, never the previous Site instances.</span>
+            <span class="c1"># Unregister obsolete sites owned by these atoms. ASE slicing and</span>
+            <span class="c1"># extending can temporarily borrow Sites from another Atoms object;</span>
+            <span class="c1"># those must remain registered with their original owner. Repeated</span>
+            <span class="c1"># arrays can also contain the same previous Site more than once.</span>
+            <span class="k">for</span> <span class="n">previous</span> <span class="ow">in</span> <span class="n">old_sites</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">previous</span> <span class="ow">and</span> <span class="n">previous</span><span class="o">.</span><span class="n">site_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                        <span class="ow">and</span> <span class="n">previous</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">atoms</span> <span class="ow">is</span> <span class="n">atoms</span><span class="p">):</span>
+                    <span class="n">previous</span><span class="o">.</span><span class="n">unregister</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
@@ -463,15 +516,19 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.block_updating">[docs]</a>
     <span class="nd">@contextmanager</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">block_updating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">always_recompute</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="o">=</span> <span class="n">SpacegroupInfoBlock</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">raise_counter</span><span class="p">()</span>
-        <span class="k">yield</span>
-        <span class="k">if</span> <span class="n">always_recompute</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">lower_counter</span><span class="p">()</span>
-        <span class="n">block</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span>
+            <span class="n">block</span><span class="o">.</span><span class="n">raise_counter</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span>
+            <span class="k">if</span> <span class="n">always_recompute</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">lower_counter</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">block</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
@@ -479,8 +536,8 @@
 <div class="viewcode-block" id="SpacegroupInfoBlock">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpacegroupInfoBlock</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class, for locking the update of spacegroup_info. If more operation are performed, the</span>
-<span class="sd">    update is performed after the all operations are done.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Class, for locking the update of spacegroup_info. If more operation are performed, the</span>
+<span class="sd">    update is performed after the all operations are done."""</span>
 
 <div class="viewcode-block" id="SpacegroupInfoBlock.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.__init__">[docs]</a>
@@ -489,7 +546,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_info</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">consider_old</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_precision</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_precision</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"Inf"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">do</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span></div>
 

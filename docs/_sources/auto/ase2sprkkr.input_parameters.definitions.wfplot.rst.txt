@@ -1,0 +1,60 @@
+wfplot
+======
+
+Full name: **ase2sprkkr.input\_parameters.definitions.wfplot**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.definitions.wfplot.WfplotInputParametersDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.wfplot
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _print_default
+      _validate_wfplot
+      input_parameters_definition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      WfplotInputParametersDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

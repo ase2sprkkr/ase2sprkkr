@@ -45,6 +45,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
@@ -56,10 +59,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -81,6 +84,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.outputs.task_result</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,31 +95,47 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.outputs.task_result</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;This module contains classes, used by parsers of the output files&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""This module contains classes used by parsers of SPR-KKR output files."""</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">readers</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">cached_class_property</span><span class="p">,</span> <span class="n">maybeclassmethod</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..common.process_output_reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_coro_sync</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..common.file_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">filename_from_file</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataValidityError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">maybeclassmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.file_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilePath</span><span class="p">,</span> <span class="n">filename_from_file</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..potentials.potentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">Potential</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">input_parameters</span> <span class="k">as</span> <span class="n">input_parameters</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.result_options</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_files_section</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 
 <div class="viewcode-block" id="TaskResult">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TaskResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A base class for a result of a runned task (kkrscf executable)&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A base class for a result of a runned task (kkrscf executable)"""</span>
+
+    <span class="n">produces_potential</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">"""Whether this result produces a new potential usable by later tasks."""</span>
+
+    <span class="n">sfn_generated</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">"""Whether this calculation generated rather than reused its SFN file."""</span>
 
 <div class="viewcode-block" id="TaskResult.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="p">,</span>
+        <span class="n">calculator</span><span class="p">,</span>
+        <span class="n">directory</span><span class="p">,</span>
+        <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">task_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detected_input_parameters</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_calculator</span> <span class="o">=</span> <span class="n">calculator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_task_name</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">task_name</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">task_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">create_files_section</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span> <span class="o">=</span> <span class="n">filename_from_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -124,16 +144,13 @@
         <span class="k">if</span> <span class="n">output_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">output_filename</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">output_filename</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_filename</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">output_filename</span><span class="p">):</span>
-                <span class="n">output_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">output_filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_filename</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">FilePath</span><span class="p">(</span><span class="n">output_filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="s2">"output"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
 
         <span class="n">input_filename</span> <span class="o">=</span> <span class="n">filename_from_file</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">input_filename</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">input_filename</span><span class="p">):</span>
-            <span class="n">input_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">input_filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span> <span class="o">=</span> <span class="n">input_filename</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span> <span class="o">=</span> <span class="n">FilePath</span><span class="p">(</span><span class="n">input_filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span> <span class="k">if</span> <span class="n">input_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="s2">"input"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TaskResult.directory">
@@ -146,54 +163,101 @@
 <div class="viewcode-block" id="TaskResult.path_to">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.path_to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">path_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;return full path to a given file</span>
+<span class="w">        </span><span class="sd">"""return full path to a given file</span>
 
 <span class="sd">        ..doctest::</span>
-<span class="sd">        &gt;&gt;&gt; t = TaskResult(None, None, &quot;/example&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; t.files.add_file(&quot;input&quot;, &quot;input.txt&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; t.path_to(&quot;input&quot;)</span>
-<span class="sd">        &#39;/example/input.txt&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">file</span><span class="p">]()</span>
-        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">file</span>
-        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span></div>
+<span class="sd">        &gt;&gt;&gt; t = TaskResult(None, None, "/example")</span>
+<span class="sd">        &gt;&gt;&gt; t.files.add_file("input", "input.txt")</span>
+<span class="sd">        &lt;Option input of type String with value = input.txt&gt;</span>
+<span class="sd">        &gt;&gt;&gt; t.path_to("input")</span>
+<span class="sd">        '/example/input.txt'</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">file</span><span class="p">]())</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">task_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">task_name</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_name</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">task_definition</span> <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot determine the task of this result from its input"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TaskResult.input_parameters">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.input_parameters">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_file</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_file</span><span class="p">)</span></div>
+        <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_file</span>
+        <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detected_input_parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detected_input_parameters</span>
+        <span class="c1"># An explicitly registered input is authoritative: parsing errors</span>
+        <span class="c1"># here must remain visible to the caller.</span>
+        <span class="k">return</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">source</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TaskResult._candidate_input_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult._candidate_input_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_candidate_input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Use an unambiguous native input file; never guess between runs."""</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+
+        <span class="n">directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">()</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">{</span><span class="n">path</span> <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">".inp"</span><span class="p">,</span> <span class="s2">".in"</span><span class="p">)</span>
+             <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">"*"</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">))}</span>
+        <span class="p">)</span>
+        <span class="c1"># A paired input name is authoritative even if the directory contains</span>
+        <span class="c1"># unrelated calculations.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stem</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">".inp"</span><span class="p">,</span> <span class="s2">".in"</span><span class="p">):</span>
+                <span class="n">paired</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">stem</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">paired</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="n">paired</span><span class="p">,)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="TaskResult.input_parameters_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.input_parameters_file">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;input&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"input"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">"input"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">filename</span></div>
+                <span class="k">return</span> <span class="n">filename</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidate_input_files</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">parameters</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">UnicodeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseBaseException</span><span class="p">,</span> <span class="n">DataValidityError</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">parameters</span><span class="o">.</span><span class="n">task_name</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_name</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
+                <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_detected_input_parameters</span> <span class="o">=</span> <span class="n">parameters</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="s2">"input"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">filename</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="TaskResult.potential_filename">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.potential_filename">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;New (output) potential file name&quot;&quot;&quot;</span>
-        <span class="n">potfil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">"""New (output) potential file name"""</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span>
+        <span class="n">potfil</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span> <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">potfil</span><span class="p">:</span>
-            <span class="n">potfil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;potential&quot;</span><span class="p">]()</span> <span class="k">if</span> <span class="s2">&quot;potential&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">potfil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s2">"potential"</span><span class="p">]()</span> <span class="k">if</span> <span class="s2">"potential"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">potfil</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set CONTROL.POTFIL of the input_parameters to read the potential&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Please set CONTROL.POTFIL of the input_parameters to read the potential"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
             <span class="n">potfil</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">potfil</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">potfil</span></div>
@@ -203,101 +267,206 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.potential">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The new (output) potential - that contains the converged charge density etc.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The new (output) potential - that contains the converged charge density etc."""</span>
         <span class="k">return</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">any_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the parsed potential (SCF then try output and then input) """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TaskResult.parse_result_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.parse_result_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_result_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Parse a registered structured result file in this calculation context."""</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">..result_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_plottable_file</span>
+
+        <span class="c1"># Grace plots do not depend on the calculation potential.</span>
+        <span class="k">if</span> <span class="n">potential</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">file</span><span class="o">.</span><span class="n">file_type</span> <span class="o">!=</span> <span class="s2">"agr"</span><span class="p">:</span>
+            <span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">any_potential</span>
+        <span class="k">return</span> <span class="n">read_plottable_file</span><span class="p">(</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">path</span><span class="p">(),</span>
+            <span class="n">try_only</span><span class="o">=</span><span class="n">file</span><span class="o">.</span><span class="n">file_type</span><span class="p">,</span>
+            <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TaskResult.new_task">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.new_task">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">new_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculator</span><span class="o">.</span><span class="n">copy_with_potential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">task</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">task</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;jxc&quot;</span><span class="p">:</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;EMIN&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">EMIN</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">out</span></div>
+<span class="w">        </span><span class="sd">"""Create a fresh calculator for *task* using values from this result."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters.task_definition</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskDefinition</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">..sprkkr.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
+
+        <span class="n">task</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">task</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">TaskDefinition</span><span class="p">)</span>
+            <span class="k">else</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">task_registry</span><span class="p">[</span><span class="n">task</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">input_parameters</span><span class="o">.</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">input_parameters_registry</span><span class="o">.</span><span class="n">create_from_result</span><span class="p">(</span>
+                <span class="n">task</span><span class="p">,</span> <span class="bp">self</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">SPRKKR</span><span class="p">(</span>
+            <span class="n">potential</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">,</span>
+            <span class="n">input_parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TaskResult.complete">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.complete">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span>
+        <span class="c1"># Completed results are parsed from locally available output files.</span>
+        <span class="c1"># Absent declared outputs are not results; diagnose required ones only</span>
+        <span class="c1"># for calculations that report successful completion.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enrich_declared_output_files</span><span class="p">(</span><span class="n">warn_missing</span><span class="o">=</span><span class="n">return_code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TaskResult.enrich_declared_output_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.enrich_declared_output_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enrich_declared_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">warn_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Expose existing task-declared outputs, preserving parsed FILES entries."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.file_provenance</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_declared_result_files</span>
+
+        <span class="k">return</span> <span class="n">register_declared_result_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">warn_missing</span><span class="o">=</span><span class="n">warn_missing</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">atoms</span>
 
-    <span class="nd">@cached_class_property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_match_task_regex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot; TASK\s+ = ([A-Z]+)\s+\n&quot;</span><span class="p">)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Files and other values exposed as the public result summary."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered_output_files</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TaskResult._ordered_output_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult._ordered_output_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ordered_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Put actual result files first; omit internal, untyped task caches."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">fnmatch</span><span class="w"> </span><span class="kn">import</span> <span class="n">fnmatchcase</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.file_provenance</span><span class="w"> </span><span class="kn">import</span> <span class="n">task_file_declarations</span>
+
+        <span class="n">_parameters</span><span class="p">,</span> <span class="n">declarations</span> <span class="o">=</span> <span class="n">task_file_declarations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kinds</span><span class="o">=</span><span class="p">(</span><span class="s2">"cache"</span><span class="p">,))</span>
+        <span class="n">cache_patterns</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">kind</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">declarations</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"cache"</span>
+        <span class="p">)</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="n">visible</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">file_type</span><span class="p">:</span>
+                <span class="n">visible</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"taudir"</span><span class="p">,</span> <span class="s2">"tau_dir"</span><span class="p">}:</span>
+                <span class="c1"># Native TAUDIR is a calculation cache, not a result file.</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">fnmatchcase</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">path</span><span class="p">(),</span> <span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">cache_patterns</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">visible</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="n">task_files</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">visible</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">file_type</span><span class="p">}</span>
+        <span class="n">task_files</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">visible</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">file_type</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">task_files</span></div>
+
+
+<div class="viewcode-block" id="TaskResult.to_file_manifest">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.to_file_manifest">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_file_manifest</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">potential_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">result_files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Capture the files used or produced by this result as a KKRunner manifest."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.file_provenance</span><span class="w"> </span><span class="kn">import</span> <span class="n">capture_result_file_manifest</span>
+
+        <span class="k">return</span> <span class="n">capture_result_file_manifest</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
+            <span class="n">potential_path</span><span class="o">=</span><span class="n">potential_path</span><span class="p">,</span>
+            <span class="n">result_files</span><span class="o">=</span><span class="n">result_files</span><span class="p">,</span>
+            <span class="n">output_version</span><span class="o">=</span><span class="n">output_version</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="TaskResult.from_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.from_file">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">read_output_for</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
-            <span class="n">process</span> <span class="o">=</span> <span class="n">KkrOutputReader</span><span class="o">.</span><span class="n">class_for_task</span><span class="p">(</span><span class="n">task</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">process</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">process</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Read a standalone SPR-KKR output using registry-owned detection."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.reader_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">reader_registry</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">raw_out</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-            <span class="n">matches</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_match_task_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">raw_out</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">))</span>
-            <span class="n">typ</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">matches</span> <span class="ow">and</span> <span class="n">matches</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;NONE&quot;</span> <span class="k">else</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="n">typ</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="sa">b</span><span class="s2">&quot;Components of Dzyaloshinski-Moriya vector Dij&quot;</span> <span class="ow">in</span> <span class="n">raw_out</span><span class="p">:</span>
-                    <span class="n">typ</span> <span class="o">=</span> <span class="s2">&quot;jxc&quot;</span>
-
-            <span class="n">out</span> <span class="o">=</span> <span class="n">read_output_for</span><span class="p">(</span><span class="n">typ</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">typ</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s2">&quot;DOS&quot;</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                        <span class="n">out</span> <span class="o">=</span> <span class="n">read_output_for</span><span class="p">(</span><span class="s2">&quot;DOS&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">out</span></div>
-</div>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">reader_registry</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">reader_class</span> <span class="o">=</span> <span class="n">reader_registry</span><span class="o">.</span><span class="n">class_for_task_name</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">reader_class</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
+            <span class="n">task_name</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">reader</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="TaskResult.from_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.from_run">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_run</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">manager</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Load a persisted run using an execution manager.</span>
 
-<div class="viewcode-block" id="KkrProcess">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">KkrProcess</span><span class="p">:</span>
-<div class="viewcode-block" id="KkrProcess.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">output_parser</span><span class="p">,</span> <span class="n">coroutine</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">reader</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_parser</span> <span class="o">=</span> <span class="n">output_parser</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">coroutine</span> <span class="o">=</span> <span class="n">coroutine</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span></div>
+<span class="sd">        With no manager, use the shared default project-run store. The</span>
+<span class="sd">        manager retrieves missing files and checks their saved fingerprints.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">manager</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.projects</span><span class="w"> </span><span class="kn">import</span> <span class="n">project_execution_manager</span>
 
-
-<div class="viewcode-block" id="KkrProcess.run">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess.run">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">result</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span> <span class="o">=</span> <span class="n">run_coro_sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coroutine</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">)</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span></div>
+            <span class="n">manager</span> <span class="o">=</span> <span class="n">project_execution_manager</span><span class="p">()</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.project_results</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_project_result</span>
+        <span class="k">return</span> <span class="n">load_project_result</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">run</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="KkrProcess.stop_the_process">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess.stop_the_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">stop_the_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_parser</span><span class="o">.</span><span class="n">stop_the_process</span><span class="p">()</span></div>
+<div class="viewcode-block" id="TaskResult.from_run_record">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.from_run_record">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_run_record</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_code</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Parse a locally available run using its persisted task metadata.</span>
 
+<span class="sd">        File retrieval and fingerprint verification are handled by</span>
+<span class="sd">        :meth:`from_run` through the project run manager, not by this method.</span>
+<span class="sd">        """</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">files</span>
+        <span class="k">if</span> <span class="n">files</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Run </span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> has no recorded output files"</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">output_file</span> <span class="k">if</span> <span class="n">output_file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">output_file</span>
+        <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Run </span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> has no recorded output file"</span><span class="p">)</span>
 
-<div class="viewcode-block" id="KkrProcess.run_async">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess.run_async">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">result</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">coroutine</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span></div>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.project_results</span><span class="w"> </span><span class="kn">import</span> <span class="n">_reader_for_record</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">_reader_for_record</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+        <span class="n">available_input</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">input_file</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="s2">"input_parameters"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span>
+            <span class="n">output</span><span class="p">,</span>
+            <span class="n">error_file</span><span class="p">,</span>
+            <span class="n">return_code</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">record</span><span class="o">.</span><span class="n">return_code</span> <span class="k">if</span> <span class="n">return_code</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">return_code</span>
+            <span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">input_file</span><span class="o">=</span><span class="n">available_input</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">run_record</span> <span class="o">=</span> <span class="n">record</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 </div>
 
 
@@ -305,96 +474,120 @@
 <div class="viewcode-block" id="KkrOutputReader">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">KkrOutputReader</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class, that runs a process and reads its output using the underlying</span>
-<span class="sd">    output parser (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputParser`)</span>
-<span class="sd">    and return the appropriate TaskResult.</span>
+<span class="w">    </span><span class="sd">"""Parse SPR-KKR output streams into a TaskResult.</span>
 
-<span class="sd">    Descendants should define parser_class and result_class property.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Execution is handled by :mod:`kkrunner`; this class owns only</span>
+<span class="sd">    task-specific parsing and result construction.</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="KkrOutputReader.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">read_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="p">,</span>
+        <span class="n">calculator</span><span class="p">,</span>
+        <span class="n">directory</span><span class="p">,</span>
+        <span class="n">print_info</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">task_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Input parameters, that command to read the output (thus probably the ones, that</span>
-<span class="sd">      run the process that produced the output. It is used e.g. for determining the potential file,</span>
-<span class="sd">      which belongs to the output.</span>
-<span class="sd">      &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span> <span class="o">=</span> <span class="n">calculator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculator, that can be used for further processing of the results. &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser_class</span><span class="p">(</span><span class="n">print_output</span><span class="p">,</span> <span class="n">read_callback</span><span class="p">)</span></div>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">task_definition</span> <span class="k">if</span> <span class="n">input_parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task_name</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">task_name</span>
+            <span class="k">if</span> <span class="n">task_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">task</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser_class</span><span class="p">(</span><span class="n">print_info</span><span class="o">=</span><span class="n">print_info</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="KkrOutputReader._create_result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader._create_result">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an object that stores results of the KKR output parsing.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="KkrOutputReader.matches_output">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.matches_output">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">matches_output</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return whether legacy output without a task marker belongs to this reader."""</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="KkrOutputReader.create_result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.create_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Create the TaskResult before parsing starts."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="n">input_file</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+            <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span>
+            <span class="n">input_file</span><span class="o">=</span><span class="n">input_file</span><span class="p">,</span>
+            <span class="n">task_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_name</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="KkrOutputReader._create_process">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader._create_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coroutine</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an object that can run the desired process (either reading from file or running a process)</span>
+<div class="viewcode-block" id="KkrOutputReader.parse_streams">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.parse_streams">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">parse_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Parse simultaneously growing stdout and stderr streams.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        KkrProcess</span>
-<span class="sd">            An object that can run the process and return the result.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">KkrProcess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="p">,</span> <span class="n">coroutine</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span></div>
+<span class="sd">        Parser failures are returned to the execution backend rather than</span>
+<span class="sd">        raised immediately. The backend must first observe the process exit</span>
+<span class="sd">        status: a truncated output stream is often only a symptom of the</span>
+<span class="sd">        executable having failed, and that failure is the more useful error.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">read_output</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">read_error</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="n">result</span><span class="p">),</span>
+            <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="KkrOutputReader.create_process">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.create_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an object that takes care of running the command and parsing the results&quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_result</span><span class="p">(</span><span class="n">filename_from_file</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">input_file</span><span class="p">)</span>
-        <span class="n">coroutine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">run_async</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="p">[</span><span class="n">result</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_process</span><span class="p">(</span><span class="n">coroutine</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span></div>
+<div class="viewcode-block" id="KkrOutputReader.complete_result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.complete_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complete_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Finalize a result after the execution backend completes."""</span>
+        <span class="k">if</span> <span class="n">return_code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">output</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">error</span>
+
+        <span class="c1"># A nonzero exit takes precedence over parser/stream errors. Ask the</span>
+        <span class="c1"># parser to classify the exit once, then rethrow an earlier stream</span>
+        <span class="c1"># failure only if it accepted the exit status.</span>
+        <span class="n">_output</span><span class="p">,</span> <span class="n">parsed_error</span><span class="p">,</span> <span class="n">parsed_return_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">result</span><span class="p">(</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">)</span> <span class="k">else</span> <span class="n">output</span><span class="p">,</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">)</span> <span class="k">else</span> <span class="n">error</span><span class="p">,</span>
+            <span class="n">return_code</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">output</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">error</span>
+
+        <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span> <span class="o">=</span> <span class="n">parsed_error</span><span class="p">,</span> <span class="n">parsed_return_code</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="KkrOutputReader.read_from_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.read_from_file">[docs]</a>
     <span class="nd">@maybeclassmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_code</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an object that takes care of reading and parsing of the output of a sprkkr process&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Parse output of an already finished SPR-KKR calculation."""</span>
         <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_result</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">input_file</span><span class="p">)</span>
-        <span class="n">output_source</span> <span class="o">=</span> <span class="n">output</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s2">&quot;read&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">result</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_result</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">input_file</span><span class="p">)</span>
+        <span class="n">output_source</span> <span class="o">=</span> <span class="n">output</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s2">"read"</span><span class="p">)</span> <span class="k">else</span> <span class="n">result</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">"output"</span><span class="p">)</span>
 
-        <span class="n">coroutine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">read_output_file</span><span class="p">(</span><span class="n">output_source</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="p">[</span><span class="n">result</span><span class="p">],</span> <span class="n">return_code</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_process</span><span class="p">(</span><span class="n">coroutine</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="KkrOutputReader.class_for_task">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.class_for_task">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">class_for_task</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">DefaultOutputReader</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">readers</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-            <span class="n">clsname</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;OutputReader&quot;</span>
-            <span class="bp">cls</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">clsname</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Can not determine the class to read the results of task </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;No </span><span class="si">{clsname}</span><span class="s2"> class in the module </span><span class="si">{oo.__name__}</span><span class="s2">.</span><span class="si">{task}</span><span class="s2">&quot;</span>
-                <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
-            <span class="bp">cls</span> <span class="o">=</span> <span class="n">DefaultOutputReader</span>
-
-        <span class="k">return</span> <span class="bp">cls</span></div>
+        <span class="n">_parsed_output</span><span class="p">,</span> <span class="n">parsed_error</span><span class="p">,</span> <span class="n">parsed_return_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span>
+            <span class="n">output_source</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="p">[</span><span class="n">result</span><span class="p">],</span> <span class="n">return_code</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="n">parsed_error</span><span class="p">,</span> <span class="n">parsed_return_code</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 </div>
 
-
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">..outputs.readers.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultOutputReader</span>  <span class="c1"># NOQA</span>
 </pre></div>
 
            </div>

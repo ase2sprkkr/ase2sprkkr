@@ -1,0 +1,36 @@
+AESInputParametersDefinition
+============================
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.definitions.aes
+
+.. autoclass:: AESInputParametersDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.aes.AESInputParametersDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

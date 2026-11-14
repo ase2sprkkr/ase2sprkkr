@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition  ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition  ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition 
+.. inheritance-diagram::  ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition  ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition  ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition  ase2sprkkr.input_parameters.input_parameters_definitions._CachedPreparseIPD  ase2sprkkr.input_parameters.input_parameters_definitions._TaskSelectorMap 
       :parts: 1
 
 |
@@ -24,6 +24,18 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _read_input_text
+      _read_selected_definitions
+      _snapshot_stream
+      _task_preparse_definition
+      _task_selector_map
+   
    
 
 
@@ -38,6 +50,8 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions**
       InputParametersDefinition
       InputSectionDefinition
       InputValueDefinition
+      _CachedPreparseIPD
+      _TaskSelectorMap
    
    
 

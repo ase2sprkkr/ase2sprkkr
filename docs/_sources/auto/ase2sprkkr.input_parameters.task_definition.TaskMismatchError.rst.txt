@@ -1,0 +1,6 @@
+ase2sprkkr.input\_parameters.task\_definition.TaskMismatchError
+===============================================================
+
+.. currentmodule:: ase2sprkkr.input_parameters.task_definition
+
+.. autoexception:: TaskMismatchError

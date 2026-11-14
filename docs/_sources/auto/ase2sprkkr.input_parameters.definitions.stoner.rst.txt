@@ -1,0 +1,43 @@
+stoner
+======
+
+Full name: **ase2sprkkr.input\_parameters.definitions.stoner**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.stoner
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _validate_stoner
+      input_parameters_definition
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

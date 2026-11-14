@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Execution, persistent runs and KKRunner &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="More about installing of the ASE2SPRKKR package" href="how-to-install.html" />
+    <link rel="prev" title="Crystal symmetry and cell transformations" href="symmetry.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Execution, persistence and remote runs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#local-calculations">Local calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#persistent-project-calculations">Persistent project calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reconnect-and-load-history">Reconnect and load history</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#profiles-remote-execution-and-schedulers">Profiles, remote execution and schedulers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#files-manifests-and-resource-lifetime">Files, manifests and resource lifetime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remote-commands-for-users">Remote commands for users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-for-developers">Architecture for developers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kkrunner-version-compatibility">KKRunner version compatibility</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Execution, persistent runs and KKRunner</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/execution.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="execution-persistent-runs-and-kkrunner">
+<h1>Execution, persistent runs and KKRunner<a class="headerlink" href="#execution-persistent-runs-and-kkrunner" title="Link to this heading"></a></h1>
+<p>ASE2SPRKKR prepares SPR-KKR inputs and interprets its outputs. The separate
+<a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner library</a> owns local/MPI,
+SSH and scheduler execution, file transfers and durable run history.
+It has no dependency on ASE2SPRKKR or on its scientific readers.</p>
+<p>For a normal calculation, continue using <code class="docutils literal notranslate"><span class="pre">SPRKKR.calculate()</span></code>. Use
+<code class="docutils literal notranslate"><span class="pre">SPRKKR.create_run()</span></code> when you need to separate preparation/submission from
+waiting, observe progress, or retain a handle for a persistent calculation.
+The returned application result is a <code class="docutils literal notranslate"><span class="pre">TaskResult</span></code>; KKRunner’s raw
+<code class="docutils literal notranslate"><span class="pre">ExecutionOutcome</span></code> describes process facts before application interpretation.</p>
+<section id="local-calculations">
+<h2>Local calculations<a class="headerlink" href="#local-calculations" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
+
+<span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">bulk</span><span class="p">(</span><span class="s2">"Al"</span><span class="p">,</span> <span class="s2">"fcc"</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">4.05</span><span class="p">),</span> <span class="n">directory</span><span class="o">=</span><span class="s2">"al-scf"</span><span class="p">)</span>
+<span class="n">run</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">create_run</span><span class="p">()</span>
+<span class="n">run</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Preparation is performed when <code class="docutils literal notranslate"><span class="pre">create_run()</span></code> is called; submission starts the
+executable. The run owns the resources transferred by preparation. Retain its
+working directory until execution, transfers and result processing are complete.
+These examples require installed SPR-KKR executables.</p>
+</section>
+<section id="persistent-project-calculations">
+<h2>Persistent project calculations<a class="headerlink" href="#persistent-project-calculations" title="Link to this heading"></a></h2>
+<p>Persistence is explicit. Create a project and pass a project-bound manager;
+omitting <code class="docutils literal notranslate"><span class="pre">project</span></code> does not silently enable global tracking.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.projects</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProjectRepository</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.projects</span><span class="w"> </span><span class="kn">import</span> <span class="n">project_execution_manager</span>
+
+<span class="n">projects</span> <span class="o">=</span> <span class="n">ProjectRepository</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"calculation-state/projects"</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">())</span>
+<span class="n">project</span> <span class="o">=</span> <span class="n">projects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">"Aluminium"</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">"al-scf"</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">())</span>
+<span class="n">manager</span> <span class="o">=</span> <span class="n">project_execution_manager</span><span class="p">(</span><span class="n">projects</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">)</span>
+<span class="n">run</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">manager</span><span class="p">)</span>
+<span class="n">run</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+<span class="n">run_id</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">id</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The application helper constructs KKRunner’s <code class="docutils literal notranslate"><span class="pre">ProjectRunManager</span></code> using
+ASE2SPRKKR’s storage policy. <code class="docutils literal notranslate"><span class="pre">RunManager</span></code> is the distinct project-free KKRunner
+API for clients that supply an explicit <code class="docutils literal notranslate"><span class="pre">RunStore</span></code>. Use those actual class
+names when extending the application.</p>
+<p>Project definitions retain ASE2SPRKKR’s existing application-state location.
+New-format run records use KKRunner’s state namespace. Passing an explicit
+project repository retains its colocated run store. Old development record
+formats are not migrated or silently ignored as current records.</p>
+</section>
+<section id="reconnect-and-load-history">
+<h2>Reconnect and load history<a class="headerlink" href="#reconnect-and-load-history" title="Link to this heading"></a></h2>
+<p>Reopen the same project repository and its manager after restarting the client.
+Use the application adapter when reconnecting, so it supplies the correct reader:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.outputs.project_results</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">attach_project_run</span><span class="p">,</span> <span class="n">load_project_result</span><span class="p">,</span> <span class="n">retry_project_postprocessing</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># For an active, downloading or waiting-for-processing run:</span>
+<span class="n">run</span> <span class="o">=</span> <span class="n">attach_project_run</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+<span class="c1"># For a terminal historical run:</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">load_project_result</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These are alternative actions according to the record’s state. Do not attach a
+terminal run merely to load its result. <code class="docutils literal notranslate"><span class="pre">TaskResult.from_run(run_id,</span>
+<span class="pre">manager=manager)</span></code> is another historical-loading entry point.</p>
+<p><code class="docutils literal notranslate"><span class="pre">attach_project_run</span></code> also reopens a supported failed download before attaching.
+For failed or interrupted result processing, call
+<code class="docutils literal notranslate"><span class="pre">retry_project_postprocessing(manager,</span> <span class="pre">run_id)</span></code> explicitly. It verifies the
+preserved files and parses them again without resubmitting SPR-KKR.</p>
+<p>Recovery after interruption during submission depends on the selected backend.
+Managed local execution uses retained service receipts. Slurm can also discover
+jobs by their run marker; discovery of completed jobs needs accounting that
+stores job comments. Other PSI/J backends do not implement discovery without a
+saved backend ID, even when attaching to a known job works. Uncertain acceptance
+leaves the record reserved in <code class="docutils literal notranslate"><span class="pre">submitting</span></code>; it does not trigger a duplicate
+SPR-KKR calculation. See the
+<a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/backends.html#backend-recovery">backend recovery capabilities</a>
+for target-side requirements and limits.</p>
+<p><code class="docutils literal notranslate"><span class="pre">stop_observation()</span></code> detaches the observer; <code class="docutils literal notranslate"><span class="pre">cancel()</span></code> requests cancellation
+of the backend. <code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code> means observation is uncertain, not that execution
+has finished. Required processing that is unavailable or owned by another client
+raises <code class="docutils literal notranslate"><span class="pre">ProcessingPending</span></code>; callers must not treat a raw process outcome as a
+replacement for a <code class="docutils literal notranslate"><span class="pre">TaskResult</span></code>.</p>
+<p>Only the application’s namespaced metadata selects a task definition and reader.
+Generic or foreign application records in a shared store are not SPR-KKR history.
+Historical loading verifies captured artifacts; overwritten files must be reported
+rather than parsed as the original run’s results.</p>
+</section>
+<section id="profiles-remote-execution-and-schedulers">
+<h2>Profiles, remote execution and schedulers<a class="headerlink" href="#profiles-remote-execution-and-schedulers" title="Link to this heading"></a></h2>
+<p>A profile describes the backend connection and per-run launch/staging policy.
+An explicit per-call executor takes precedence. An explicit per-call profile
+selects its backend; otherwise a calculator-level executor takes precedence over
+the calculator’s default profile backend.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRProfile</span>
+
+<span class="n">profile</span> <span class="o">=</span> <span class="n">SPRKKRProfile</span><span class="p">(</span>
+    <span class="n">executor</span><span class="o">=</span><span class="s2">"ssh"</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="s2">"user@cluster"</span><span class="p">,</span>
+    <span class="n">local_root</span><span class="o">=</span><span class="s2">"/absolute/local/work"</span><span class="p">,</span>
+    <span class="n">remote_root</span><span class="o">=</span><span class="s2">"/absolute/remote/work"</span><span class="p">,</span>
+    <span class="n">mpi</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">run</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">manager</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Install a compatible released KKRunner on the target, including its Python
+interpreter (by default <code class="docutils literal notranslate"><span class="pre">python3</span></code>) for SSH remote procedure calls. Execution
+uses <code class="docutils literal notranslate"><span class="pre">EndpointClient</span></code> with <code class="docutils literal notranslate"><span class="pre">SshTransport</span></code>, not the old <code class="docutils literal notranslate"><span class="pre">kkrunner</span> <span class="pre">remote</span></code>
+service command. The target needs SPR-KKR and MPI when requested, but not
+ASE2SPRKKR.</p>
+<p>The profile field <code class="docutils literal notranslate"><span class="pre">executor</span></code> selects the location (<code class="docutils literal notranslate"><span class="pre">local</span></code> or <code class="docutils literal notranslate"><span class="pre">ssh</span></code>),
+while <code class="docutils literal notranslate"><span class="pre">backend</span></code> independently selects <code class="docutils literal notranslate"><span class="pre">direct</span></code>, <code class="docutils literal notranslate"><span class="pre">process</span></code>
+(supervised), or <code class="docutils literal notranslate"><span class="pre">psij</span></code>. Unspecified backends default to <code class="docutils literal notranslate"><span class="pre">direct</span></code>
+locally and <code class="docutils literal notranslate"><span class="pre">process</span></code> over SSH. Legacy <code class="docutils literal notranslate"><span class="pre">executor=&quot;psij&quot;</span></code> remains
+a local PSI/J shorthand. For SSH+Slurm, select <code class="docutils literal notranslate"><span class="pre">executor=&quot;ssh&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">backend=&quot;psij&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">psij_backend=&quot;slurm&quot;</span></code> and install
+<code class="docutils literal notranslate"><span class="pre">kkrunner[psij]</span></code> on the target.</p>
+<p><code class="docutils literal notranslate"><span class="pre">remote_python</span></code> supplies the target Python argv (for example
+<code class="docutils literal notranslate"><span class="pre">[&quot;/opt/kkrunner/bin/python3&quot;]</span></code>). The old custom <code class="docutils literal notranslate"><span class="pre">remote_command</span></code>
+must be migrated explicitly to <code class="docutils literal notranslate"><span class="pre">remote_python</span></code>.</p>
+<p>Use a consistent <code class="docutils literal notranslate"><span class="pre">filesystem_id</span></code> in profiles that address the same filesystem
+through different host aliases or shared mounts. KKRunner cannot infer that
+relationship from hostnames. Required MPI cannot fall back to serial execution;
+auto-detection may allow fallback according to the selected MPI policy.</p>
+</section>
+<section id="files-manifests-and-resource-lifetime">
+<h2>Files, manifests and resource lifetime<a class="headerlink" href="#files-manifests-and-resource-lifetime" title="Link to this heading"></a></h2>
+<p>ASE2SPRKKR resolves task declarations into KKRunner’s <code class="docutils literal notranslate"><span class="pre">TaskFile</span></code> and manifest
+data. Scientific filename templates, parser registries and format descriptions
+belong to ASE2SPRKKR. <code class="docutils literal notranslate"><span class="pre">TaskFile.type</span></code> and <code class="docutils literal notranslate"><span class="pre">info</span></code> are opaque to KKRunner.</p>
+<p>Declare all input, output and cache paths. Collision checks use that manifest,
+including stdin, local transfer destinations and remote filesystem identity.
+Sharing a calculation directory does not itself reserve the whole directory.
+A missing required output is an artifact error; an absent optional output may
+be skipped. Transfer errors and processing errors have distinct retry paths.</p>
+<p>Paths written into generated SPR-KKR input are relative to the run’s working
+directory, even if the input file itself is elsewhere. An absolute native
+<code class="docutils literal notranslate"><span class="pre">TAUDIR</span></code> is mapped relative to the effective <code class="docutils literal notranslate"><span class="pre">TAUPATH</span></code>. Internal open-file
+paths may remain absolute to preserve ownership and cleanup guarantees.</p>
+<p>Tracked calculations require persistent working/output paths. In particular,
+<code class="docutils literal notranslate"><span class="pre">directory=False</span></code> and temporary stderr requested by <code class="docutils literal notranslate"><span class="pre">error_file=False</span></code> are
+rejected for tracked runs. <code class="docutils literal notranslate"><span class="pre">error_file=None</span></code> stores stderr beside stdout;
+<code class="docutils literal notranslate"><span class="pre">error_file=True</span></code> merges it with stdout. Temporary files for untracked runs
+retain their ordinary cleanup behavior.</p>
+<p>Do not delete files after merely losing observation. Required application
+processing can resume after reconnect and needs the captured artifacts.
+Processing callbacks should be idempotent or transactional because an explicit
+retry after a crash can repeat side effects; exactly-once side effects are not
+promised.</p>
+</section>
+<section id="remote-commands-for-users">
+<h2>Remote commands for users<a class="headerlink" href="#remote-commands-for-users" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ase2sprkkr remote status HANDLE</span>
+<span class="go">ase2sprkkr remote follow HANDLE</span>
+<span class="go">ase2sprkkr remote cancel HANDLE</span>
+</pre></div>
+</div>
+<p>These commands act on the host where they run and delegate to KKRunner.
+They currently accept a target-side execution handle, not a project run ID.
+Internal submit/recovery/acknowledgement and MPI commands belong to
+<code class="docutils literal notranslate"><span class="pre">kkrunner</span></code>. See the
+<a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/command-line.html">KKRunner command-line guide</a>
+and <a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/persistent-runs.html">recovery guide</a>
+for the generic protocol and lifecycle contract.</p>
+</section>
+<section id="architecture-for-developers">
+<h2>Architecture for developers<a class="headerlink" href="#architecture-for-developers" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">sprkkr._preparation</span></code> resolves application state and materializes files.
+<code class="docutils literal notranslate"><span class="pre">PreparedCalculation</span></code> owns prepared resources and adapts them to an execution
+specification. KKRunner runs the command and persists generic execution state.
+<code class="docutils literal notranslate"><span class="pre">outputs</span></code> resolves task-owned readers and constructs <code class="docutils literal notranslate"><span class="pre">TaskResult</span></code> objects.
+There is no scientific parser registry inside KKRunner.</p>
+<p>KKRunner’s packages are <code class="docutils literal notranslate"><span class="pre">runs</span></code>, <code class="docutils literal notranslate"><span class="pre">backends</span></code>, <code class="docutils literal notranslate"><span class="pre">remote</span></code>, <code class="docutils literal notranslate"><span class="pre">projects</span></code>, <code class="docutils literal notranslate"><span class="pre">files</span></code>
+and <code class="docutils literal notranslate"><span class="pre">support</span></code>. Its principal classes are importable from <code class="docutils literal notranslate"><span class="pre">kkrunner</span></code>;
+implementation-level imports use their defining subpackage modules. See the
+<a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/architecture.html">KKRunner architecture</a>
+for those responsibilities and the
+<a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/api.html">API reference</a> for current names.</p>
+</section>
+<section id="kkrunner-version-compatibility">
+<h2>KKRunner version compatibility<a class="headerlink" href="#kkrunner-version-compatibility" title="Link to this heading"></a></h2>
+<p>Install a released KKRunner distribution that provides the <code class="docutils literal notranslate"><span class="pre">EndpointClient</span></code>,
+transport, backend configuration and project run management interfaces used
+above. The required version range is declared in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>.
+The standard CI installation uses that package dependency.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="symmetry.html" class="btn btn-neutral float-left" title="Crystal symmetry and cell transformations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="how-to-install.html" class="btn btn-neutral float-right" title="More about installing of the ASE2SPRKKR package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

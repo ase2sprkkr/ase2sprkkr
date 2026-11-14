@@ -1,0 +1,59 @@
+clxps
+=====
+
+Full name: **ase2sprkkr.input\_parameters.definitions.clxps**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.definitions.clxps.CLXPSInputParametersDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.clxps
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _validate_clxps
+      input_parameters_definition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      CLXPSInputParametersDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

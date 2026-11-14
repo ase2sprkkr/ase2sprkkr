@@ -48,10 +48,16 @@ Full name: **ase2sprkkr.sprkkr**
      build
   
   
+     calculation
+  
+  
      calculator
   
   
      configuration
+  
+  
+     executables
   
   
      io_data
@@ -63,6 +69,12 @@ Full name: **ase2sprkkr.sprkkr**
      occupations
   
   
+     profile
+  
+  
+     projects
+  
+  
      radial
   
   
@@ -70,6 +82,9 @@ Full name: **ase2sprkkr.sprkkr**
   
   
      reference_systems
+  
+  
+     site_equivalence
   
   
      sites
@@ -85,6 +100,9 @@ Full name: **ase2sprkkr.sprkkr**
   
   
      structure
+  
+  
+     symmetry
   
   
      sysfile

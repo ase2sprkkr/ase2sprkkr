@@ -1,0 +1,43 @@
+plot2dpr
+========
+
+Full name: **ase2sprkkr.input\_parameters.definitions.plot2dpr**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.plot2dpr
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _validate_plot2dpr
+      input_parameters_definition
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

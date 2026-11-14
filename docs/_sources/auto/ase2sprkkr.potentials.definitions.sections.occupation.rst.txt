@@ -24,6 +24,14 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _validate_row
+   
    
 
 

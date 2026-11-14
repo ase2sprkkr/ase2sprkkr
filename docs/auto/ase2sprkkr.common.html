@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,42 +62,52 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">common</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.async_utils.html">async_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.backward_compatibility.html">backward_compatibility</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_versions.html">file_versions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.output_printing.html">output_printing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.temporary.html">temporary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a></li>
@@ -103,6 +116,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -110,8 +126,9 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -153,47 +170,65 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.alternative_types.html#module-ase2sprkkr.common.alternative_types" title="ase2sprkkr.common.alternative_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">alternative_types</span></code></a></p></td>
 <td><p>This module contains helper functions and data to deal with the problem, that numpy arrays contains their own datatypes and thus e.g. an <code class="docutils literal notranslate"><span class="pre">int</span></code> may not be what it seems.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.backward_compatibility.html#module-ase2sprkkr.common.backward_compatibility" title="ase2sprkkr.common.backward_compatibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">backward_compatibility</span></code></a></p></td>
-<td><p>In this module, backward compatibility issues are solved by mocking</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.async_utils.html#module-ase2sprkkr.common.async_utils" title="ase2sprkkr.common.async_utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">async_utils</span></code></a></p></td>
+<td><p>Compatibility import; implementation is owned by KKRunner.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration.html#module-ase2sprkkr.common.configuration" title="ase2sprkkr.common.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.backward_compatibility.html#module-ase2sprkkr.common.backward_compatibility" title="ase2sprkkr.common.backward_compatibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">backward_compatibility</span></code></a></p></td>
+<td><p>Backward-compatibility helpers for supported Python versions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration.html#module-ase2sprkkr.common.configuration" title="ase2sprkkr.common.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
 <td><p>This module contains just a base class for both configuration values - <a class="reference internal" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-class docutils literal notranslate"><span class="pre">Options</span></code></a> and configuration containers - <a class="reference internal" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" title="ase2sprkkr.common.configuration_containers.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sections</span></code></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html#module-ase2sprkkr.common.configuration_containers" title="ase2sprkkr.common.configuration_containers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration_containers</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html#module-ase2sprkkr.common.configuration_containers" title="ase2sprkkr.common.configuration_containers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration_containers</span></code></a></p></td>
 <td><p>In this file the common containers of configuration values are, either for task or potential.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html#module-ase2sprkkr.common.configuration_definitions" title="ase2sprkkr.common.configuration_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration_definitions</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html#module-ase2sprkkr.common.configuration_definitions" title="ase2sprkkr.common.configuration_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration_definitions</span></code></a></p></td>
 <td><p>Configuration definitions are classes, that desribes the syntax of a configuration file, or its parts (sections or configuration options)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html#module-ase2sprkkr.common.configuration_transaction" title="ase2sprkkr.common.configuration_transaction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration_transaction</span></code></a></p></td>
+<td><p>Transactional staging and committing of configuration changes.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.container_definitions.html#module-ase2sprkkr.common.container_definitions" title="ase2sprkkr.common.container_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">container_definitions</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.debug.html#module-ase2sprkkr.common.debug" title="ase2sprkkr.common.debug"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html#module-ase2sprkkr.common.dangerous_values" title="ase2sprkkr.common.dangerous_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dangerous_values</span></code></a></p></td>
+<td><p>Values that explicitly bypass configuration validation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.debug.html#module-ase2sprkkr.common.debug" title="ase2sprkkr.common.debug"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.decorators.html#module-ase2sprkkr.common.decorators" title="ase2sprkkr.common.decorators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decorators</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.decorators.html#module-ase2sprkkr.common.decorators" title="ase2sprkkr.common.decorators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decorators</span></code></a></p></td>
 <td><p>Various decorators, mainly for class methods</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.dependencies.html#module-ase2sprkkr.common.dependencies" title="ase2sprkkr.common.dependencies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dependencies</span></code></a></p></td>
+<td><p>Values derived from other configuration definitions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.doc.html#module-ase2sprkkr.common.doc" title="ase2sprkkr.common.doc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">doc</span></code></a></p></td>
 <td><p>Functionality for enriching docstrings.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html#module-ase2sprkkr.common.file_fingerprints" title="ase2sprkkr.common.file_fingerprints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_fingerprints</span></code></a></p></td>
+<td><p>Compatibility import; implementation is owned by KKRunner.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.file_locks.html#module-ase2sprkkr.common.file_locks" title="ase2sprkkr.common.file_locks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_locks</span></code></a></p></td>
+<td><p>Compatibility import; implementation is owned by KKRunner.</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.file_utils.html#module-ase2sprkkr.common.file_utils" title="ase2sprkkr.common.file_utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_utils</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.formats.html#module-ase2sprkkr.common.formats" title="ase2sprkkr.common.formats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formats</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.file_versions.html#module-ase2sprkkr.common.file_versions" title="ase2sprkkr.common.file_versions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_versions</span></code></a></p></td>
+<td><p>Compatibility import; implementation is owned by KKRunner.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.formats.html#module-ase2sprkkr.common.formats" title="ase2sprkkr.common.formats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formats</span></code></a></p></td>
 <td><p>Formating routines</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html#module-ase2sprkkr.common.generated_configuration_definitions" title="ase2sprkkr.common.generated_configuration_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generated_configuration_definitions</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html#module-ase2sprkkr.common.generated_configuration_definitions" title="ase2sprkkr.common.generated_configuration_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generated_configuration_definitions</span></code></a></p></td>
 <td><p>Definition of value in configuration/output files, that is generated from other values</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.html#module-ase2sprkkr.common.grammar" title="ase2sprkkr.common.grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.html#module-ase2sprkkr.common.grammar" title="ase2sprkkr.common.grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar</span></code></a></p></td>
 <td><p>Various pyparsing grammar elements and a few useful routines.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.html#module-ase2sprkkr.common.grammar_types" title="ase2sprkkr.common.grammar_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar_types</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.html#module-ase2sprkkr.common.grammar_types" title="ase2sprkkr.common.grammar_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar_types</span></code></a></p></td>
 <td><p>Classes, that represents various value types that can appear in the configuration and problem definitionfiles.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.init_tests.html#module-ase2sprkkr.common.init_tests" title="ase2sprkkr.common.init_tests"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_tests</span></code></a></p></td>
-<td><p>Routines and classes used in tests</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.lazy_string.html#module-ase2sprkkr.common.lazy_string" title="ase2sprkkr.common.lazy_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lazy_string</span></code></a></p></td>
 <td><p></p></td>
@@ -201,40 +236,49 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.html#module-ase2sprkkr.common.misc" title="ase2sprkkr.common.misc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">misc</span></code></a></p></td>
 <td><p>Various classes and routines used thorough the package</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.no_output.html#module-ase2sprkkr.common.no_output" title="ase2sprkkr.common.no_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">no_output</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.module_registry.html#module-ase2sprkkr.common.module_registry" title="ase2sprkkr.common.module_registry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_registry</span></code></a></p></td>
+<td><p>Reusable discovery registry for values stored in Python modules.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.no_output.html#module-ase2sprkkr.common.no_output" title="ase2sprkkr.common.no_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">no_output</span></code></a></p></td>
 <td><p>Context manager, that suppress output to the given descriptor.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.options.html#module-ase2sprkkr.common.options" title="ase2sprkkr.common.options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">options</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.options.html#module-ase2sprkkr.common.options" title="ase2sprkkr.common.options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">options</span></code></a></p></td>
 <td><p>The classes for storing one configuration value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.output_printing.html#module-ase2sprkkr.common.output_printing" title="ase2sprkkr.common.output_printing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_printing</span></code></a></p></td>
+<td><p>Output printing listeners independent of task-specific parsers.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.parsing_results.html#module-ase2sprkkr.common.parsing_results" title="ase2sprkkr.common.parsing_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parsing_results</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html#module-ase2sprkkr.common.process_output_reader" title="ase2sprkkr.common.process_output_reader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_output_reader</span></code></a></p></td>
-<td><p>Readers for processes outputs.</p></td>
+<td><p>Parsers and stream helpers for calculation output.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html#module-ase2sprkkr.common.repeated_configuration_containers" title="ase2sprkkr.common.repeated_configuration_containers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeated_configuration_containers</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html#module-ase2sprkkr.common.section_adaptors" title="ase2sprkkr.common.section_adaptors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">section_adaptors</span></code></a></p></td>
-<td><p>When the data are validated, there can be need for merge two data sources: the old section and the newly set data.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.repetition.html#module-ase2sprkkr.common.repetition" title="ase2sprkkr.common.repetition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repetition</span></code></a></p></td>
+<td><p>Definitions of the supported configuration-item repetition modes.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.subprocess.html#module-ase2sprkkr.common.subprocess" title="ase2sprkkr.common.subprocess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subprocess</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.tools.html#module-ase2sprkkr.common.tools" title="ase2sprkkr.common.tools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tools</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.temporary.html#module-ase2sprkkr.common.temporary" title="ase2sprkkr.common.temporary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">temporary</span></code></a></p></td>
+<td><p>Helpers for scoped temporary configuration values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.tools.html#module-ase2sprkkr.common.tools" title="ase2sprkkr.common.tools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tools</span></code></a></p></td>
 <td><p>This module contain support for the tools</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.unique_values.html#module-ase2sprkkr.common.unique_values" title="ase2sprkkr.common.unique_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique_values</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.unique_values.html#module-ase2sprkkr.common.unique_values" title="ase2sprkkr.common.unique_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique_values</span></code></a></p></td>
 <td><p>UniqueValuesMapping: the class for solving equivalence classes on a collection of objects.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.value_definitions.html#module-ase2sprkkr.common.value_definitions" title="ase2sprkkr.common.value_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_definitions</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.value_definitions.html#module-ase2sprkkr.common.value_definitions" title="ase2sprkkr.common.value_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_definitions</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.warnings.html#module-ase2sprkkr.common.warnings" title="ase2sprkkr.common.warnings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warnings</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.warnings.html#module-ase2sprkkr.common.warnings" title="ase2sprkkr.common.warnings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warnings</span></code></a></p></td>
 <td><p>This module implement simple class that encapsulates the warning about non-critical errors (or just suspicious data) in configuration/data files.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.yaml.html#module-ase2sprkkr.common.yaml" title="ase2sprkkr.common.yaml"><code class="xref py py-obj docutils literal notranslate"><span class="pre">yaml</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.yaml.html#module-ase2sprkkr.common.yaml" title="ase2sprkkr.common.yaml"><code class="xref py py-obj docutils literal notranslate"><span class="pre">yaml</span></code></a></p></td>
 <td><p>YAML - related stuff</p></td>
 </tr>
 </tbody>

@@ -1,0 +1,70 @@
+symmetry
+========
+
+Full name: **ase2sprkkr.sprkkr.symmetry**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.symmetry.SymmetryAnalysis 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.symmetry
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _classify_sites
+      _electronic_data_present
+      _make_sites
+      _validate
+      _warn_electronic_data
+      analyze_symmetry
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SymmetryAnalysis
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      SymmetryError
+   
+   
+
+
+  
+  
+  

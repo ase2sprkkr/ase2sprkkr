@@ -48,11 +48,46 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#version-3-5">Version 3.5</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-4-0-0-beta-series">Version 4.0.0 (beta series)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#spr-kkr-tasks-and-input-parameters">SPR-KKR tasks and input parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#completely-redesigned-execution">Completely redesigned execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#symmetry-plotting-and-gui-support">Symmetry, plotting and GUI support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compatibility">Compatibility</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#version-4-0-0-beta4">Version 4.0.0-beta4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#arpes-nexus-export">ARPES NeXus export</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#version-4-0-0-beta3">Version 4.0.0-beta3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#results-and-plotting">Results and plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#execution-and-fixes">Execution and fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#version-4-0-0-beta2">Version 4.0.0-beta2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#execution-and-remote-monitoring">Execution and remote monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-and-compatibility">Command line and compatibility</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#version-4-0-0-beta1">Version 4.0.0-beta1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#execution-remote-calculations-and-projects">Execution, remote calculations and projects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-and-profiles">Configuration and profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#new-and-extended-spr-kkr-tasks">New and extended SPR-KKR tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#symmetry-and-structure-tools">Symmetry and structure tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Results and plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calculator-and-command-line-interface">Calculator and command-line interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Compatibility</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#internals">Internals</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-6-0">Version 3.6.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-4">Version 3.4</a></li>
@@ -67,31 +102,31 @@
 <li class="toctree-l2"><a class="reference internal" href="#version-3-1-0-beta">Version 3.1.0-beta</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-0-2-beta">Version 3.0.2-beta</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-0-0-beta">Version 3.0.0-beta</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">User interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tools">Tools</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Internals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#refactoring">Refactoring</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-2-1">Version 2.2.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-2-0-beta">Version 2.2.0-beta</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-1-1">Version 2.1.1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-4">Version 2.0.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-1">Version 2.0.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-0-beta2">Version 2.0.0-beta2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id6">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-0-beta1">Version 2.0.0-beta1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id8">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">User interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#architecture-changes">Architecture changes</a></li>
 </ul>
 </li>
@@ -107,10 +142,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -143,14 +178,309 @@
              
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
-<section id="version-3-5">
-<h2>Version 3.5<a class="headerlink" href="#version-3-5" title="Link to this heading"></a></h2>
+<section id="version-4-0-0-beta-series">
+<h2>Version 4.0.0 (beta series)<a class="headerlink" href="#version-4-0-0-beta-series" title="Link to this heading"></a></h2>
+<p>Version 4.0.0 is a major refactoring of ASE2SPRKKR, extending the available
+SPR-KKR tasks, calculation execution, result processing and GUI integration.
+The highlights below summarize the beta series; the release-specific notes
+retain the detailed technical changes.</p>
+<section id="spr-kkr-tasks-and-input-parameters">
+<h3>SPR-KKR tasks and input parameters<a class="headerlink" href="#spr-kkr-tasks-and-input-parameters" title="Link to this heading"></a></h3>
 <ul class="simple">
+<li><p>Added more than 40 native task definitions based on the SPR-KKR sources.
+Many of the advanced tasks are experimental.</p></li>
+<li><p>Separated native task identity from reusable input-parameter definitions.
+Multiple tasks can share a schema: <code class="docutils literal notranslate"><span class="pre">BSFEK</span></code> and <code class="docutils literal notranslate"><span class="pre">BSFKK</span></code> share the BSF
+input parameters, while <code class="docutils literal notranslate"><span class="pre">JXC</span></code> and <code class="docutils literal notranslate"><span class="pre">DMI</span></code> select different task modes
+through a common definition.</p></li>
+<li><p>Improved task validation, dependent and optional parameters, user-defined
+input-parameter presets and canonical task handling.</p></li>
+<li><p>Tasks now declare their known input, output and auxiliary/cache files for
+result discovery, postprocessing and remote file management.</p></li>
+</ul>
+</section>
+<section id="completely-redesigned-execution">
+<h3>Completely redesigned execution<a class="headerlink" href="#completely-redesigned-execution" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Rewrote SPR-KKR program execution around the independently distributed
+<code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> run manager, which also supports other scientific programs.</p></li>
+<li><p>Added local and remote execution over SSH, MPI launchers, and optional
+scheduler support, including Slurm through PSI/J.</p></li>
+<li><p>Added project databases that retain calculation records, statuses and files,
+with reconnection to supported running jobs after client restart.
+Project history is particularly useful for the GUI, but is also accessible
+from Python and the command line.</p></li>
+<li><p>Added named execution profiles stored in YAML configuration, and output
+filtering using regular expressions.</p></li>
+</ul>
+</section>
+<section id="symmetry-plotting-and-gui-support">
+<h3>Symmetry, plotting and GUI support<a class="headerlink" href="#symmetry-plotting-and-gui-support" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">symmetry</span></code> for crystallographic space-group analysis,
+site equivalence, symmetry operations and cell transformations.</p></li>
+<li><p>Added parsing and direct plotting of SPR-KKR Grace <code class="docutils literal notranslate"><span class="pre">.agr</span></code> files through
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">plot</span></code>.</p></li>
+<li><p>Added ARPES SPC-to-NeXus/HDF5 export through <code class="docutils literal notranslate"><span class="pre">ResultFile.to_nexus()</span></code>
+and the new <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">nexus</span> <span class="pre">SPECTRUM.spc</span></code> command. The export
+preserves native spectra and physical axes and includes available
+calculation provenance and descriptive metadata. The NeXus writer’s
+optional dependencies are provided by <code class="docutils literal notranslate"><span class="pre">ase2sprkkr[nexus]</span></code>.</p></li>
+<li><p>Added APIs for calculation preparation, monitoring, persistent project
+history and result-file actions used by the separately published
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr-gui</span></code> desktop application.</p></li>
+</ul>
+</section>
+<section id="compatibility">
+<h3>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Python 3.9 or newer is required. Version 3.6.0 is the final stable
+release supporting Python 3.8 and the last release before this
+architectural refactoring.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> is a required dependency; the execution and task-definition
+APIs have changed substantially from the 3.x series.</p></li>
+</ul>
+</section>
+</section>
+<section id="version-4-0-0-beta4">
+<h2>Version 4.0.0-beta4<a class="headerlink" href="#version-4-0-0-beta4" title="Link to this heading"></a></h2>
+<section id="arpes-nexus-export">
+<h3>ARPES NeXus export<a class="headerlink" href="#arpes-nexus-export" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">nexus</span> <span class="pre">SPECTRUM.spc</span></code> to export native ARPES SPC
+spectra to NeXus/HDF5; <code class="docutils literal notranslate"><span class="pre">-o/--output</span></code> selects the output file and
+<code class="docutils literal notranslate"><span class="pre">-i/--input-file</span></code> supplies the original SPR-KKR input when available.
+Without <code class="docutils literal notranslate"><span class="pre">-o</span></code>, the command writes beside the SPC file using <code class="docutils literal notranslate"><span class="pre">.nxs</span></code>.
+Dependencies for exporting are optional (<code class="docutils literal notranslate"><span class="pre">ase2sprkkr[nexus]</span></code>).</p></li>
+<li><p>Enriched ARPES NeXus exports with physical-axis labels and HDF5
+dimension scales, descriptive signal units and names, exporter details,
+native SPC header/column provenance and available input parameters,
+without changing sampled intensities or axis ordering.</p></li>
+</ul>
+</section>
+</section>
+<section id="version-4-0-0-beta3">
+<h2>Version 4.0.0-beta3<a class="headerlink" href="#version-4-0-0-beta3" title="Link to this heading"></a></h2>
+<section id="results-and-plotting">
+<h3>Results and plotting<a class="headerlink" href="#results-and-plotting" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Added parsing of Grace <code class="docutils literal notranslate"><span class="pre">.agr</span></code> result files into graph and dataset
+models, with Matplotlib plots including multiple panels.</p></li>
+<li><p>Added AGR support to <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">plot</span></code> and result-file plot actions.</p></li>
+<li><p>Exposed existing task-declared output files in parsed scientific results,
+including files that do not have specialized result parsers.</p></li>
+<li><p>Improved historical result loading when auxiliary files are missing or
+stored input-parameter schemas differ from the current definitions.</p></li>
+</ul>
+</section>
+<section id="execution-and-fixes">
+<h3>Execution and fixes<a class="headerlink" href="#execution-and-fixes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Persisted resolved execution-profile identity and application metadata
+with project runs.</p></li>
+<li><p>Updated the required <code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> version to 0.2.0b2.</p></li>
+<li><p>Fixed output-file discovery, historical-result and CI regressions.</p></li>
+</ul>
+</section>
+</section>
+<section id="version-4-0-0-beta2">
+<h2>Version 4.0.0-beta2<a class="headerlink" href="#version-4-0-0-beta2" title="Link to this heading"></a></h2>
+<section id="execution-and-remote-monitoring">
+<h3>Execution and remote monitoring<a class="headerlink" href="#execution-and-remote-monitoring" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Adopted the KKRunner 0.2 execution architecture, including independent
+backends and transports and Run-owned resources.</p></li>
+<li><p>Improved persistent run recovery, result reconstruction, execution
+lifecycle handling and integration with direct, supervised and PSI/J jobs.</p></li>
+<li><p>Added SPR-KKR-aware <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">remote</span> <span class="pre">status</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">remote</span> <span class="pre">follow</span></code> commands, with SCF iteration progress and
+historical output handling.</p></li>
+</ul>
+</section>
+<section id="command-line-and-compatibility">
+<h3>Command line and compatibility<a class="headerlink" href="#command-line-and-compatibility" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Added third-party command discovery through the
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr:cli</span></code> entry-point group.</p></li>
+<li><p>Continued extraction of the lightweight <code class="docutils literal notranslate"><span class="pre">ase2sprkkr_cli</span></code> package.</p></li>
+<li><p>Improved NumPy compatibility, execution test coverage and resource
+cleanup.</p></li>
+</ul>
+</section>
+</section>
+<section id="version-4-0-0-beta1">
+<h2>Version 4.0.0-beta1<a class="headerlink" href="#version-4-0-0-beta1" title="Link to this heading"></a></h2>
+<section id="execution-remote-calculations-and-projects">
+<h3>Execution, remote calculations and projects<a class="headerlink" href="#execution-remote-calculations-and-projects" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Managed local and remote calculations with asynchronous execution,
+status monitoring, output following, cancellation and persistent run history.</p></li>
+<li><p>The independent <code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> package provides the execution layer.
+ASE2SPRKKR prepares SPR-KKR inputs and interprets scientific outputs;
+KKRunner manages processes, MPI, SSH, schedulers, file transfers and run state.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SPRKKR.create_run()</span></code> separates preparation, submission and waiting
+(<code class="docutils literal notranslate"><span class="pre">submit()</span></code> and <code class="docutils literal notranslate"><span class="pre">wait()</span></code>) while <code class="docutils literal notranslate"><span class="pre">SPRKKR.calculate()</span></code> remains available
+for synchronous calculations.</p></li>
+<li><p>Host-aware MPI launchers, including <code class="docutils literal notranslate"><span class="pre">srun</span></code> in Slurm allocations
+and <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>/<code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> elsewhere.</p></li>
+<li><p>Remote execution over SSH, with remote working directories, input
+staging, output retrieval, configurable synchronization policies,
+and remote executable and MPI configuration.</p></li>
+<li><p>Optional PSI/J scheduler integration, including Slurm, via the
+<code class="docutils literal notranslate"><span class="pre">psij</span></code> extra, with scheduler-specific resources and backend behavior.</p></li>
+<li><p>Persistent project-based calculations with durable run identities,
+statuses, execution records and calculation history; tracking is opt-in.</p></li>
+<li><p>Reconnection to active jobs after client restart, resumption of
+interrupted downloads and explicit postprocessing retries without
+resubmitting SPR-KKR. Recovery depends on backend capabilities.</p></li>
+<li><p>Historical <code class="docutils literal notranslate"><span class="pre">TaskResult</span></code> reconstruction using <code class="docutils literal notranslate"><span class="pre">TaskResult.from_run()</span></code>
+or <code class="docutils literal notranslate"><span class="pre">load_project_result()</span></code>; <code class="docutils literal notranslate"><span class="pre">attach_project_run()</span></code> reconnects active
+persistent project runs.</p></li>
+<li><p>Declarative task input/output/cache file manifests, including
+optional files and wildcard patterns, synchronization policies and
+integrity checks to detect missing or overwritten historical results.</p></li>
+<li><p>Managed stdout/stderr and output listeners. <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">remote</span></code> provides
+user-facing status, follow and cancel commands; the execution protocol
+uses <code class="docutils literal notranslate"><span class="pre">kkrunner</span> <span class="pre">remote</span></code>.</p></li>
+</ul>
+</section>
+<section id="configuration-and-profiles">
+<h3>Configuration and profiles<a class="headerlink" href="#configuration-and-profiles" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>YAML user configuration and named execution profiles for executable
+locations, MPI, local/SSH/scheduler backends, remote directories,
+filesystem identities and file synchronization settings.</p></li>
+<li><p>Migration from legacy Python configuration with
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">config</span> <span class="pre">--migrate</span></code>; extended CLI to list, inspect and
+edit profiles and their settings.</p></li>
+<li><p>Profiles and per-calculation overrides can select execution
+backends without changing task input parameters.</p></li>
+</ul>
+</section>
+<section id="new-and-extended-spr-kkr-tasks">
+<h3>New and extended SPR-KKR tasks<a class="headerlink" href="#new-and-extended-spr-kkr-tasks" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>More than 40 new native task input definitions, many experimental.
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">info</span></code> lists stable tasks before experimental ones;
+definitions do not imply numerical validation of every advanced mode.</p></li>
+<li><p>Photoemission, spectroscopy and related tasks: <code class="docutils literal notranslate"><span class="pre">AES</span></code>, <code class="docutils literal notranslate"><span class="pre">APS</span></code>,
+<code class="docutils literal notranslate"><span class="pre">NRAES</span></code>, <code class="docutils literal notranslate"><span class="pre">AIPES</span></code>, <code class="docutils literal notranslate"><span class="pre">BAND</span></code>, <code class="docutils literal notranslate"><span class="pre">SPLEED</span></code>, <code class="docutils literal notranslate"><span class="pre">CLPES</span></code>, <code class="docutils literal notranslate"><span class="pre">CLXPS</span></code>,
+<code class="docutils literal notranslate"><span class="pre">VBPES</span></code>, <code class="docutils literal notranslate"><span class="pre">XES</span></code>, <code class="docutils literal notranslate"><span class="pre">XRS</span></code> and <code class="docutils literal notranslate"><span class="pre">CHIXAS</span></code>.</p></li>
+<li><p>Magnetic response, optical and transport tasks: <code class="docutils literal notranslate"><span class="pre">CHI</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CHILANDAU</span></code>, <code class="docutils literal notranslate"><span class="pre">SIGMA</span></code>, <code class="docutils literal notranslate"><span class="pre">OPTABS</span></code>, <code class="docutils literal notranslate"><span class="pre">T1</span></code>, <code class="docutils literal notranslate"><span class="pre">NUCSSCPL</span></code>,
+<code class="docutils literal notranslate"><span class="pre">STONER</span></code>, <code class="docutils literal notranslate"><span class="pre">SOCPAR</span></code>, <code class="docutils literal notranslate"><span class="pre">FMAG</span></code> and <code class="docutils literal notranslate"><span class="pre">COMPTON</span></code>.</p></li>
+<li><p>Electronic-structure, scattering and current-density tasks:
+<code class="docutils literal notranslate"><span class="pre">BONDING</span></code>, <code class="docutils literal notranslate"><span class="pre">BSDOSIJ</span></code>, <code class="docutils literal notranslate"><span class="pre">FSCAT</span></code>, <code class="docutils literal notranslate"><span class="pre">EKREL</span></code>, <code class="docutils literal notranslate"><span class="pre">JALF</span></code>,
+<code class="docutils literal notranslate"><span class="pre">JORB</span></code> and <code class="docutils literal notranslate"><span class="pre">TDOBS</span></code>.</p></li>
+<li><p>Positron workflows: <code class="docutils literal notranslate"><span class="pre">POSANIPREP</span></code>, <code class="docutils literal notranslate"><span class="pre">POSANITAU</span></code> and <code class="docutils literal notranslate"><span class="pre">POSANI</span></code>.</p></li>
+<li><p>Plotting and diagnostic tasks: <code class="docutils literal notranslate"><span class="pre">PLOTPRS</span></code>, <code class="docutils literal notranslate"><span class="pre">PLOTPOT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PLOTRHO</span></code>, <code class="docutils literal notranslate"><span class="pre">PLOTSFN</span></code>, <code class="docutils literal notranslate"><span class="pre">PLOT2DPR</span></code>, <code class="docutils literal notranslate"><span class="pre">PLOT2DPOT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PLOT2DRHO</span></code>, <code class="docutils literal notranslate"><span class="pre">WFPLOT</span></code>, <code class="docutils literal notranslate"><span class="pre">MECHECK</span></code>, <code class="docutils literal notranslate"><span class="pre">MEPLOT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PSHIFT</span></code> and <code class="docutils literal notranslate"><span class="pre">TUTORIAL</span></code>.</p></li>
+<li><p>BSF modes have separate <code class="docutils literal notranslate"><span class="pre">BSFEK</span></code> and <code class="docutils literal notranslate"><span class="pre">BSFKK</span></code> task identities
+sharing the BSF input schema; BSF validation and k-paths improved.</p></li>
+<li><p>Existing <code class="docutils literal notranslate"><span class="pre">SCF</span></code>, <code class="docutils literal notranslate"><span class="pre">DOS</span></code>, <code class="docutils literal notranslate"><span class="pre">ARPES</span></code>, <code class="docutils literal notranslate"><span class="pre">PHAGEN</span></code>, <code class="docutils literal notranslate"><span class="pre">JXC</span></code>, <code class="docutils literal notranslate"><span class="pre">XAS</span></code>,
+<code class="docutils literal notranslate"><span class="pre">GILBERT</span></code> and other definitions received improved options,
+default values, validation or declared files.</p></li>
+<li><p>Task identity and executable metadata separated from reusable
+input parameter schemas; user-defined presets preserve canonical
+task identities instead of introducing unwanted new tasks.</p></li>
+<li><p>Task-specific input, output and cache declarations, including
+conditional filenames, <code class="docutils literal notranslate"><span class="pre">DATASET</span></code>/<code class="docutils literal notranslate"><span class="pre">ADSI</span></code> and
+<code class="docutils literal notranslate"><span class="pre">TAUDIR</span></code>/<code class="docutils literal notranslate"><span class="pre">TAUPATH</span></code> handling.</p></li>
+<li><p>Support for reading incomplete input files with warnings,
+conditional requiredness, and cross-section validation of
+dependent options and array lengths.</p></li>
+</ul>
+</section>
+<section id="symmetry-and-structure-tools">
+<h3>Symmetry and structure tools<a class="headerlink" href="#symmetry-and-structure-tools" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>New <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">symmetry</span></code> command and <code class="docutils literal notranslate"><span class="pre">analyze_symmetry()</span></code> API
+for spglib-based space-group and site-symmetry analysis without
+modifying or retaining the input Atoms object.</p></li>
+<li><p>Primitive and standardized conventional cell transformations,
+optional idealization, and policies for preserving SPR-KKR site
+metadata and extra ASE arrays.</p></li>
+<li><p>Equivalent sites, Wyckoff positions and symmetry operations
+can be displayed, with optional JSON report output.</p></li>
+<li><p>CIF-declared symmetry is reported separately from calculated
+symmetry, including detection of differing space-group numbers.</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>Results and plotting<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Structured result files exposed as <code class="docutils literal notranslate"><span class="pre">ResultFile</span></code> from <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span></code>
+and <code class="docutils literal notranslate"><span class="pre">ase2sprkkr.result_files</span></code>. The top-level <code class="docutils literal notranslate"><span class="pre">OutputFile</span></code>
+remains available as a deprecated compatibility alias.</p></li>
+<li><p>SFN file reading, writing and plotting, explicit <code class="docutils literal notranslate"><span class="pre">SFNFIL</span></code>
+selection, and information about SFN file generation.</p></li>
+<li><p>SCF parsing supports runs without <code class="docutils literal notranslate"><span class="pre">EMIN</span></code> (thanks to Chriss Woodgate).</p></li>
+<li><p>ARPES results provide all polarization spectra through
+<code class="docutils literal notranslate"><span class="pre">ArpesResult.spectra</span></code>; NeXus/HDF5 export with metadata
+and interactive ARPES plotting controls.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">print_output</span></code> supports informational output, regular expressions
+and custom output listeners.</p></li>
+<li><p>Corrected DOS, BSF and ARPES arithmetic, DOS energy handling,
+and Gaussian and Lorentzian spectral broadening.</p></li>
+</ul>
+</section>
+<section id="calculator-and-command-line-interface">
+<h3>Calculator and command-line interface<a class="headerlink" href="#calculator-and-command-line-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SPRKKR.prepare()</span></code> generates scientific calculation inputs without
+submitting a run.</p></li>
+<li><p>Explicit <code class="docutils literal notranslate"><span class="pre">restart_scf</span></code> option to control SCF restarts.</p></li>
+<li><p>Unsuccessful synchronous calculations raise ASE’s
+<code class="docutils literal notranslate"><span class="pre">CalculationFailed</span></code> instead of updating calculator state as if
+the calculation had succeeded.</p></li>
+<li><p>Lightweight <code class="docutils literal notranslate"><span class="pre">ase2sprkkr_cli</span></code> package now implements the CLI entry point,
+with lazy imports of command-specific functionality.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>Compatibility<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Python 3.8 support dropped; Python 3.9 or newer required.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> is a required dependency; scheduler integration uses
+the optional <code class="docutils literal notranslate"><span class="pre">psij</span></code> extra.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ArpesResult.spc</span></code> deprecated in favor of <code class="docutils literal notranslate"><span class="pre">ArpesResult.spectra</span></code>.</p></li>
+<li><p>Legacy execution-related configuration options are deprecated
+in favor of named profiles.</p></li>
+</ul>
+</section>
+<section id="internals">
+<h3>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Transactional configuration updates and cross-section validation.</p></li>
+<li><p>Refactored dependent, repeated and generated configuration values,
+including NumPy arrays with specified or dependent line counts.</p></li>
+<li><p>Optional fast parsing of simple numerical arrays via <code class="docutils literal notranslate"><span class="pre">numpy.fromstring</span></code>,
+with fallback for incompatible input formats.</p></li>
+<li><p>Reorganized task and result-reader registries, with SPR-KKR
+file metadata and result reconstruction in ASE2SPRKKR and
+generic execution state and persistence delegated to KKRunner.</p></li>
+<li><p>Improved symmetry/site-equivalence handling and regression tests.</p></li>
+<li><p>Various bug fixes and compatibility improvements.</p></li>
+</ul>
+</section>
+</section>
+<section id="version-3-6-0">
+<h2>Version 3.6.0<a class="headerlink" href="#version-3-6-0" title="Link to this heading"></a></h2>
+<p>This is the final stable release of the original ASE2SPRKKR architecture
+before the major 4.0.0 refactoring, and the last release supporting Python 3.8.
+Users needing Python 3.8 or the previous execution architecture should
+remain on the 3.6.x series.</p>
+<ul class="simple">
+<li><p>Added support for ANDERSON mixing (experimental), BSF task improved</p></li>
+<li><p>A better debugging in <cite>ase2sprkkr shell</cite></p></li>
 <li><p><cite>promote_ase_atoms</cite> can be directly imported from the <cite>ase2sprkkr</cite> root package</p></li>
 <li><p>Changing properties via <cite>site</cite> is disallowed in cases where <cite>site_type</cite> is shared</p></li>
 <li><p>JXC output file parsing and plotting</p></li>
 <li><p>XAS output file parsing and plotting</p></li>
 <li><p>Beyond-DFT parammeters (DFTM, DFT+U,…)</p></li>
+<li><p>Hyperfine-field switches</p></li>
 <li><p>Semi-infinite structure building improved</p></li>
 <li><p>Uppasd improvements: direct calling of <cite>sd</cite>, input file stub writing</p></li>
 <li><p>Improved layout for multiple plots</p></li>
@@ -166,13 +496,18 @@
 <li><p>Examples from ASE2SPRKKR article were added</p></li>
 <li><p>Runtime dependencies were revisited</p></li>
 </ul>
-<section id="internals">
-<h3>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Internals<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Adoption of Ruff: code formatting and cleanup</p></li>
 <li><p>Picklability of Atom objects (for better ase.view compatibility)</p></li>
 <li><p>Refactoring of ProcessOutput and ProcessReaders</p></li>
 <li><p>Actions for Outputs and OutputFiles (for GUI support)</p></li>
+<li><p>BaseCalculator is used as a base class for SPRKKRCalculator</p></li>
+<li><p>Improvements for GUI:
+* ResultValues are implemented as Options, to reuse existing functionality in GUI
+* Better result files handling
+* Files in results provide both relative and absolute path</p></li>
 </ul>
 </section>
 </section>
@@ -274,8 +609,8 @@
 </section>
 <section id="version-3-0-0-beta">
 <h2>Version 3.0.0-beta<a class="headerlink" href="#version-3-0-0-beta" title="Link to this heading"></a></h2>
-<section id="id1">
-<h3>User interface<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>User interface<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Empty spheres finding has been added</p></li>
 <li><p>SiteType class added: sites are now always distinct, site_types can be shared between sites
@@ -305,8 +640,8 @@ due to symmetry</p></li>
 <li><p>Various tools and plotting fixies</p></li>
 </ul>
 </section>
-<section id="id2">
-<h3>Internals<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>Internals<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>NumpyArray grammar type improved</p></li>
 <li><p>Some fixies and code lininting</p></li>
@@ -341,8 +676,8 @@ due to symmetry</p></li>
 <li><p>Plotting improved</p></li>
 <li><p>Better help values for output files</p></li>
 </ul>
-<section id="id3">
-<h3>Internals<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Internals<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Generated type improvement</p></li>
 <li><p>Switch grammar element: format of a parsed file can depend on the previously parsed values</p></li>
@@ -354,8 +689,8 @@ due to symmetry</p></li>
 </section>
 <section id="version-2-1-1">
 <h2>Version 2.1.1<a class="headerlink" href="#version-2-1-1" title="Link to this heading"></a></h2>
-<section id="id4">
-<h3>User interface<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>User interface<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>ARPES and SCF task definition improved</p></li>
 <li><p>ARPES SPC results can be parsed and plotted</p></li>
@@ -371,8 +706,8 @@ due to symmetry</p></li>
 <li><p>Some minor tweaks and corrections of input parameters</p></li>
 </ul>
 </section>
-<section id="id5">
-<h3>Internals<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>Internals<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>GrammmarTypes refactorized (splitted to more files)</p></li>
 <li><p>NumpyArray and RestOfTheFile grammar types for output files</p></li>
@@ -397,8 +732,8 @@ due to symmetry</p></li>
 </section>
 <section id="version-2-0-0-beta2">
 <h2>Version 2.0.0-beta2<a class="headerlink" href="#version-2-0-0-beta2" title="Link to this heading"></a></h2>
-<section id="id6">
-<h3>User interface<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id9">
+<h3>User interface<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>es_finder integration for empty spheres finding</p></li>
 <li><p>Support for 2D problems</p></li>
@@ -407,8 +742,8 @@ due to symmetry</p></li>
 <li><p>calculate(…, directory=False) runs the calculation in a temporary directory</p></li>
 </ul>
 </section>
-<section id="id7">
-<h3>Internals<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id10">
+<h3>Internals<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Sections validation</p></li>
 <li><p>LatticeData class refactored</p></li>
@@ -418,8 +753,8 @@ due to symmetry</p></li>
 </section>
 <section id="version-2-0-0-beta1">
 <h2>Version 2.0.0-beta1<a class="headerlink" href="#version-2-0-0-beta1" title="Link to this heading"></a></h2>
-<section id="id8">
-<h3>User interface<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<section id="id11">
+<h3>User interface<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Runtime documentation available.</p></li>
 <li><p>Runtime documentation is added to the docstring and to the generated documentation.

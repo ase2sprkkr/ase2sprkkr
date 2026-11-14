@@ -1,0 +1,44 @@
+projects
+========
+
+Full name: **ase2sprkkr.sprkkr.projects**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.projects
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      default_project_repository
+      project_execution_manager
+      resolve_project_manager
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

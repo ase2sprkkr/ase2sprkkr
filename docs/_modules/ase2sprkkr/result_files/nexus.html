@@ -1,0 +1,678 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.result_files.nexus &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Execution, persistence and remote runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="../result_files.html">ase2sprkkr.result_files</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.result_files.nexus</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.result_files.nexus</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Export native SPR-KKR ARPES SPC data as NeXus/HDF5.</span>
+
+<span class="sd">The SPC file owns sampled intensities and coordinates. InputParameters owns</span>
+<span class="sd">the *specified* experiment settings. This module does not recompute KKRSPEC</span>
+<span class="sd">spin, photon, or reciprocal-space transformations.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">PackageNotFoundError</span><span class="p">,</span> <span class="n">version</span> <span class="k">as</span> <span class="n">distribution_version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<span class="c1"># A single declarative map for optional, *original* SPR-KKR settings.</span>
+<span class="c1"># Values in this map are not inferred effective values.</span>
+<span class="n">_INPUT_OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"TASK"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"TASK"</span><span class="p">,</span> <span class="s2">"INPVER"</span><span class="p">,</span> <span class="s2">"STRVER"</span><span class="p">,</span> <span class="s2">"IQ_AT_SURF"</span><span class="p">,</span>
+             <span class="s2">"MILLER_HKL"</span><span class="p">,</span> <span class="s2">"CRYS_VECS"</span><span class="p">),</span>
+    <span class="s2">"ENERGY"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"EMIN"</span><span class="p">,</span> <span class="s2">"EMAX"</span><span class="p">,</span> <span class="s2">"NE"</span><span class="p">,</span> <span class="s2">"EWORK_EV"</span><span class="p">,</span> <span class="s2">"IMV_INI_EV"</span><span class="p">,</span> <span class="s2">"IMV_FIN_EV"</span><span class="p">),</span>
+    <span class="s2">"SPEC_PH"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"EPHOT"</span><span class="p">,</span> <span class="s2">"THETA"</span><span class="p">,</span> <span class="s2">"PHI"</span><span class="p">,</span> <span class="s2">"POL_P"</span><span class="p">,</span> <span class="s2">"NPOL"</span><span class="p">,</span> <span class="s2">"ICIRC"</span><span class="p">,</span>
+                <span class="s2">"IDREH"</span><span class="p">,</span> <span class="s2">"ALQ"</span><span class="p">,</span> <span class="s2">"DELQ"</span><span class="p">,</span> <span class="s2">"IFSP"</span><span class="p">,</span> <span class="s2">"THETA_FIX"</span><span class="p">),</span>
+    <span class="s2">"SPEC_EL"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"THETA"</span><span class="p">,</span> <span class="s2">"PHI"</span><span class="p">,</span> <span class="s2">"NT"</span><span class="p">,</span> <span class="s2">"NP"</span><span class="p">,</span> <span class="s2">"KA"</span><span class="p">,</span>
+                <span class="s2">"K1"</span><span class="p">,</span> <span class="s2">"K2"</span><span class="p">,</span> <span class="s2">"K3"</span><span class="p">,</span> <span class="s2">"K4"</span><span class="p">,</span> <span class="s2">"NK1"</span><span class="p">,</span> <span class="s2">"NK2"</span><span class="p">,</span> <span class="s2">"NK3"</span><span class="p">,</span> <span class="s2">"NK4"</span><span class="p">,</span>
+                <span class="s2">"SPOL"</span><span class="p">,</span> <span class="s2">"PSPIN"</span><span class="p">,</span> <span class="s2">"POL_E"</span><span class="p">,</span> <span class="s2">"TYP"</span><span class="p">,</span> <span class="s2">"ISTR"</span><span class="p">,</span> <span class="s2">"POL0"</span><span class="p">,</span> <span class="s2">"POL0L"</span><span class="p">,</span>
+                <span class="s2">"Q1"</span><span class="p">,</span> <span class="s2">"Q2"</span><span class="p">,</span> <span class="s2">"Q3"</span><span class="p">,</span> <span class="s2">"Q4"</span><span class="p">,</span> <span class="s2">"BETA1"</span><span class="p">,</span> <span class="s2">"BETA2"</span><span class="p">,</span> <span class="s2">"ROTAXIS"</span><span class="p">),</span>
+    <span class="s2">"SPEC_STR"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"SURF_BAR"</span><span class="p">,</span> <span class="s2">"TRANSP_BAR"</span><span class="p">,</span> <span class="s2">"N_LAYDBL"</span><span class="p">,</span>
+                 <span class="s2">"NLAT_G_VEC"</span><span class="p">,</span> <span class="s2">"N_LAYER"</span><span class="p">),</span>
+<span class="p">}</span>
+<span class="n">_EXPORT_METADATA</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"photon_energy"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"SPEC_PH"</span><span class="p">,</span> <span class="s2">"EPHOT"</span><span class="p">),</span>
+    <span class="s2">"photon_theta"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"SPEC_PH"</span><span class="p">,</span> <span class="s2">"THETA"</span><span class="p">),</span>
+    <span class="s2">"photon_phi"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"SPEC_PH"</span><span class="p">,</span> <span class="s2">"PHI"</span><span class="p">),</span>
+    <span class="s2">"photon_polarization"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"SPEC_PH"</span><span class="p">,</span> <span class="s2">"POL_P"</span><span class="p">),</span>
+    <span class="s2">"work_function"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"ENERGY"</span><span class="p">,</span> <span class="s2">"EWORK_EV"</span><span class="p">),</span>
+    <span class="s2">"surface_hkl"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"TASK"</span><span class="p">,</span> <span class="s2">"MILLER_HKL"</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="c1"># Units of original input parameters are added only where their semantics</span>
+<span class="c1"># are established by the parameter names/definitions. Do not infer effective</span>
+<span class="c1"># photon or electron geometry from the input.</span>
+<span class="n">_INPUT_UNITS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">"ENERGY"</span><span class="p">,</span> <span class="s2">"EWORK_EV"</span><span class="p">):</span> <span class="s2">"eV"</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">"ENERGY"</span><span class="p">,</span> <span class="s2">"IMV_INI_EV"</span><span class="p">):</span> <span class="s2">"eV"</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">"ENERGY"</span><span class="p">,</span> <span class="s2">"IMV_FIN_EV"</span><span class="p">):</span> <span class="s2">"eV"</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">"SPEC_PH"</span><span class="p">,</span> <span class="s2">"EPHOT"</span><span class="p">):</span> <span class="s2">"eV"</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">"SPEC_PH"</span><span class="p">,</span> <span class="s2">"THETA"</span><span class="p">):</span> <span class="s2">"degree"</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">"SPEC_PH"</span><span class="p">,</span> <span class="s2">"PHI"</span><span class="p">):</span> <span class="s2">"degree"</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">"SPEC_EL"</span><span class="p">,</span> <span class="s2">"THETA"</span><span class="p">):</span> <span class="s2">"degree"</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">"SPEC_EL"</span><span class="p">,</span> <span class="s2">"PHI"</span><span class="p">):</span> <span class="s2">"degree"</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1"># Native SPC header fields that the parser exposes directly. The original</span>
+<span class="c1"># values are preserved, without guessing the units of EFERMI or applying</span>
+<span class="c1"># physical conversions.</span>
+<span class="n">_SPC_HEADER</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"keyword"</span><span class="p">:</span> <span class="s2">"KEYWORD"</span><span class="p">,</span>
+    <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"TITLE"</span><span class="p">,</span>
+    <span class="s2">"system"</span><span class="p">:</span> <span class="s2">"SYSTEM"</span><span class="p">,</span>
+    <span class="s2">"number_of_sites"</span><span class="p">:</span> <span class="s2">"NQ_EFF"</span><span class="p">,</span>
+    <span class="s2">"number_of_atom_types"</span><span class="p">:</span> <span class="s2">"NT_EFF"</span><span class="p">,</span>
+    <span class="s2">"number_of_energies"</span><span class="p">:</span> <span class="s2">"NE"</span><span class="p">,</span>
+    <span class="s2">"relativity_setting"</span><span class="p">:</span> <span class="s2">"IREL"</span><span class="p">,</span>
+    <span class="s2">"fermi_energy_native"</span><span class="p">:</span> <span class="s2">"EFERMI"</span><span class="p">,</span>
+    <span class="s2">"calculation_info"</span><span class="p">:</span> <span class="s2">"INFO"</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1"># Column-by-column units of the native mixed-unit records. An empty string</span>
+<span class="c1"># marks an unknown native unit rather than assuming a physical meaning.</span>
+<span class="n">_SPC_COLUMN_UNITS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"energy"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"degree"</span><span class="p">,</span> <span class="s2">"eV"</span><span class="p">,</span> <span class="s2">"arbitrary"</span><span class="p">,</span> <span class="s2">"arbitrary"</span><span class="p">,</span> <span class="s2">"arbitrary"</span><span class="p">,</span>
+               <span class="s2">"1"</span><span class="p">,</span> <span class="s2">"1/angstrom"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
+    <span class="s2">"kx_ky"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"1/angstrom"</span><span class="p">,</span> <span class="s2">"1/angstrom"</span><span class="p">,</span> <span class="s2">"arbitrary"</span><span class="p">,</span> <span class="s2">"arbitrary"</span><span class="p">,</span>
+              <span class="s2">"arbitrary"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="_exporter_version">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus._exporter_version.html#ase2sprkkr.result_files.nexus._exporter_version">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_exporter_version</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">distribution_version</span><span class="p">(</span><span class="s2">"ase2sprkkr"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">PackageNotFoundError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="_spc_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus._spc_value.html#ase2sprkkr.result_files.nexus._spc_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_spc_value</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span><span class="p">()</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">else</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="_describe">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus._describe.html#ase2sprkkr.result_files.nexus._describe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_describe</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">long_name</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"long_name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">long_name</span>
+    <span class="k">if</span> <span class="n">units</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"units"</span><span class="p">]</span> <span class="o">=</span> <span class="n">units</span>
+    <span class="k">return</span> <span class="n">dataset</span></div>
+
+
+
+<div class="viewcode-block" id="_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus._value.html#ase2sprkkr.result_files.nexus._value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_value</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">option</span><span class="p">()</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">option</span><span class="p">)</span> <span class="k">else</span> <span class="n">option</span></div>
+
+
+
+<div class="viewcode-block" id="_companion_input_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus._companion_input_file.html#ase2sprkkr.result_files.nexus._companion_input_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_companion_input_file</span><span class="p">(</span><span class="n">spc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Look up only names related to the recorded SPC filename."""</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="s2">"original_filename"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="s2">"_filename"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">source</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">stem</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">stem</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">stem</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">"_ARPES_data"</span><span class="p">)</span>
+    <span class="n">stems</span> <span class="o">=</span> <span class="p">{</span><span class="n">stem</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">dataset</span> <span class="o">+</span> <span class="s2">"_ARPES"</span><span class="p">}</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">source</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">stems</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">".inp"</span><span class="p">,</span> <span class="s2">".in"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">found</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">found</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="_resolve_input">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus._resolve_input.html#ase2sprkkr.result_files.nexus._resolve_input">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_input</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">input_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Explicit filename &gt; supplied parameters &gt; unambiguous companion file."""</span>
+    <span class="n">explicit</span> <span class="o">=</span> <span class="n">input_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">explicit</span><span class="p">:</span>
+        <span class="n">candidate</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">candidate</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SPR-KKR input file not found: </span><span class="si">{</span><span class="n">candidate</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">input_parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">candidate</span> <span class="o">=</span> <span class="n">_companion_input_file</span><span class="p">(</span><span class="n">spc</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">candidate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">"No SPR-KKR input parameters found for ARPES NeXus export; "</span>
+            <span class="s2">"only SPC data will be exported."</span><span class="p">,</span>
+            <span class="ne">UserWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters.input_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">explicit</span><span class="p">:</span>
+            <span class="k">raise</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Cannot parse detected SPR-KKR input </span><span class="si">{</span><span class="n">candidate</span><span class="si">}</span><span class="s2">; "</span>
+            <span class="s2">"only SPC data will be exported."</span><span class="p">,</span>
+            <span class="ne">UserWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">candidate</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_dataset">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus._dataset.html#ase2sprkkr.result_files.nexus._dataset">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_dataset</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Write an original numeric/string setting without inferring its meaning."""</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">"O"</span><span class="p">:</span>
+        <span class="c1"># Do not invent a representation for arbitrary Python objects.</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cannot serialize original input option </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">"U"</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"S"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">group</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_spc_arrays">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus._spc_arrays.html#ase2sprkkr.result_files.nexus._spc_arrays">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_spc_arrays</span><span class="p">(</span><span class="n">spc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Use the SPC parser's named fields, shapes and native column contract."""</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">spc</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">spc</span><span class="o">.</span><span class="n">spc_columns</span><span class="p">()</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">RAW_DATA</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">raw</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"ARPES SPC </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2"> records must have </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns"</span>
+        <span class="p">)</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"data"</span><span class="p">:</span> <span class="s2">"TOTAL"</span><span class="p">,</span> <span class="s2">"spin_up"</span><span class="p">:</span> <span class="s2">"UP"</span><span class="p">,</span> <span class="s2">"spin_down"</span><span class="p">:</span> <span class="s2">"DOWN"</span><span class="p">,</span>
+        <span class="s2">"spin_polarization"</span><span class="p">:</span> <span class="s2">"POLARIZATION"</span><span class="p">,</span> <span class="s2">"determinant"</span><span class="p">:</span> <span class="s2">"DETERMINANT"</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
+        <span class="n">fields</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="s2">"THETA"</span><span class="p">,</span> <span class="n">energy</span><span class="o">=</span><span class="s2">"ENERGY"</span><span class="p">,</span> <span class="n">k_parallel</span><span class="o">=</span><span class="s2">"K"</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"kx_ky"</span><span class="p">:</span>
+        <span class="n">fields</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">k_x</span><span class="o">=</span><span class="s2">"KX"</span><span class="p">,</span> <span class="n">k_y</span><span class="o">=</span><span class="s2">"KY"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported ARPES SPC mode: </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">arrays</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="n">native</span><span class="p">)())</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">native</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">nt</span><span class="p">,</span> <span class="n">np_</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">NT</span><span class="p">()),</span> <span class="nb">int</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">NP</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">nt</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">np_</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">shape</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arrays</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Inconsistent ARPES SPC field dimensions"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">nt</span> <span class="ow">or</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"kx_ky"</span> <span class="ow">and</span> <span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="n">np_</span><span class="p">,</span> <span class="n">nt</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ARPES SPC grid dimensions do not match NT and NP"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">np_</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ARPES SPC NP disagrees with decoded energy-grid shape"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">np_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ARPES SPC NP disagrees with decoded azimuth grid"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unexpected ARPES SPC energy-grid dimensions"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="n">arrays</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"ARPES SPC raw data must have </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns "</span>
+            <span class="s2">"and match the decoded field grid"</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">mode</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">arrays</span></div>
+
+
+
+<div class="viewcode-block" id="_write_nexus">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus._write_nexus.html#ase2sprkkr.result_files.nexus._write_nexus">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_nexus</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">spc</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">input_path</span><span class="p">,</span> <span class="n">input_text</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+
+    <span class="n">mode</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">arrays</span> <span class="o">=</span> <span class="n">_spc_arrays</span><span class="p">(</span><span class="n">spc</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">unknown</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">_EXPORT_METADATA</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unknown ARPES export metadata: "</span> <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">unknown</span><span class="p">)))</span>
+
+    <span class="n">settings</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">_value</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="o">*</span><span class="n">option</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">_EXPORT_METADATA</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">inpver</span> <span class="o">=</span> <span class="n">_value</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="s2">"TASK"</span><span class="p">,</span> <span class="s2">"INPVER"</span><span class="p">)</span>
+    <span class="n">strver</span> <span class="o">=</span> <span class="n">_value</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="s2">"TASK"</span><span class="p">,</span> <span class="s2">"STRVER"</span><span class="p">)</span>
+    <span class="c1"># Old native input files can supersede the modern IP settings.</span>
+    <span class="k">if</span> <span class="n">inpver</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">strver</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">settings</span><span class="p">[</span><span class="s2">"surface_hkl"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+    <span class="n">exported_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="n">exporter_version</span> <span class="o">=</span> <span class="n">_exporter_version</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">NX_class</span><span class="o">=</span><span class="s2">"NXroot"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"entry"</span><span class="p">,</span> <span class="n">creator</span><span class="o">=</span><span class="s2">"ase2sprkkr"</span><span class="p">,</span>
+                       <span class="n">file_name</span><span class="o">=</span><span class="n">filename</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">file_time</span><span class="o">=</span><span class="n">exported_at</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">exporter_version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"creator_version"</span><span class="p">]</span> <span class="o">=</span> <span class="n">exporter_version</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"entry"</span><span class="p">)</span>
+        <span class="n">entry</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">NX_class</span><span class="o">=</span><span class="s2">"NXentry"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"data"</span><span class="p">)</span>
+        <span class="n">entry</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"title"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"SPR-KKR calculated ARPES"</span><span class="p">)</span>
+        <span class="n">entry</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"experiment_type"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"simulation"</span><span class="p">)</span>
+        <span class="n">program_name</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"program_name"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"ase2sprkkr"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">exporter_version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">program_name</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"version"</span><span class="p">]</span> <span class="o">=</span> <span class="n">exporter_version</span>
+
+        <span class="n">export</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"export"</span><span class="p">)</span>
+        <span class="n">export</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXprocess"</span>
+        <span class="n">export</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"program"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"ase2sprkkr"</span><span class="p">)</span>
+        <span class="n">export</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"date"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">exported_at</span><span class="p">)</span>
+        <span class="n">export</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+            <span class="s2">"description"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"Conversion of native SPR-KKR SPC records to NeXus"</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">exporter_version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">export</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"version"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">exporter_version</span><span class="p">)</span>
+
+        <span class="n">process</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"calculation"</span><span class="p">)</span>
+        <span class="n">process</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXprocess"</span>
+        <span class="n">process</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"program"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"SPR-KKR"</span><span class="p">)</span>
+        <span class="n">process</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"description"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"One-step photoemission calculation"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">input_text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">provenance</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"parameters"</span><span class="p">)</span>
+            <span class="n">provenance</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXparameters"</span>
+            <span class="n">provenance</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"sprkkr_input"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">input_text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">input_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">provenance</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"source_file"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">input_path</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">original</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"original_input"</span><span class="p">)</span>
+                <span class="n">original</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXcollection"</span>
+                <span class="k">for</span> <span class="n">section</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="n">_INPUT_OPTIONS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">options</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_value</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+                        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span>
+                    <span class="p">]</span>
+                    <span class="n">options</span> <span class="o">=</span> <span class="p">[(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">options</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">options</span><span class="p">:</span>
+                        <span class="n">group</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+                        <span class="n">group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXcollection"</span>
+                        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                            <span class="n">field</span> <span class="o">=</span> <span class="n">_dataset</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                            <span class="n">unit</span> <span class="o">=</span> <span class="n">_INPUT_UNITS</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+                            <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="n">field</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"units"</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit</span>
+                <span class="k">if</span> <span class="n">inpver</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">strver</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">original</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"native_external_input_incomplete"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+            <span class="n">supplied</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"export_metadata"</span><span class="p">)</span>
+            <span class="n">supplied</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXcollection"</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">_dataset</span><span class="p">(</span><span class="n">supplied</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">instrument</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"instrument"</span><span class="p">)</span>
+        <span class="n">instrument</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXinstrument"</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"source"</span><span class="p">)</span>
+        <span class="n">source</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXsource"</span>
+        <span class="n">source</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"Virtual photon beam"</span><span class="p">)</span>
+        <span class="n">source</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"probe"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"photon"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="p">[</span><span class="s2">"photon_energy"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">photon</span> <span class="o">=</span> <span class="n">_dataset</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s2">"energy"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="p">[</span><span class="s2">"photon_energy"</span><span class="p">]))</span>
+            <span class="n">_describe</span><span class="p">(</span><span class="n">photon</span><span class="p">,</span> <span class="s2">"Specified incident photon energy"</span><span class="p">,</span> <span class="s2">"eV"</span><span class="p">)</span>
+            <span class="n">photon</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"source"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">"export_metadata"</span> <span class="k">if</span> <span class="s2">"photon_energy"</span> <span class="ow">in</span> <span class="n">metadata</span>
+                <span class="k">else</span> <span class="s2">"SPR-KKR input SPEC_PH.EPHOT"</span>
+            <span class="p">)</span>
+        <span class="n">beam</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"photon_geometry"</span><span class="p">)</span>
+        <span class="n">beam</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXcollection"</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"photon_theta"</span><span class="p">,</span> <span class="s2">"photon_phi"</span><span class="p">,</span> <span class="s2">"photon_polarization"</span><span class="p">):</span>
+            <span class="n">_dataset</span><span class="p">(</span><span class="n">beam</span><span class="p">,</span> <span class="n">name</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="s2">"photon_"</span><span class="p">),</span> <span class="n">settings</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="n">beam</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"values_are"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"specified input, not reconstructed effective parameters"</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="s2">"Specified photon polar angle"</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"phi"</span><span class="p">,</span> <span class="s2">"Specified photon azimuthal angle"</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"polarization"</span><span class="p">,</span> <span class="s2">"Specified photon polarization"</span><span class="p">),</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">beam</span><span class="p">:</span>
+                <span class="n">_describe</span><span class="p">(</span><span class="n">beam</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">label</span><span class="p">,</span>
+                          <span class="s2">"degree"</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="s2">"phi"</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"sample"</span><span class="p">)</span>
+        <span class="n">sample</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXsample"</span>
+        <span class="n">sample</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"description"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"Calculated crystalline surface"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="p">[</span><span class="s2">"surface_hkl"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_describe</span><span class="p">(</span><span class="n">_dataset</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="s2">"miller_hkl"</span><span class="p">,</span> <span class="n">settings</span><span class="p">[</span><span class="s2">"surface_hkl"</span><span class="p">]),</span>
+                      <span class="s2">"Specified surface Miller indices"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="p">[</span><span class="s2">"work_function"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">work</span> <span class="o">=</span> <span class="n">_dataset</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="s2">"work_function"</span><span class="p">,</span> <span class="n">settings</span><span class="p">[</span><span class="s2">"work_function"</span><span class="p">])</span>
+            <span class="n">_describe</span><span class="p">(</span><span class="n">work</span><span class="p">,</span> <span class="s2">"Specified work function"</span><span class="p">,</span> <span class="s2">"eV"</span><span class="p">)</span>
+            <span class="n">work</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"source"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">"export_metadata"</span> <span class="k">if</span> <span class="s2">"work_function"</span> <span class="ow">in</span> <span class="n">metadata</span>
+                <span class="k">else</span> <span class="s2">"SPR-KKR input ENERGY.EWORK_EV"</span>
+            <span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"data"</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">NX_class</span><span class="o">=</span><span class="s2">"NXdata"</span><span class="p">,</span> <span class="n">signal</span><span class="o">=</span><span class="s2">"data"</span><span class="p">,</span> <span class="n">sprkkr_mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+            <span class="s2">"title"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">"SPR-KKR ARPES intensity (calculated spectrum)"</span>
+        <span class="p">)</span>
+        <span class="n">main</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"data"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">arrays</span><span class="p">[</span><span class="s2">"data"</span><span class="p">])</span>
+        <span class="n">_describe</span><span class="p">(</span><span class="n">main</span><span class="p">,</span> <span class="s2">"Total ARPES intensity (arbitrary units)"</span><span class="p">,</span> <span class="s2">"arbitrary"</span><span class="p">)</span>
+        <span class="c1"># Interpretation is a display hint, not an instruction to transpose.</span>
+        <span class="c1"># For 3D (energy, azimuth, angle) data a default slice describes the</span>
+        <span class="c1"># 2D image without mislabelling the 3D signal as a 2D image.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">main</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"interpretation"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"image"</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"default_slice"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">,</span> <span class="s2">"."</span><span class="p">]</span>
+        <span class="c1"># Coordinate columns are preserved verbatim in the raw SPC below.</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"kx_ky"</span><span class="p">:</span>
+            <span class="c1"># SPC records are ordered (NP, NT): y/row index first,</span>
+            <span class="c1"># x/column index second. Do not transpose intensity data.</span>
+            <span class="c1"># Oblique scans have genuinely 2D coordinates; NXdata supports</span>
+            <span class="c1"># multidimensional axis arrays via the *_indices attributes.</span>
+            <span class="c1"># Each coordinate may span either one or both data dimensions.</span>
+            <span class="c1"># Only collapse exactly constant coordinates: tolerances would</span>
+            <span class="c1"># silently discard real (albeit small) deviations from a grid.</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"axes"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"k_y"</span><span class="p">,</span> <span class="s2">"k_x"</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">dimension</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">selector</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="p">(</span><span class="s2">"k_y"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">arrays</span><span class="p">[</span><span class="s2">"k_y"</span><span class="p">][:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="mi">0</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s2">"k_x"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">arrays</span><span class="p">[</span><span class="s2">"k_x"</span><span class="p">][:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">))),</span>
+            <span class="p">):</span>
+                <span class="n">coordinate</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">coordinate</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                               <span class="n">equal_nan</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">coordinate</span><span class="p">[</span><span class="n">selector</span><span class="p">])</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_indices"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dimension</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">coordinate</span><span class="p">)</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_indices"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">_describe</span><span class="p">(</span>
+                    <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="s2">"Parallel photoelectron momentum "</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
+                    <span class="s2">"1/angstrom"</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">_value</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="s2">"SPEC_EL"</span><span class="p">,</span> <span class="s2">"K1"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"scan_definition"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"../calculation/original_input/SPEC_EL"</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># Prefer physical axes over indices, even for nonseparable</span>
+            <span class="c1"># coordinates. The azimuth has no physical SPC column; its</span>
+            <span class="c1"># scan index is retained without inventing angles from input.</span>
+            <span class="n">energy</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="s2">"energy"</span><span class="p">],</span> <span class="n">arrays</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"axes"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"energy"</span><span class="p">,</span> <span class="s2">"azimuth_index"</span><span class="p">,</span> <span class="s2">"theta"</span><span class="p">]</span>
+            <span class="n">_describe</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"azimuth_index"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                <span class="s2">"Zero-based azimuth scan index (angle not present in SPC)"</span><span class="p">,</span>
+                <span class="s2">"1"</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"azimuth_index_indices"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">coordinate</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">reduced</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="p">(</span><span class="s2">"energy"</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">energy</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">theta</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]),</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">coordinate</span><span class="p">,</span> <span class="n">reduced</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">equal_nan</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">selector</span> <span class="o">=</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">coordinate</span><span class="p">[</span><span class="n">selector</span><span class="p">])</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_indices"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dim</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">coordinate</span><span class="p">)</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_indices"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">energy</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="s2">"energy"</span><span class="p">],</span> <span class="n">arrays</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"axes"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"energy"</span><span class="p">,</span> <span class="s2">"theta"</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">coordinate</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">reduced</span><span class="p">,</span> <span class="n">selector</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="p">(</span><span class="s2">"energy"</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">energy</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="mi">0</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">theta</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">))),</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">coordinate</span><span class="p">,</span> <span class="n">reduced</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">equal_nan</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">coordinate</span><span class="p">[</span><span class="n">selector</span><span class="p">])</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_indices"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dim</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">coordinate</span><span class="p">)</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_indices"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
+            <span class="n">_describe</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"energy"</span><span class="p">],</span> <span class="s2">"Initial-state energy E - E_F"</span><span class="p">,</span> <span class="s2">"eV"</span><span class="p">)</span>
+            <span class="n">_describe</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">],</span> <span class="s2">"Photoelectron polar angle"</span><span class="p">,</span> <span class="s2">"degree"</span><span class="p">)</span>
+            <span class="n">_describe</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"k_parallel"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">arrays</span><span class="p">[</span><span class="s2">"k_parallel"</span><span class="p">]),</span>
+                <span class="s2">"Parallel photoelectron momentum"</span><span class="p">,</span> <span class="s2">"1/angstrom"</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"k_parallel_indices"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"spin_up"</span><span class="p">,</span> <span class="s2">"spin_down"</span><span class="p">,</span> <span class="s2">"spin_polarization"</span><span class="p">,</span> <span class="s2">"determinant"</span><span class="p">):</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">arrays</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="n">_describe</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"spin_up"</span><span class="p">],</span> <span class="s2">"Spin-up ARPES intensity (arbitrary units)"</span><span class="p">,</span>
+                  <span class="s2">"arbitrary"</span><span class="p">)</span>
+        <span class="n">_describe</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"spin_down"</span><span class="p">],</span> <span class="s2">"Spin-down ARPES intensity (arbitrary units)"</span><span class="p">,</span>
+                  <span class="s2">"arbitrary"</span><span class="p">)</span>
+        <span class="n">_describe</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"spin_polarization"</span><span class="p">],</span> <span class="s2">"Spin polarization"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">"spin_polarization"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"formula"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"(I_1 - I_2) / (I_1 + I_2)"</span>
+        <span class="n">_describe</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"determinant"</span><span class="p">],</span> <span class="s2">"Native SPR-KKR spectral determinant"</span><span class="p">)</span>
+        <span class="c1"># The determinant's physical units are not documented by the SPC</span>
+        <span class="c1"># parser, so do not assign a potentially incorrect unit.</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"auxiliary_signals"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">"spin_up"</span><span class="p">,</span> <span class="s2">"spin_down"</span><span class="p">,</span> <span class="s2">"spin_polarization"</span><span class="p">,</span> <span class="s2">"determinant"</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Add HDF5 dimension labels/scales as a compatibility aid for generic</span>
+        <span class="c1"># HDF5 viewers. NeXus axes and *_indices remain authoritative. A</span>
+        <span class="c1"># coupled (multidimensional) coordinate is never flattened to invent</span>
+        <span class="c1"># a one-dimensional scale.</span>
+        <span class="k">for</span> <span class="n">dimension</span><span class="p">,</span> <span class="n">axis_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"axes"</span><span class="p">]):</span>
+            <span class="n">main</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="n">dimension</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">axis_name</span>
+            <span class="n">coordinate</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">axis_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">coordinate</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">coordinate</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">shape</span><span class="p">[</span><span class="n">dimension</span><span class="p">]:</span>
+                <span class="n">coordinate</span><span class="o">.</span><span class="n">make_scale</span><span class="p">(</span><span class="n">axis_name</span><span class="p">)</span>
+                <span class="n">main</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="n">dimension</span><span class="p">]</span><span class="o">.</span><span class="n">attach_scale</span><span class="p">(</span><span class="n">coordinate</span><span class="p">)</span>
+
+        <span class="n">native</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"sprkkr_spc"</span><span class="p">)</span>
+        <span class="n">native</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXcollection"</span>
+        <span class="n">native</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"mode"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+        <span class="n">spc_name</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="s2">"original_filename"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="s2">"_filename"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">spc_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">native</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"source_filename"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">spc_name</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">raw_ds</span> <span class="o">=</span> <span class="n">native</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"raw_data"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">raw</span><span class="p">)</span>
+        <span class="n">raw_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"columns"</span><span class="p">]</span> <span class="o">=</span> <span class="n">spc</span><span class="o">.</span><span class="n">spc_columns</span><span class="p">()</span>
+        <span class="n">raw_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"column_units"</span><span class="p">]</span> <span class="o">=</span> <span class="n">_SPC_COLUMN_UNITS</span><span class="p">[</span><span class="n">mode</span><span class="p">]</span>
+        <span class="n">raw_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"long_name"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Unmodified numerical records from SPR-KKR SPC"</span>
+        <span class="n">raw_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"record_shape"</span><span class="p">]</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="n">raw_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"record_order"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">"NE, NP, NT (NT fastest)"</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span>
+            <span class="p">(</span><span class="s2">"NE, NT (NT fastest)"</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"energy"</span>
+             <span class="k">else</span> <span class="s2">"NP, NT (NT fastest)"</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">native</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"nt"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">NT</span><span class="p">()))</span>
+        <span class="n">native</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"np"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">NP</span><span class="p">()))</span>
+        <span class="n">native</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">"comment"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">COMMENT</span><span class="p">()))</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_spc_value</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">_SPC_HEADER</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">[(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">header</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+            <span class="n">original_header</span> <span class="o">=</span> <span class="n">native</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">"header"</span><span class="p">)</span>
+            <span class="n">original_header</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"NX_class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"NXcollection"</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">header</span><span class="p">:</span>
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">_dataset</span><span class="p">(</span><span class="n">original_header</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"number_of_sites"</span><span class="p">,</span> <span class="s2">"number_of_atom_types"</span><span class="p">,</span>
+                            <span class="s2">"number_of_energies"</span><span class="p">):</span>
+                    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"units"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"1"</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"fermi_energy_native"</span><span class="p">:</span>
+                    <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"long_name"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">"Native SPC EFERMI value (unit not inferred)"</span>
+                    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="write_arpes_nexus">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.nexus.write_arpes_nexus.html#ase2sprkkr.result_files.nexus.write_arpes_nexus">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_arpes_nexus</span><span class="p">(</span><span class="n">spc</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Export native SPC without inferring unavailable instrument metadata.</span>
+
+<span class="sd">    An explicit input_file takes precedence; missing input issues UserWarning.</span>
+<span class="sd">    Write to a temporary path and replace the target only on success.</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>  <span class="c1"># noqa: F401</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">"ARPES NeXus export needs h5py (ase2sprkkr[nexus])"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="n">parameters</span><span class="p">,</span> <span class="n">source_path</span><span class="p">,</span> <span class="n">input_text</span> <span class="o">=</span> <span class="n">_resolve_input</span><span class="p">(</span>
+        <span class="n">spc</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">input_file</span>
+    <span class="p">)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">temporary</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span>
+            <span class="n">prefix</span><span class="o">=</span><span class="s2">"."</span> <span class="o">+</span> <span class="n">target</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"."</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".tmp"</span><span class="p">,</span>
+            <span class="nb">dir</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+            <span class="n">temporary</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">_write_nexus</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">spc</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">source_path</span><span class="p">,</span>
+                     <span class="n">input_text</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">metadata</span> <span class="ow">or</span> <span class="p">{}))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">temporary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">temporary</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">target</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

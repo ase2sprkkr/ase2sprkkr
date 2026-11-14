@@ -1,0 +1,66 @@
+sfn
+===
+
+Full name: **ase2sprkkr.result\_files.definitions.sfn**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.result_files.definitions.sfn.SFNDefinition  ase2sprkkr.result_files.definitions.sfn.SFNResultFile  ase2sprkkr.result_files.definitions.sfn.ShapeFunctionMesh  ase2sprkkr.result_files.definitions.sfn._ArrayItem  ase2sprkkr.result_files.definitions.sfn._ArrayShape  ase2sprkkr.result_files.definitions.sfn._MeshesView  ase2sprkkr.result_files.definitions.sfn._SFNSectionDefinition  ase2sprkkr.result_files.definitions.sfn._SFNValueDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.result_files.definitions.sfn
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _fortran_record
+      create_definition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SFNDefinition
+      SFNResultFile
+      ShapeFunctionMesh
+      _ArrayItem
+      _ArrayShape
+      _MeshesView
+      _SFNSectionDefinition
+      _SFNValueDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

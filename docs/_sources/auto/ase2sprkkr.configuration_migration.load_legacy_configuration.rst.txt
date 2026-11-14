@@ -1,0 +1,8 @@
+load\_legacy\_configuration
+===========================
+
+Full name: **ase2sprkkr.configuration\_migration.load\_legacy\_configuration**
+
+.. currentmodule:: ase2sprkkr.configuration_migration
+
+.. autofunction:: load_legacy_configuration

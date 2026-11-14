@@ -1,0 +1,51 @@
+band\_spc
+=========
+
+Full name: **ase2sprkkr.result\_files.definitions.band\_spc**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.result_files.definitions.band_spc.BandSPCDefinition  ase2sprkkr.result_files.definitions.band_spc.BandSPCResultFile 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.result_files.definitions.band_spc
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BandSPCDefinition
+      BandSPCResultFile
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

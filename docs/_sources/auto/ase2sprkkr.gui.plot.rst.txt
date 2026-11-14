@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.gui.plot**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.gui.plot.Multiplot 
+.. inheritance-diagram::  ase2sprkkr.gui.plot.Multiplot  ase2sprkkr.gui.plot.PlotControls 
       :parts: 1
 
 |
@@ -37,6 +37,7 @@ Full name: **ase2sprkkr.gui.plot**
       combined_colormap
       create_rc_context
       finish_plot
+      lineplot
       normalize_rc_params
       plotting_function
       set_up_common_plot
@@ -54,6 +55,7 @@ Full name: **ase2sprkkr.gui.plot**
       :template: custom-class-template.rst
    
       Multiplot
+      PlotControls
    
    
 

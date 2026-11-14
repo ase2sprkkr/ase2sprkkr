@@ -1,0 +1,50 @@
+dangerous\_values
+=================
+
+Full name: **ase2sprkkr.common.dangerous\_values**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.dangerous_values.DangerousValue 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.dangerous_values
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      DangerousValue
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

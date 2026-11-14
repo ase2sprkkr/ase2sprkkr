@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="input_parameters" href="ase2sprkkr.input_parameters.definitions.dos.input_parameters.html" />
-    <link rel="prev" title="input_parameters" href="ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters.html" /> 
+    <link rel="next" title="input_parameters_definition" href="ase2sprkkr.input_parameters.definitions.dos.input_parameters_definition.html" />
+    <link rel="prev" title="ComptonInputParametersDefinition" href="ase2sprkkr.input_parameters.definitions.compton.ComptonInputParametersDefinition.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,47 +62,96 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.aes.html">aes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.aipes.html">aipes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.aps.html">aps</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfek.html">bsfek</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfkk.html">bsfkk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.band.html">band</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bonding.html">bonding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsdosij.html">bsdosij</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.html">bsf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.chi.html">chi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.chilandau.html">chilandau</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.chixas.html">chixas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.clpes.html">clpes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.clxps.html">clxps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.compton.html">compton</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.ekrel.html">ekrel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.fmag.html">fmag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.fscat.html">fscat</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jalf.html">jalf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jorb.html">jorb</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html">jxc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.mecheck.html">mecheck</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.meplot.html">meplot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.nraes.html">nraes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.nucsscpl.html">nucsscpl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.optabs.html">optabs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html">phagen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plot2dpot.html">plot2dpot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plot2dpr.html">plot2dpr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plot2drho.html">plot2drho</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotpot.html">plotpot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotprs.html">plotprs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotrho.html">plotrho</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotsfn.html">plotsfn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.posani.html">posani</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.posaniprep.html">posaniprep</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.posanitau.html">posanitau</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.pshift.html">pshift</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html">scf</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sigma.html">sigma</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.socpar.html">socpar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.spleed.html">spleed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.stoner.html">stoner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.t1.html">t1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.tdobs.html">tdobs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.torque.html">torque</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.tutorial.html">tutorial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.vbpes.html">vbpes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.wfplot.html">wfplot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xas.html">xas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xes.html">xes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xrs.html">xrs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html">marpes</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.html">task_definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.html">tasks</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -136,106 +188,11 @@
 <h1>dos<a class="headerlink" href="#dos" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.input_parameters.definitions.dos</strong></p>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.input_parameters.definitions.dos">DOS task input parameters definition</p>
-<p><strong>Description of the sections and parameters</strong></p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>DOS - The density of states computation
-
-INPUT PARAMETERS dos contains:
-------------------------------
-        SECTION CONTROL contains:
-    -----------------------------
-        DATASET : String                  The custom field for the description of the problem - the output files will been called &#39;DATASET.&lt;ext&gt;&#39;.
-        ADSI : FixedValue(DOS) ≝ DOS      Type of the computation.
-        POTFIL : String                   The potential file (see SPRKKR documentation for its format). It isn&#39;t necessary to set it, it will be set by the calculator.
-        KRWS : Integer ≝ 1  (optional)    If it is 0, RWS is taken from the potential file and scaled. If 1, RWS is calculated by scaling the muffin-tin radii by a common scaling factor. (This setting is forced in the case of FULLPOT.)
-        KRMT : AnyOf(0,1,2,3,4,5,6)  (optional)
-
-            Possible values:
-              0         RMT is taken from the potential file
-              1         RMT = min( x*RWS )
-              2         RMT = min( d_ij / 2 )
-              3         RMT from atomic charge density (=&gt; KRWS=1)
-              4         RMT from atomic Hartree potential (=&gt; KRWS=1)
-              5         RMT from total atomic potential (=&gt; KRWS=1)
-              6         take average of 3 and 4 (=&gt; KRWS=1)
-
-            It controls how the muffin-tin radii are calculated.
-
-        PRINT : Integer ≝ 0  (optional)   Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.
-        NONMAG : Flag ≝ False  (optional)  Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation.
-        NOHFF : Flag ≝ False  (optional)  Set this flag, if you want to include hyper fine field calculation. This leads to a slower calculation.
-        NOSYM : Flag ≝ False  (optional)  Set this flag, if you want to supress all symetry consideration. This leads to a slower calculation.
-
-
-
-        SECTION TAU contains:
-    -------------------------
-        BZINT : AnyOf(POINTS,WEYL,CLUSTER)  (optional)
-
-            Possible values:
-              POINTS    special points method
-              WEYL      Weyl method
-              CLUSTER   Cluster method
-
-
-            The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
-            dom points. The number of k-points used for the integration varies quadratically be-
-            tween 0.0 and ImE according to the imaginary part of the energy.
-
-            The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
-            points. It is the standard method and gives a good compromise concerning accuracy
-            and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
-            regular mesh.
-
-
-            The mode of BZ-integration used for calculation of the scattering  path operator τ
-
-        NKTAB : Integer ≝ 250  (optional)  Number of points for the special points method
-        NKTAB2D : Integer  (optional)     Number of points for the special points method for 2D region of 2D problem
-        NKTAB3D : Integer  (optional)     Number of points for the special points method for 3D region of 2D problem
-        NKMIN : Integer ≝ 300  (optional)  Minimal number of k-points used for Weyl integration
-        NKMAX : Integer ≝ 500  (optional)  Maximal number of k-points used for Weyl integration
-        KKRMODE : AnyOf(STANDARD,TB,IMPURITY)  (optional)
-
-        Expert options:
-        --------------
-            CLUSTER : Flag ≝ False  (optional, expert)  Do cluster type calculation.
-            NSHLCLU : Integer  (optional, expert)  Number of atomic shells around the central atom of a cluster
-            CLURAD : Real  (optional, expert)  Radius of the cluster in multiples of ALAT.
-            IQCNTR : Site  (optional, expert)  The center of the cluster is set at the site position with number IQCNTR of the specified basis.
-            ITCNTR : AtomicType  (optional, expert)  The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR.
-            NLOUT : Integer ≝ 3  (optional, expert)  The calculated τ -matrix is printed up to lmax=NLOUT.
-            MOL : Flag ≝ False  (optional, expert)  Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.
-
-
-
-        SECTION ENERGY contains:
-    ----------------------------
-        GRID : Array(of Integer) ≝ [3]    Type of the grid for the energy-mesh
-        NE : Array(of Integer) ≝ [300]    Number of points in energy-mesh
-        ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.01 Ry  (optional)
-        EMIN : Real  (optional)           The real part of the lowest E-value
-        EMINEV : Real  (optional)         EMIN, given in eV with respect to the Fermi level
-        EMAX : Real  (optional)           value of the highest energy
-        EMAXEV : Real  (optional)         EMAX in eV with respect to the Fermi level
-
-
-
-        SECTION TASK contains:
-    --------------------------
-        TASK : FixedValue(DOS) ≝ DOS  (optional)
-
-
-
-        SECTION SITES contains:
-    ---------------------------
-        NL : Array(of Integer) ≝ [3]  (optional)  Angula momentum cutoff (the first discarded l-space)
-</pre></div>
-</div>
+<p id="module-ase2sprkkr.input_parameters.definitions.dos">DOS input-parameter definition.</p>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.input_parameters.html#ase2sprkkr.input_parameters.definitions.dos.input_parameters" title="ase2sprkkr.input_parameters.definitions.dos.input_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.input_parameters_definition.html#ase2sprkkr.input_parameters.definitions.dos.input_parameters_definition" title="ase2sprkkr.input_parameters.definitions.dos.input_parameters_definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters_definition</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -246,8 +203,8 @@ INPUT PARAMETERS dos contains:
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters.html" class="btn btn-neutral float-left" title="input_parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.input_parameters.definitions.dos.input_parameters.html" class="btn btn-neutral float-right" title="input_parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.input_parameters.definitions.compton.ComptonInputParametersDefinition.html" class="btn btn-neutral float-left" title="ComptonInputParametersDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.input_parameters.definitions.dos.input_parameters_definition.html" class="btn btn-neutral float-right" title="input_parameters_definition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

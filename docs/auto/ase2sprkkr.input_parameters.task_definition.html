@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>task_definition &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="_normalize_identifier" href="ase2sprkkr.input_parameters.task_definition._normalize_identifier.html" />
+    <link rel="prev" title="_TaskSelectorMap" href="ase2sprkkr.input_parameters.input_parameters_definitions._TaskSelectorMap.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">task_definition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._normalize_identifier.html">_normalize_identifier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._normalize_task_files.html">_normalize_task_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._validate_executable.html">_validate_executable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html">InputParametersRegistry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.TaskDefinition.html">TaskDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.TaskRegistry.html">TaskRegistry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._ExtraTaskRegistry.html">_ExtraTaskRegistry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._TaskFileFormatter.html">_TaskFileFormatter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.TaskMismatchError.html">ase2sprkkr.input_parameters.task_definition.TaskMismatchError</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._MissingTaskFileValue.html">ase2sprkkr.input_parameters.task_definition._MissingTaskFileValue</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.html">tasks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+      <li class="breadcrumb-item active">task_definition</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.input_parameters.task_definition.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="task-definition">
+<h1>task_definition<a class="headerlink" href="#task-definition" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr.input_parameters.task_definition</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-842b8c29f2abbfe581a9f2d8e9f34a8906c02010.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.task_definition.InputParametersRegistry, ase2sprkkr.input_parameters.task_definition.TaskDefinition, ase2sprkkr.input_parameters.task_definition.TaskRegistry, ase2sprkkr.input_parameters.task_definition._ExtraTaskRegistry, ase2sprkkr.input_parameters.task_definition._TaskFileFormatter" usemap="#inheritance0255d7acfc" class="inheritance graphviz" /></div>
+<map id="inheritance0255d7acfc" name="inheritance0255d7acfc">
+<area shape="rect" id="node1" href="ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html#ase2sprkkr.input_parameters.task_definition.InputParametersRegistry" target="_top" title="Registry and factory service for input&#45;parameter schemas and values." alt="" coords="158,109,340,137"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.module_registry.ModuleRegistry.html#ase2sprkkr.common.module_registry.ModuleRegistry" target="_top" title="Lazily discover and load one named value from package modules." alt="" coords="5,109,129,137"/>
+<area shape="rect" id="node3" href="ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.task_definition.TaskDefinition" target="_top" title="Immutable declarative metadata identifying one SPR&#45;KKR task." alt="" coords="10,57,124,85"/>
+<area shape="rect" id="node4" href="ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.task_definition.TaskRegistry" target="_top" title="Authoritative namespace and resolver for SPR&#45;KKR task identities." alt="" coords="15,5,119,33"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
+<p id="module-ase2sprkkr.input_parameters.task_definition">Task-level metadata and registries for SPR-KKR calculations.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._normalize_identifier.html#ase2sprkkr.input_parameters.task_definition._normalize_identifier" title="ase2sprkkr.input_parameters.task_definition._normalize_identifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_normalize_identifier</span></code></a>(value, field)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._normalize_task_files.html#ase2sprkkr.input_parameters.task_definition._normalize_task_files" title="ase2sprkkr.input_parameters.task_definition._normalize_task_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_normalize_task_files</span></code></a>(files, field)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._validate_executable.html#ase2sprkkr.input_parameters.task_definition._validate_executable" title="ase2sprkkr.input_parameters.task_definition._validate_executable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate_executable</span></code></a>(value)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html#ase2sprkkr.input_parameters.task_definition.InputParametersRegistry" title="ase2sprkkr.input_parameters.task_definition.InputParametersRegistry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputParametersRegistry</span></code></a>(package)</p></td>
+<td><p>Registry and factory service for input-parameter schemas and values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.task_definition.TaskDefinition" title="ase2sprkkr.input_parameters.task_definition.TaskDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TaskDefinition</span></code></a>(...[, name, executable, mpi, ...])</p></td>
+<td><p>Immutable declarative metadata identifying one SPR-KKR task.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.task_definition.TaskRegistry" title="ase2sprkkr.input_parameters.task_definition.TaskRegistry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TaskRegistry</span></code></a>(input_parameters_registry, ...)</p></td>
+<td><p>Authoritative namespace and resolver for SPR-KKR task identities.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._ExtraTaskRegistry.html#ase2sprkkr.input_parameters.task_definition._ExtraTaskRegistry" title="ase2sprkkr.input_parameters.task_definition._ExtraTaskRegistry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_ExtraTaskRegistry</span></code></a>(package, ...)</p></td>
+<td><p>Validate explicit task declarations at materialization time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._TaskFileFormatter.html#ase2sprkkr.input_parameters.task_definition._TaskFileFormatter" title="ase2sprkkr.input_parameters.task_definition._TaskFileFormatter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_TaskFileFormatter</span></code></a>(parameters)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Exceptions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.TaskMismatchError.html#ase2sprkkr.input_parameters.task_definition.TaskMismatchError" title="ase2sprkkr.input_parameters.task_definition.TaskMismatchError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TaskMismatchError</span></code></a>(expected_task_name, task_name)</p></td>
+<td><p>Parsed input values represent a different task than expected.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition._MissingTaskFileValue.html#ase2sprkkr.input_parameters.task_definition._MissingTaskFileValue" title="ase2sprkkr.input_parameters.task_definition._MissingTaskFileValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_MissingTaskFileValue</span></code></a></p></td>
+<td><p>Optional filename template field is unset.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.input_parameters.input_parameters_definitions._TaskSelectorMap.html" class="btn btn-neutral float-left" title="_TaskSelectorMap" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.input_parameters.task_definition._normalize_identifier.html" class="btn btn-neutral float-right" title="_normalize_identifier" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

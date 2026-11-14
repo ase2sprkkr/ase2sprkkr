@@ -45,6 +45,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
@@ -56,10 +59,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -81,6 +84,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.input_parameters.definitions.scf</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,28 +95,95 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.scf</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;SCF task input parameters definition&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""SCF input-parameter definition."""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SCF</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">TASK</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span>
-<span class="c1">#   ,InputValueDefinition as V</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">,</span> <span class="n">Keyword</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataValidityError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._file_manifests</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SCF</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">TASK</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..task_definition</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskDefinition</span><span class="p">,</span> <span class="n">TaskFile</span>
 
 
-<div class="viewcode-block" id="input_parameters">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.input_parameters.html#ase2sprkkr.input_parameters.definitions.scf.input_parameters">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span>
-        <span class="s2">&quot;scf&quot;</span><span class="p">,</span>
-        <span class="p">[</span><span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;SCF&quot;</span><span class="p">),</span> <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;SCF&quot;</span><span class="p">),</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">(),</span> <span class="n">SCF</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">],</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;SCF - Calculate a self-consistent potential&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrscf&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="SCFInputParametersDefinition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.SCFInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.scf.SCFInputParametersDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SCFInputParametersDefinition</span><span class="p">(</span><span class="n">InputParametersDefinition</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""SCF schema with files depending on the concrete parameters."""</span>
+
+<div class="viewcode-block" id="SCFInputParametersDefinition.cache_files">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.SCFInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.scf.SCFInputParametersDefinition.cache_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cache_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">cache_files</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">FULLPOT</span><span class="p">():</span>
+            <span class="n">sfnfil</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">SFNFIL</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">sfnfil</span><span class="p">:</span>
+                <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resolve_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">sfnfil</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">files</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SCFInputParametersDefinition.output_files">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.SCFInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.scf.SCFInputParametersDefinition.output_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output_files</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">))</span>
+        <span class="n">potfil</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">potfil</span><span class="p">:</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resolve_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">potfil</span><span class="si">}</span><span class="s2">_new"</span><span class="p">))</span>
+        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TaskFile</span><span class="p">(</span><span class="n">resolve_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">"*_SCFSTART.dos"</span><span class="p">),</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">files</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_validate_scf">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf._validate_scf.html#ase2sprkkr.input_parameters.definitions.scf._validate_scf">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_scf</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">_values</span><span class="p">,</span> <span class="n">why</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">why</span> <span class="o">==</span> <span class="s2">"set"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"MIX"</span><span class="p">,</span> <span class="s2">"MIXOP"</span><span class="p">,</span> <span class="s2">"TOL"</span><span class="p">,</span> <span class="s2">"EFGUESS"</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">SCF</span><span class="p">[</span><span class="n">name</span><span class="p">]()</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">"EFGUESS"</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)):</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DataValidityError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SCF.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite"</span> <span class="o">+</span> <span class="p">(</span><span class="s2">" and positive."</span> <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">"EFGUESS"</span> <span class="k">else</span> <span class="s2">"."</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">FULLPOT</span><span class="p">()</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">ALG</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"TCHEBY"</span><span class="p">:</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DataValidityError</span><span class="p">(</span><span class="s2">"Native TCHEBY is not available with FULLPOT."</span><span class="p">))</span>
+    <span class="n">grid</span><span class="p">,</span> <span class="n">ne</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">GRID</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"2"</span><span class="p">,</span> <span class="s2">"3"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ne</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DataValidityError</span><span class="p">(</span><span class="s2">"GRID=2/3 requires NE&gt;=2 to avoid native one-point integration defects."</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">errors</span> <span class="ow">or</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="input_parameters_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.input_parameters_definition.html#ase2sprkkr.input_parameters.definitions.scf.input_parameters_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_definition</span><span class="p">():</span>
+    <span class="n">scf</span> <span class="o">=</span> <span class="n">SCF</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+        <span class="n">add</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">SCF</span><span class="p">[</span><span class="s2">"ALG"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">Keyword</span><span class="p">({</span><span class="s2">"BROYDEN2"</span><span class="p">:</span> <span class="s2">"Broyden's second method"</span><span class="p">,</span> <span class="s2">"TCHEBY"</span><span class="p">:</span> <span class="s2">"Tchebychev mixing"</span><span class="p">,</span> <span class="s2">"ANDERSON"</span><span class="p">:</span> <span class="s2">"Anderson mixing"</span><span class="p">}),</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">"BROYDEN2"</span><span class="p">),</span>
+            <span class="n">SCF</span><span class="p">[</span><span class="s2">"NITER"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+            <span class="n">SCF</span><span class="p">[</span><span class="s2">"ISTBRY"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+            <span class="n">SCF</span><span class="p">[</span><span class="s2">"ITDEPT"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">40</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Broyden/Anderson history depth; native resets values below 3 to 40 and caps values above 40."</span><span class="p">),</span>
+            <span class="n">SCF</span><span class="p">[</span><span class="s2">"MIXOP"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s2">"Orbital-polarization mixing; omitted native value is initialized before reading MIX and is not necessarily the user-supplied MIX."</span><span class="p">),</span>
+            <span class="n">SCF</span><span class="p">[</span><span class="s2">"EFGUESS"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s2">"Initial Fermi-energy guess in Ry; skips the initial search when building a starting potential, not all later EF updates."</span><span class="p">),</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">ENERGY</span><span class="p">()</span>
+    <span class="n">energy</span><span class="o">.</span><span class="n">copy_member</span><span class="p">(</span><span class="s2">"NE"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">SetOf</span><span class="p">(</span><span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">SCFInputParametersDefinition</span><span class="p">(</span>
+        <span class="s2">"scf"</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">CONTROL</span><span class="p">(</span><span class="s2">"SCF"</span><span class="p">),</span> <span class="n">TASK</span><span class="p">(</span><span class="s2">"SCF"</span><span class="p">),</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">],</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"Calculate a self-consistent potential"</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="n">_validate_scf</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">schema</span><span class="o">.</span><span class="n">_task_definition</span> <span class="o">=</span> <span class="n">TaskDefinition</span><span class="p">(</span>
+        <span class="s2">"SCF"</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"SCF"</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrscf"</span><span class="p">,</span>
         <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span></div>
+        <span class="n">output_reader</span><span class="o">=</span><span class="s2">"SCF"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">schema</span></div>
 
-
-
-<span class="sd">&quot;&quot;&quot; SCF task input parameters definition&quot;&quot;&quot;</span>
 </pre></div>
 
            </div>

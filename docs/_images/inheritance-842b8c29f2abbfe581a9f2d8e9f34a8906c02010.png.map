@@ -1,0 +1,6 @@
+<map id="inheritance0255d7acfc" name="inheritance0255d7acfc">
+<area shape="rect" id="node1" href="ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html#ase2sprkkr.input_parameters.task_definition.InputParametersRegistry" target="_top" title="Registry and factory service for input&#45;parameter schemas and values." alt="" coords="158,109,340,137"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.module_registry.ModuleRegistry.html#ase2sprkkr.common.module_registry.ModuleRegistry" target="_top" title="Lazily discover and load one named value from package modules." alt="" coords="5,109,129,137"/>
+<area shape="rect" id="node3" href="ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.task_definition.TaskDefinition" target="_top" title="Immutable declarative metadata identifying one SPR&#45;KKR task." alt="" coords="10,57,124,85"/>
+<area shape="rect" id="node4" href="ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.task_definition.TaskRegistry" target="_top" title="Authoritative namespace and resolver for SPR&#45;KKR task identities." alt="" coords="15,5,119,33"/>
+</map>

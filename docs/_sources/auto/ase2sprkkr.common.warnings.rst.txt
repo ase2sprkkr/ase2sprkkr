@@ -5,6 +5,14 @@ Full name: **ase2sprkkr.common.warnings**
 
 
 
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.warnings.InvalidValuePolicy 
+      :parts: 1
+
+|
+
+
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.common.warnings
@@ -16,10 +24,26 @@ Full name: **ase2sprkkr.common.warnings**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      catch_warnings_of
+   
    
 
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      InvalidValuePolicy
    
    
 
@@ -32,7 +56,9 @@ Full name: **ase2sprkkr.common.warnings**
       :toctree:
    
       DataValidityError
+      DataValidityErrors
       DataValidityWarning
+      ValidationResult
    
    
 

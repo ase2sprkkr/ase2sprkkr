@@ -1,0 +1,36 @@
+TransformedCell
+===============
+
+
+.. currentmodule:: ase2sprkkr.bindings.spglib
+
+.. autoclass:: TransformedCell
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.spglib.TransformedCell
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

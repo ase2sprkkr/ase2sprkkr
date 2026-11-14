@@ -1,0 +1,36 @@
+ChixasInputParametersDefinition
+===============================
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.definitions.chixas
+
+.. autoclass:: ChixasInputParametersDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.chixas.ChixasInputParametersDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.sprkkr.site_equivalence &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Execution, persistence and remote runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.sprkkr.site_equivalence</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.sprkkr.site_equivalence</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Define the exact equivalence classes of sites passed to spglib."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.unique_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.occupations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Occupation</span>
+
+
+<div class="viewcode-block" id="occupation_key">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.site_equivalence.occupation_key.html#ase2sprkkr.sprkkr.site_equivalence.occupation_key">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">occupation_key</span><span class="p">(</span><span class="n">occupation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Exact chemical composition, including vacancies and independent of order."""</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span> <span class="k">for</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">amount</span> <span class="ow">in</span> <span class="n">occupation</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="site_equivalence_tags">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.site_equivalence.site_equivalence_tags.html#ase2sprkkr.sprkkr.site_equivalence.site_equivalence_tags">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">site_equivalence_tags</span><span class="p">(</span>
+    <span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">equivalence</span><span class="o">=</span><span class="s2">"site-types"</span><span class="p">,</span> <span class="n">atomic_kinds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">assigned_sites</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">region_memberships</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Classify sites once, before the symmetry search.</span>
+
+<span class="sd">    Uninitialized sites use ASE occupations. Initialized sites in strict mode</span>
+<span class="sd">    retain their SiteType identities and independent per-site magnetisations.</span>
+<span class="sd">    ASE/CIF spacegroup_kinds index occupancy metadata, not independent SiteTypes.</span>
+<span class="sd">    Explicit atomic_kinds override the species classification.</span>
+<span class="sd">    assigned_sites preserves SiteType sharing established by earlier region</span>
+<span class="sd">    calculations. region_memberships distinguishes atoms in different regions</span>
+<span class="sd">    even if they otherwise have identical SiteTypes.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">equivalence</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"site-types"</span><span class="p">,</span> <span class="s2">"occupation"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"equivalence must be 'site-types' or 'occupation'"</span><span class="p">)</span>
+
+    <span class="n">arrays</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span>
+    <span class="n">sites</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="s2">"sprkkr_sites_data"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"sprkkr_sites_data"</span> <span class="ow">in</span> <span class="n">arrays</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">initial_magmoms</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">arrays</span><span class="p">[</span><span class="s2">"initial_magmoms"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"initial_magmoms"</span> <span class="ow">in</span> <span class="n">arrays</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">atomic_kinds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">atomic_kinds</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"atomic_kinds must contain one value per site"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">assigned_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">assigned_sites</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"assigned_sites must contain one value per site"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">region_memberships</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">region_memberships</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"region_memberships must contain one value per site"</span><span class="p">)</span>
+
+    <span class="n">partial</span> <span class="o">=</span> <span class="n">sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">)</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)):</span>
+        <span class="n">site</span> <span class="o">=</span> <span class="n">sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">atomic_kinds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Explicit atomic kinds completely replace implicit site classes.</span>
+            <span class="n">kind</span> <span class="o">=</span> <span class="n">atomic_kinds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">kind</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">else</span> <span class="n">kind</span>
+        <span class="k">elif</span> <span class="n">site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">equivalence</span> <span class="o">==</span> <span class="s2">"site-types"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">partial</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"site-type"</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">site_type</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">magnetisation</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">occ</span> <span class="o">=</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span> <span class="k">if</span> <span class="n">site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Occupation</span><span class="o">.</span><span class="n">for_atom_from_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"occupation"</span><span class="p">,</span> <span class="n">occupation_key</span><span class="p">(</span><span class="n">occ</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">atomic_kinds</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">equivalence</span> <span class="o">==</span> <span class="s2">"site-types"</span>
+                <span class="ow">and</span> <span class="n">initial_magmoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">moment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">initial_magmoms</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">component</span><span class="p">)</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">moment</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">assigned_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Group by the shared SiteType, not by each distinct Site object.</span>
+            <span class="n">site</span> <span class="o">=</span> <span class="n">assigned_sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">site_type</span> <span class="k">if</span> <span class="n">site</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">region_memberships</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">region_memberships</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">intc</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="refine_partial_site_tags">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.site_equivalence.refine_partial_site_tags.html#ase2sprkkr.sprkkr.site_equivalence.refine_partial_site_tags">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">refine_partial_site_tags</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">sites</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Refine chemical symmetry using known SiteTypes of partially set sites.</span>
+
+<span class="sd">    Uninitialized sites inherit the known identity of their preliminary</span>
+<span class="sd">    symmetry orbit. Distinct known SiteTypes or site magnetisations split</span>
+<span class="sd">    an orbit; no Site objects are created or changed.</span>
+<span class="sd">    """</span>
+    <span class="n">known</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">site</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sites</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">site</span><span class="p">:</span>
+            <span class="n">known</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                <span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">site_type</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">magnetisation</span><span class="p">)),</span>
+            <span class="p">)</span>
+
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">tag</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">site_type</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">magnetisation</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">site</span> <span class="k">else</span> <span class="n">known</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">[</span><span class="n">i</span><span class="p">])),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">sites</span><span class="p">))</span>
+    <span class="p">]</span>
+    <span class="n">refined</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span><span class="o">.</span><span class="n">mapping</span>
+    <span class="k">if</span> <span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">are_equivalent</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">refined</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tags</span>
+    <span class="k">return</span> <span class="n">refined</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

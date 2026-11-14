@@ -1,0 +1,479 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.outputs.file_provenance &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Execution, persistence and remote runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.outputs.file_provenance</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.outputs.file_provenance</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""File provenance for path-backed values exposed by calculation results."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MappingProxyType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.files</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileEntry</span><span class="p">,</span> <span class="n">FileManifest</span><span class="p">,</span> <span class="n">FileVersion</span>
+
+
+<div class="viewcode-block" id="capture_result_file_versions">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.file_provenance.capture_result_file_versions.html#ase2sprkkr.outputs.file_provenance.capture_result_file_versions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">capture_result_file_versions</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FileVersion</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Capture path-backed output values exposed by *result*.</span>
+
+<span class="sd">    Output options are owned by ASE2SPRKKR and expose ``path()`` when their</span>
+<span class="sd">    value is backed by a file. Provenance enrichment is deliberately best-effort:</span>
+<span class="sd">    an optional or unstable output is omitted rather than represented by a weak</span>
+<span class="sd">    metadata-only identity.</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">output_values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: BLE001 - optional result metadata boundary</span>
+        <span class="k">return</span> <span class="n">MappingProxyType</span><span class="p">({})</span>
+
+    <span class="n">versions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FileVersion</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">path_getter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"path"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">path_getter</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">path_getter</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: BLE001 - optional result metadata boundary</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">versions</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">FileVersion</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">require_digest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: BLE001 - provenance enrichment is best effort</span>
+            <span class="k">continue</span>
+    <span class="k">return</span> <span class="n">MappingProxyType</span><span class="p">(</span><span class="n">versions</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="task_file_declarations">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.file_provenance.task_file_declarations.html#ase2sprkkr.outputs.file_provenance.task_file_declarations">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">task_file_declarations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">kinds</span><span class="o">=</span><span class="p">(</span><span class="s2">"input"</span><span class="p">,</span> <span class="s2">"cache"</span><span class="p">,</span> <span class="s2">"output"</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">"""Return resolved task file declarations, if historical input is usable.</span>
+
+<span class="sd">    These declarations are expectations, not evidence that a particular output</span>
+<span class="sd">    was written by the run. Keep the parser's observed file registry separate.</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">input_parameters</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: BLE001 - optional historical input parser boundary</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">()</span>
+    <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">()</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters.input_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">InputParameters</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">()</span>
+    <span class="c1"># Historical results may retain an original input schema even when the</span>
+    <span class="c1"># effective TASK value selects another task. That input is useful for</span>
+    <span class="c1"># inspection, but its values cannot safely resolve the new task's file</span>
+    <span class="c1"># declarations. Keep observed output files available independently.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parameters</span><span class="o">.</span><span class="n">task_definition_required</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parameters</span><span class="p">,</span> <span class="p">()</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+    <span class="n">declarations</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">_files"</span><span class="p">)(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">declarations</span></div>
+
+
+
+
+<div class="viewcode-block" id="register_declared_result_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.file_provenance.register_declared_result_files.html#ase2sprkkr.outputs.file_provenance.register_declared_result_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_declared_result_files</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">warn_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Add existing task-declared outputs to the parsed result file registry.</span>
+
+<span class="sd">    The native OUT FILES table is authoritative for observed names and types.</span>
+<span class="sd">    A task declaration fills gaps but never overrides a file already registered</span>
+<span class="sd">    by the parser. Absent files are not registered; required ones can warn.</span>
+<span class="sd">    This must run after the calculation's outputs have been made available</span>
+<span class="sd">    locally (for persistent/remote runs, after result-file retrieval).</span>
+<span class="sd">    """</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">..result_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResultFile</span>
+
+    <span class="n">_parameters</span><span class="p">,</span> <span class="n">declarations</span> <span class="o">=</span> <span class="n">task_file_declarations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">kinds</span><span class="o">=</span><span class="p">(</span><span class="s2">"output"</span><span class="p">,))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">declarations</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">()</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">local_path</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="k">else</span> <span class="n">directory</span> <span class="o">/</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="c1"># A path is a stronger identity than a FILES-table key or extension:</span>
+    <span class="c1"># preserve parser-owned entries and prevent duplicate buttons in the GUI.</span>
+    <span class="n">registered</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">local_path</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">path</span><span class="p">()):</span> <span class="n">key</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">items</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">known_formats</span> <span class="o">=</span> <span class="n">ResultFile</span><span class="o">.</span><span class="n">definitions</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">registered_now</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">missing_required</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">result_key</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Retain the historical accessors for recognized structured outputs."""</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"DOS"</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".dos"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">"DOS"</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"BSFEK"</span><span class="p">,</span> <span class="s2">"BSFKK"</span><span class="p">}</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".bsf"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"_spol.bsf"</span><span class="p">):</span>
+                <span class="k">return</span> <span class="s2">"Bloch-SF"</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"JXC"</span><span class="p">,</span> <span class="s2">"DMI"</span><span class="p">}:</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">"_XCPLTEN_Jij.dat"</span><span class="p">,</span> <span class="s2">"_J_ij.dat"</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="s2">"jxc"</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"_XCPLTEN_Dij.dat"</span><span class="p">):</span>
+                <span class="k">return</span> <span class="s2">"dij"</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"_DMIVEC_Dij.dat"</span><span class="p">):</span>
+                <span class="k">return</span> <span class="s2">"dmi"</span>
+        <span class="k">return</span> <span class="n">filename</span>
+
+    <span class="c1"># The ARPES/SPEC result family already owns SPC registration (including</span>
+    <span class="c1"># multiple polarizations, BAND formats, and header-only SPLEED). Let it</span>
+    <span class="c1"># decide what is a useful spectrum rather than creating duplicate entries.</span>
+    <span class="n">special_spc_tasks</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"ARPES"</span><span class="p">,</span> <span class="s2">"AIPES"</span><span class="p">,</span> <span class="s2">"BAND"</span><span class="p">,</span> <span class="s2">"SPLEED"</span><span class="p">,</span> <span class="s2">"CLPES"</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">_kind</span><span class="p">,</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="n">declarations</span><span class="p">:</span>
+        <span class="n">declared</span> <span class="o">=</span> <span class="n">local_path</span><span class="p">(</span><span class="n">declaration</span><span class="p">)</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">declared</span><span class="p">)</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">sorted</span><span class="p">(</span><span class="n">local_path</span><span class="p">(</span><span class="n">match</span><span class="p">)</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">glob</span><span class="o">.</span><span class="n">has_magic</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">[</span><span class="n">declared</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="s2">"optional"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">missing_required</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+
+        <span class="n">hint</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">file_type</span> <span class="o">=</span> <span class="n">hint</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">hint</span> <span class="ow">and</span> <span class="n">hint</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">known_formats</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">registered</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">file_type</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">registered</span><span class="p">[</span><span class="n">path</span><span class="p">]]</span><span class="o">.</span><span class="n">file_type</span><span class="p">:</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">set_file_type</span><span class="p">(</span><span class="n">registered</span><span class="p">[</span><span class="n">path</span><span class="p">],</span> <span class="n">file_type</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">special_spc_tasks</span> <span class="ow">and</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">".spc"</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">key</span> <span class="o">=</span> <span class="n">result_key</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+                <span class="c1"># Different directories can contain files with the same name.</span>
+                <span class="c1"># Keep the filename recognizable without shadowing an entry.</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+                <span class="n">candidate</span> <span class="o">=</span> <span class="n">key</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="k">while</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">candidate</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">)"</span>
+                    <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">file_type</span><span class="p">)</span>
+            <span class="n">registered</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="n">registered_now</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">warn_missing</span> <span class="ow">and</span> <span class="n">missing_required</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2"> result is missing required output file(s): "</span>
+            <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">missing_required</span><span class="p">)),</span>
+            <span class="ne">RuntimeWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">registered_now</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="capture_result_file_manifest">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.file_provenance.capture_result_file_manifest.html#ase2sprkkr.outputs.file_provenance.capture_result_file_manifest">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">capture_result_file_manifest</span><span class="p">(</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">potential_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">result_files</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FileVersion</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_version</span><span class="p">:</span> <span class="n">FileVersion</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FileManifest</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Snapshot files declared by the task and observed by the parser.</span>
+
+<span class="sd">    InputParameters supplies resolved native input, output and cache files.</span>
+<span class="sd">    The parsed FILES section provides actual filenames and their roles.</span>
+<span class="sd">    Output wildcards are frozen to matching regular files at import time.</span>
+<span class="sd">    Missing literal paths remain declarations; unmatched patterns do not</span>
+<span class="sd">    become fictitious file paths.</span>
+
+<span class="sd">    This does not mutate result.files: a declaration does not prove that a</span>
+<span class="sd">    file was produced by this particular calculation.</span>
+<span class="sd">    """</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.files</span><span class="w"> </span><span class="kn">import</span> <span class="n">CacheEntry</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">output_path</span> <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">result</span><span class="o">.</span><span class="n">output_file</span>
+    <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot create a result file manifest without an OUT file"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">absolute</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="k">else</span> <span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">absolute</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="c1"># Each path has one semantic role; observed roles take precedence.</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">absolute</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="n">output</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">entries</span> <span class="ow">or</span> <span class="n">observed</span><span class="p">:</span>
+            <span class="n">previous</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">entries</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">role</span><span class="p">,</span>
+                <span class="n">previous</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">previous</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">optional</span><span class="p">,</span>
+                <span class="n">previous</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">previous</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pattern</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="n">parameters</span><span class="p">,</span> <span class="n">declarations</span> <span class="o">=</span> <span class="n">task_file_declarations</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">kind</span><span class="p">,</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="n">declarations</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">absolute</span><span class="p">(</span><span class="n">declaration</span><span class="p">)</span>
+        <span class="n">optional</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="s2">"optional"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">glob</span><span class="o">.</span><span class="n">has_magic</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))):</span>
+                <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">match</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                    <span class="n">add</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="n">optional</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="n">optional</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># The primary starting potential is a CONTROL value, not necessarily</span>
+        <span class="c1"># an auxiliary TaskFile declaration or an item in the OUT FILES table.</span>
+        <span class="n">potential</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">potential</span><span class="p">:</span>
+            <span class="n">add</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="s2">"input"</span><span class="p">)</span>
+
+    <span class="n">registered</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="c1"># OutputFilesSection.items() returns a dict, unlike dict.items().</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">registered</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="n">registered</span> <span class="o">=</span> <span class="n">registered</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">registered</span><span class="p">:</span>
+        <span class="n">role</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="s2">"output"</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">option</span><span class="o">.</span><span class="n">path</span><span class="p">()</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="s2">"path"</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="k">else</span> <span class="n">option</span>
+        <span class="k">if</span> <span class="n">role</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"input"</span><span class="p">,</span> <span class="s2">"potential"</span><span class="p">,</span> <span class="s2">"start_potential"</span><span class="p">}:</span>
+            <span class="n">kind</span> <span class="o">=</span> <span class="s2">"input"</span>
+        <span class="k">elif</span> <span class="n">role</span> <span class="o">==</span> <span class="s2">"sfn"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">sfn_generated</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">kind</span> <span class="o">=</span> <span class="s2">"output"</span>
+            <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">sfn_generated</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">kind</span> <span class="o">=</span> <span class="s2">"input"</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">kind</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">absolute</span><span class="p">(</span><span class="n">location</span><span class="p">),</span> <span class="p">(</span><span class="s2">"input"</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">role</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"taudir"</span><span class="p">,</span> <span class="s2">"tau_dir"</span><span class="p">}:</span>
+            <span class="n">kind</span> <span class="o">=</span> <span class="s2">"cache"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># A path which is a declared input/cache stays there even if</span>
+            <span class="c1"># SPR-KKR also lists it in the OUT FILES section.</span>
+            <span class="n">kind</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">absolute</span><span class="p">(</span><span class="n">location</span><span class="p">),</span> <span class="p">(</span><span class="s2">"output"</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">add</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">add</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span> <span class="s2">"input"</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">potential_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">potential</span> <span class="o">=</span> <span class="n">absolute</span><span class="p">(</span><span class="n">potential_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">potential</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+            <span class="n">add</span><span class="p">(</span>
+                <span class="n">potential</span><span class="p">,</span>
+                <span class="s2">"output"</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">task_name</span><span class="p">)</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"scf"</span> <span class="k">else</span> <span class="s2">"input"</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="n">known</span> <span class="o">=</span> <span class="p">{</span><span class="n">absolute</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">path</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="n">result_files</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">known</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="o">!=</span> <span class="n">output</span> <span class="ow">and</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+            <span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"output"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">selected</span><span class="p">(</span><span class="n">kind</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">path</span> <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">entries</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">kind</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">entry</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">kind</span><span class="p">,</span> <span class="n">optional</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="n">entries</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"output"</span><span class="p">,</span> <span class="s2">"cache"</span><span class="p">}:</span>
+            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="s2">"available"</span>
+            <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"cache"</span> <span class="ow">or</span> <span class="n">optional</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="s2">"skipped"</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="s2">"failed"</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Required result file is missing: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="n">FileEntry</span><span class="p">(</span>
+            <span class="n">local_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">optional</span><span class="o">=</span><span class="n">optional</span><span class="p">,</span> <span class="n">source_pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span>
+            <span class="n">availability_state</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">availability_message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">versions</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">digest</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">known</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">FileVersion</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">digest</span><span class="o">=</span><span class="n">digest</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">caches</span> <span class="o">=</span> <span class="p">(</span><span class="n">selected</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span> <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"input"</span><span class="p">,</span> <span class="s2">"output"</span><span class="p">,</span> <span class="s2">"cache"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">FileManifest</span><span class="p">(</span>
+        <span class="n">inputs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">entry</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">),</span>
+        <span class="n">outputs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">entry</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">),</span>
+        <span class="n">caches</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">CacheEntry</span><span class="p">(</span><span class="n">entry</span><span class="p">(</span><span class="n">path</span><span class="p">))</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">caches</span><span class="p">),</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">FileEntry</span><span class="p">(</span>
+            <span class="n">local_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">),</span>
+            <span class="n">availability_state</span><span class="o">=</span><span class="s2">"available"</span> <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"failed"</span><span class="p">,</span>
+            <span class="n">availability_message</span><span class="o">=</span><span class="p">(</span>
+                <span class="kc">None</span> <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"Result OUT file is missing: </span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">input_versions</span><span class="o">=</span><span class="n">versions</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">digest</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="n">output_versions</span><span class="o">=</span><span class="p">(</span>
+            <span class="n">output_version</span> <span class="ow">or</span> <span class="n">known</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="ow">or</span> <span class="n">FileVersion</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">require_digest</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="o">*</span><span class="n">versions</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">digest</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">captured_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"capture_result_file_versions"</span><span class="p">,</span> <span class="s2">"capture_result_file_manifest"</span><span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

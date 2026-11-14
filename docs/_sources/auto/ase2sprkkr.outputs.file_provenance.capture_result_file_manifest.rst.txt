@@ -1,0 +1,8 @@
+capture\_result\_file\_manifest
+===============================
+
+Full name: **ase2sprkkr.outputs.file\_provenance.capture\_result\_file\_manifest**
+
+.. currentmodule:: ase2sprkkr.outputs.file_provenance
+
+.. autofunction:: capture_result_file_manifest

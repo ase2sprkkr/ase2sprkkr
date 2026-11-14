@@ -1,0 +1,50 @@
+dependencies
+============
+
+Full name: **ase2sprkkr.common.dependencies**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.dependencies.DependentValue 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.dependencies
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      DependentValue
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

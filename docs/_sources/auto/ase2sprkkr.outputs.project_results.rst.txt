@@ -1,0 +1,58 @@
+project\_results
+================
+
+Full name: **ase2sprkkr.outputs.project\_results**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.project_results
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _input_parameters_for_record
+      _reader_for_record
+      _record
+      _result_processor_for_record
+      _task_definition_for_record
+      application_metadata
+      attach_project_run
+      load_project_result
+      retry_project_postprocessing
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      ProjectResultUnavailableError
+      UnrecoverableProjectResultError
+   
+   
+
+
+  
+  
+  

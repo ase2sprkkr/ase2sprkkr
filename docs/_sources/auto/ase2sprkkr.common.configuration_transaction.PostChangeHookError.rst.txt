@@ -1,0 +1,6 @@
+ase2sprkkr.common.configuration\_transaction.PostChangeHookError
+================================================================
+
+.. currentmodule:: ase2sprkkr.common.configuration_transaction
+
+.. autoexception:: PostChangeHookError

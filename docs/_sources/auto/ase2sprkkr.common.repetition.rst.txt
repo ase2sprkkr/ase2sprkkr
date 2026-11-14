@@ -1,0 +1,57 @@
+repetition
+==========
+
+Full name: **ase2sprkkr.common.repetition**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.repetition.AnyRepeatedItemGrammar  ase2sprkkr.common.repetition.ConstRepeatedItemGrammar  ase2sprkkr.common.repetition.NotRepeatedItemGrammar  ase2sprkkr.common.repetition.Repeated  ase2sprkkr.common.repetition.RepeatedItemGrammar  ase2sprkkr.common.repetition.RepeatedNumberedIf  ase2sprkkr.common.repetition.ValidatedRepeatedItemGrammar  ase2sprkkr.common.repetition.VariableRepeatedItemGrammar 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.repetition
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AnyRepeatedItemGrammar
+      ConstRepeatedItemGrammar
+      NotRepeatedItemGrammar
+      Repeated
+      RepeatedItemGrammar
+      RepeatedNumberedIf
+      ValidatedRepeatedItemGrammar
+      VariableRepeatedItemGrammar
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

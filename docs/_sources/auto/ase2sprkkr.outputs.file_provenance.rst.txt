@@ -1,0 +1,45 @@
+file\_provenance
+================
+
+Full name: **ase2sprkkr.outputs.file\_provenance**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.file_provenance
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      capture_result_file_manifest
+      capture_result_file_versions
+      register_declared_result_files
+      task_file_declarations
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

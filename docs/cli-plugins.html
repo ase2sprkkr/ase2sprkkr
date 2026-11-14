@@ -1,0 +1,184 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLI command plugins &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Crystal symmetry and cell transformations" href="symmetry.html" />
+    <link rel="prev" title="How to use ASE2SPRKKR" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CLI command plugins</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cli-plugins.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cli-command-plugins">
+<h1>CLI command plugins<a class="headerlink" href="#cli-command-plugins" title="Link to this heading"></a></h1>
+<p>An installed Python distribution can extend the <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span></code> command
+without modifying ASE2SPRKKR. A plugin exposes a <strong>Python package</strong> through
+the entry point named <code class="docutils literal notranslate"><span class="pre">cli</span></code> in the group <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span></code>:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[project.entry-points.</span><span class="s2">"ase2sprkkr"</span><span class="k">]</span>
+<span class="n">cli</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"my_plugin.commands"</span>
+</pre></div>
+</div>
+<p>The target must be an importable package (with an <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>), not a
+single command module. Its immediate Python modules become CLI commands:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>my_plugin/
+    __init__.py
+    commands/
+        __init__.py
+        analyse.py
+        show_results.py
+</pre></div>
+</div>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">show_results.py</span></code> makes <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">show-results</span></code>
+available. Module filenames use underscores; CLI names use hyphens. Modules
+without a <code class="docutils literal notranslate"><span class="pre">parser</span></code> function are ignored.</p>
+<p>Each command has the <strong>same interface as native commands</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">help</span> <span class="o">=</span> <span class="s2">"Analyse a calculation."</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"Detailed description of the plugin command."</span>
+<span class="n">aliases</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"inspect"</span><span class="p">]</span>  <span class="c1"># optional</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"filename"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">my_plugin.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">analyse</span>  <span class="c1"># expensive imports belong here</span>
+
+    <span class="n">analyse</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The required module members are <code class="docutils literal notranslate"><span class="pre">help</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code>,
+<code class="docutils literal notranslate"><span class="pre">parser(parser)</span></code> and <code class="docutils literal notranslate"><span class="pre">run(args,</span> <span class="pre">global_args)</span></code>. Optional members
+<code class="docutils literal notranslate"><span class="pre">aliases</span></code>, <code class="docutils literal notranslate"><span class="pre">extra_help</span></code> and <code class="docutils literal notranslate"><span class="pre">unknowns</span></code> behave as they do for
+native commands. <code class="docutils literal notranslate"><span class="pre">global_args</span></code> contains the global <code class="docutils literal notranslate"><span class="pre">debug</span></code> and
+<code class="docutils literal notranslate"><span class="pre">profile</span></code> flags. The plugin’s argument parser is initialized when its
+command (or alias) is selected.</p>
+<p>Install the plugin distribution in the same Python environment as
+ASE2SPRKKR, for example with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">my-plugin</span></code>. Its commands
+then appear in <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">--help</span></code>.</p>
+<p>Native command names and aliases take precedence over plugin commands.
+If a plugin claims an already registered name or alias, that <strong>command</strong>
+is skipped with a diagnostic on stderr; other plugin commands remain
+available. Plugins are processed in deterministic entry-point target
+order. A plugin whose entry point or command module fails to import is
+also reported and skipped. Command modules should avoid expensive
+top-level imports so that normal CLI startup remains lightweight.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="How to use ASE2SPRKKR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="symmetry.html" class="btn btn-neutral float-right" title="Crystal symmetry and cell transformations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

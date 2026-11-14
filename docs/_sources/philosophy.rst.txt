@@ -48,23 +48,10 @@ The definitions of the potential sections are in
 
 :mod:`outputs<ase2sprkkr.outputs>`
 """"""""""""""""""""""""""""""""""""
-Each input file also prescribes the type of the reader: object, that
-reads and possibly parses the output of the SPR-KKR. These readers
-(located at :mod:`ase2sprkkr.outputs.readers`) are
-just simply objects, that read the output line by line, searching
-for a regex pattern and parsing selected lines of the file (skipping
-the rest) to obtain some values (e.g. convergence results from iterations).
-The parsed values are then returned as the result of the calculations.
-
-In order to be capable of parsing both standard output and error
-output stream of SPR-KKR, asyncio is employed for the readers.
-
-In version 1.0 of the package, only the output reader of SCF task
-is implemented, results of the other tasks are read by the dummy :class:`default reader<ase2sprkkr.outputs.readers.default.DefaultOutputReader>`, which does not parse anything
-from the output.
-
-Note, that some parts of the output can and are parsed using the generated
-grammar, as it is described above, see e.g. :func:`ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output`.
+The outputs layer resolves task-owned readers and constructs scientific
+``TaskResult`` objects from captured execution outputs. Reader and result-file
+registries belong to ASE2SPRKKR. They are separate from generic process
+execution, transfer and durable lifecycle handling in KKRunner.
 
 :mod:`sprkkr<ase2sprkkr.sprkkr>`
 """""""""""""""""""""""""""""""""""
@@ -105,11 +92,19 @@ Again, the exact way how to write the file - i.e. how to separate name-value pai
 
 Running the program
 ---------------------------------------------
-When SPR-KKR calculation is to be invoked, the calculator:
- * creates or updates the potential from the Atoms object (however, it is possible to run calculation just
-   according to the given potential, without an Atoms object)
- * (if the task is given by its name) creates the InputParameters object
- * saves the potential file and the input file
- * runs the executable (given by the definition object of the InputParameters)
- * creates the OutputReader (again, the type is given by the definition object of the InputParameters)
- * let the OutputReader read and parse the results from the output of the run executable
+The calculator resolves application defaults, and ``sprkkr._preparation``
+materializes the input and potential files. ``PreparedCalculation`` owns the
+prepared resources, resolves the task's complete file footprint, and builds a
+KKRunner execution specification. The selected backend executes the command.
+The outputs layer then interprets the outcome using the task's reader and
+constructs the scientific result.
+
+KKRunner owns run records, manifest reservations, transfers, supervision and
+reconnect. ASE2SPRKKR owns task definitions, template resolution, scientific
+metadata and historical result reconstruction. Project-backed execution is
+explicit; preserving project definitions and selecting the new run-store
+namespace are application storage policy.
+
+See :doc:`execution` for the current application API and the
+`KKRunner architecture <https://ase2sprkkr.github.io/kkrunner/architecture.html>`_
+for its internal package boundaries and lifecycle contracts.

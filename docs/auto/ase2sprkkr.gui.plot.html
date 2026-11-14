@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,19 +62,23 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.examples.html">examples</a></li>
@@ -84,11 +91,13 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.combined_colormap.html">combined_colormap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.create_rc_context.html">create_rc_context</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.finish_plot.html">finish_plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.lineplot.html">lineplot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.normalize_rc_params.html">normalize_rc_params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.plotting_function.html">plotting_function</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.set_up_common_plot.html">set_up_common_plot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.single_plot.html">single_plot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.Multiplot.html">Multiplot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.plot.PlotControls.html">PlotControls</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.shell.html">shell</a></li>
@@ -99,8 +108,9 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -136,9 +146,10 @@
 <h1>plot<a class="headerlink" href="#plot" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.gui.plot</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-5322047ee403a218a209b3cb5071420f2cb93bf1.png" alt="Inheritance diagram of ase2sprkkr.gui.plot.Multiplot" usemap="#inheritance159bb2c198" class="inheritance graphviz" /></div>
-<map id="inheritance159bb2c198" name="inheritance159bb2c198">
-<area shape="rect" id="node1" href="ase2sprkkr.gui.plot.Multiplot.html#ase2sprkkr.gui.plot.Multiplot" target="_top" title="This class can be used for plotting more plots into one resulting image/window." alt="" coords="5,5,85,33"/>
+<div class="graphviz"><img src="../_images/inheritance-d88b1d3fc7e99aa7535a8e802c8a37f4821f5821.png" alt="Inheritance diagram of ase2sprkkr.gui.plot.Multiplot, ase2sprkkr.gui.plot.PlotControls" usemap="#inheritance32fa3c3d94" class="inheritance graphviz" /></div>
+<map id="inheritance32fa3c3d94" name="inheritance32fa3c3d94">
+<area shape="rect" id="node1" href="ase2sprkkr.gui.plot.Multiplot.html#ase2sprkkr.gui.plot.Multiplot" target="_top" title="This class can be used for plotting more plots into one resulting image/window." alt="" coords="16,57,95,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.gui.plot.PlotControls.html#ase2sprkkr.gui.plot.PlotControls" target="_top" title="One figure&#45;owned set of simple controls sharing a single state." alt="" coords="5,5,106,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -154,7 +165,7 @@
 <td><p>Return the same function, with default kwargs changed</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.colormesh.html#ase2sprkkr.gui.plot.colormesh" title="ase2sprkkr.gui.plot.colormesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">colormesh</span></code></a>(x, y, c[, xrange, yrange, ...])</p></td>
-<td><p>Plot 3D data by assigning colors to 2D grid.</p></td>
+<td><p>Plot a 2D map; callable x/y/c receive the shared control state.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.combine_colormaps.html#ase2sprkkr.gui.plot.combine_colormaps" title="ase2sprkkr.gui.plot.combine_colormaps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">combine_colormaps</span></code></a>(cmap1, cmap2, n1, n2, ...)</p></td>
 <td><p></p></td>
@@ -168,16 +179,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.finish_plot.html#ase2sprkkr.gui.plot.finish_plot" title="ase2sprkkr.gui.plot.finish_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finish_plot</span></code></a>(fig[, filename, show, dpi, layout])</p></td>
 <td><p>Show the plot and/or save it to the given file</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.normalize_rc_params.html#ase2sprkkr.gui.plot.normalize_rc_params" title="ase2sprkkr.gui.plot.normalize_rc_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_rc_params</span></code></a>(params)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.lineplot.html#ase2sprkkr.gui.plot.lineplot" title="ase2sprkkr.gui.plot.lineplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lineplot</span></code></a>(x, y[, axis, controls])</p></td>
+<td><p>Plot a one-dimensional scan, optionally updated by shared controls.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.normalize_rc_params.html#ase2sprkkr.gui.plot.normalize_rc_params" title="ase2sprkkr.gui.plot.normalize_rc_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_rc_params</span></code></a>(params)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.plotting_function.html#ase2sprkkr.gui.plot.plotting_function" title="ase2sprkkr.gui.plot.plotting_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotting_function</span></code></a>(func)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.plotting_function.html#ase2sprkkr.gui.plot.plotting_function" title="ase2sprkkr.gui.plot.plotting_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotting_function</span></code></a>(func)</p></td>
 <td><p>Decorator, that 'completes' the given function that just draw into a matplolib axis.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.set_up_common_plot.html#ase2sprkkr.gui.plot.set_up_common_plot" title="ase2sprkkr.gui.plot.set_up_common_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_common_plot</span></code></a>(axis[, title, xlabel, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.set_up_common_plot.html#ase2sprkkr.gui.plot.set_up_common_plot" title="ase2sprkkr.gui.plot.set_up_common_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_common_plot</span></code></a>(axis[, title, xlabel, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.single_plot.html#ase2sprkkr.gui.plot.single_plot" title="ase2sprkkr.gui.plot.single_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">single_plot</span></code></a>([filename, show, window_title, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.single_plot.html#ase2sprkkr.gui.plot.single_plot" title="ase2sprkkr.gui.plot.single_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">single_plot</span></code></a>([filename, show, window_title, ...])</p></td>
 <td><p>Creates single plot according to the given function a either show it or save it.</p></td>
 </tr>
 </tbody>
@@ -185,8 +199,11 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.Multiplot.html#ase2sprkkr.gui.plot.Multiplot" title="ase2sprkkr.gui.plot.Multiplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Multiplot</span></code></a>(layout[, figsize, latex, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.Multiplot.html#ase2sprkkr.gui.plot.Multiplot" title="ase2sprkkr.gui.plot.Multiplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Multiplot</span></code></a>([layout, figsize, latex, ...])</p></td>
 <td><p>This class can be used for plotting more plots into one resulting image/window.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.PlotControls.html#ase2sprkkr.gui.plot.PlotControls" title="ase2sprkkr.gui.plot.PlotControls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotControls</span></code></a>(figure, specs[, live])</p></td>
+<td><p>One figure-owned set of simple controls sharing a single state.</p></td>
 </tr>
 </tbody>
 </table>

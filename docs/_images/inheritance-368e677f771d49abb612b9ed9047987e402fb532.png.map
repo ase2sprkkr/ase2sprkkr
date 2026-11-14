@@ -1,0 +1,9 @@
+<map id="inheritancef7e6dff071" name="inheritancef7e6dff071">
+<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="36,3,77,18"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="126,17,325,32"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="3,31,110,46"/>
+<area shape="rect" id="node3" href="#ase2sprkkr.configuration.ExecutionProfile" target="_top" title="Mutable named execution profile stored in ASE2SPRKKR configuration." alt="" coords="841,17,957,32"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="698,17,825,32"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="341,17,523,32"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="539,17,683,32"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="inheritance12a390a649" name="inheritance12a390a649">
+<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="32,3,69,16"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="113,16,292,29"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="3,28,99,41"/>
+<area shape="rect" id="node3" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="677,29,785,42"/>
+<area shape="rect" id="node8" href="ase2sprkkr.result_files.result_files.ResultFile.html#ase2sprkkr.result_files.result_files.ResultFile" target="_top" title="Representation of a structured SPR&#45;KKR result file." alt="" coords="799,29,877,42"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="485,16,663,29"/>
+<area shape="rect" id="node5" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="507,41,640,54"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="307,16,470,29"/>
+<area shape="rect" id="node9" href="#ase2sprkkr.result_files.definitions.sfn.SFNResultFile" target="_top" title="Grammar&#45;backed representation of an SPR&#45;KKR shape&#45;function file." alt="" coords="891,29,957,42"/>
+</map>

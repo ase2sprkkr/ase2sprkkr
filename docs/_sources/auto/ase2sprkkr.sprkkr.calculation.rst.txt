@@ -1,0 +1,59 @@
+calculation
+===========
+
+Full name: **ase2sprkkr.sprkkr.calculation**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.calculation.PreparedCalculation 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.calculation
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _create_sprkkr_run
+      _prepare_error_file
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      PreparedCalculation
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

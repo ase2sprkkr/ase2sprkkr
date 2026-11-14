@@ -1,0 +1,6 @@
+ase2sprkkr.outputs.project\_results.ProjectResultUnavailableError
+=================================================================
+
+.. currentmodule:: ase2sprkkr.outputs.project_results
+
+.. autoexception:: ProjectResultUnavailableError

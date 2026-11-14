@@ -1,0 +1,8 @@
+test\_lorentz\_broadens\_last\_axis\_for\_multiple\_spectra
+===========================================================
+
+Full name: **ase2sprkkr.physics.test\_broadening.test\_lorentz\_broadens\_last\_axis\_for\_multiple\_spectra**
+
+.. currentmodule:: ase2sprkkr.physics.test_broadening
+
+.. autofunction:: test_lorentz_broadens_last_axis_for_multiple_spectra

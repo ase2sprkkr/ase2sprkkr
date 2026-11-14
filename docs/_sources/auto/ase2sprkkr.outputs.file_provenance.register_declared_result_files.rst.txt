@@ -1,0 +1,8 @@
+register\_declared\_result\_files
+=================================
+
+Full name: **ase2sprkkr.outputs.file\_provenance.register\_declared\_result\_files**
+
+.. currentmodule:: ase2sprkkr.outputs.file_provenance
+
+.. autofunction:: register_declared_result_files

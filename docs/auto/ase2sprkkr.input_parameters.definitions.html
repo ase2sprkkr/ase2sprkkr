@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="arpes" href="ase2sprkkr.input_parameters.definitions.arpes.html" />
+    <link rel="next" title="aes" href="ase2sprkkr.input_parameters.definitions.aes.html" />
     <link rel="prev" title="input_parameters" href="ase2sprkkr.input_parameters.html" /> 
 </head>
 
@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,47 +62,96 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.aes.html">aes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.aipes.html">aipes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.aps.html">aps</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfek.html">bsfek</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfkk.html">bsfkk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.band.html">band</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bonding.html">bonding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsdosij.html">bsdosij</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.html">bsf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.chi.html">chi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.chilandau.html">chilandau</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.chixas.html">chixas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.clpes.html">clpes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.clxps.html">clxps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.compton.html">compton</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.ekrel.html">ekrel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.fmag.html">fmag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.fscat.html">fscat</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jalf.html">jalf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jorb.html">jorb</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html">jxc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.mecheck.html">mecheck</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.meplot.html">meplot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.nraes.html">nraes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.nucsscpl.html">nucsscpl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.optabs.html">optabs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html">phagen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plot2dpot.html">plot2dpot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plot2dpr.html">plot2dpr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plot2drho.html">plot2drho</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotpot.html">plotpot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotprs.html">plotprs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotrho.html">plotrho</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotsfn.html">plotsfn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.posani.html">posani</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.posaniprep.html">posaniprep</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.posanitau.html">posanitau</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.pshift.html">pshift</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html">scf</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sigma.html">sigma</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.socpar.html">socpar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.spleed.html">spleed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.stoner.html">stoner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.t1.html">t1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.tdobs.html">tdobs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.torque.html">torque</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.tutorial.html">tutorial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.vbpes.html">vbpes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.wfplot.html">wfplot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xas.html">xas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xes.html">xes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xrs.html">xrs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html">marpes</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.html">task_definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.html">tasks</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -135,48 +187,174 @@
 <h1>definitions<a class="headerlink" href="#definitions" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.input_parameters.definitions</strong></p>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.input_parameters.definitions">sprkkr.input_parameters.definitions - definitions of InputParameterss: definition of configurtion options and their
-default values for SPR-KKR input_parameters.</p>
-<p>Each contained module should have input_parameters attribute, that holds the definition of a task. The modules
-should be named according to the name of the contained task (e.g. DOS, ARPES, SCF, …)</p>
+<p id="module-ase2sprkkr.input_parameters.definitions">Input-parameter schema definitions.</p>
+<p>Each public module exposes <code class="docutils literal notranslate"><span class="pre">input_parameters_definition</span></code>. Standard schemas
+attach their 1:1 task as <code class="docutils literal notranslate"><span class="pre">_task_definition</span></code>; schemas shared by several tasks
+leave it unset and resolve task names from concrete parameter values.</p>
 <p class="rubric">Modules</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html#module-ase2sprkkr.input_parameters.definitions.arpes" title="ase2sprkkr.input_parameters.definitions.arpes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">arpes</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.aes.html#module-ase2sprkkr.input_parameters.definitions.aes" title="ase2sprkkr.input_parameters.definitions.aes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aes</span></code></a></p></td>
+<td><p>Fully relativistic AES, audited against SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.aipes.html#module-ase2sprkkr.input_parameters.definitions.aipes" title="ase2sprkkr.input_parameters.definitions.aipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aipes</span></code></a></p></td>
+<td><p>Native AIPES local/incoherent angle-integrated PES workflow.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.aps.html#module-ase2sprkkr.input_parameters.definitions.aps" title="ase2sprkkr.input_parameters.definitions.aps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aps</span></code></a></p></td>
+<td><p>APS postprocessing of existing DOS (SPR-KKR 9.7 NRAPS).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html#module-ase2sprkkr.input_parameters.definitions.arpes" title="ase2sprkkr.input_parameters.definitions.arpes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">arpes</span></code></a></p></td>
 <td><p>ARPES task input parameters definition</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfek.html#module-ase2sprkkr.input_parameters.definitions.bsfek" title="ase2sprkkr.input_parameters.definitions.bsfek"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsfek</span></code></a></p></td>
-<td><p>DOS task input parameters definition</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.band.html#module-ase2sprkkr.input_parameters.definitions.band" title="ase2sprkkr.input_parameters.definitions.band"><code class="xref py py-obj docutils literal notranslate"><span class="pre">band</span></code></a></p></td>
+<td><p>KKRSPEC band calculation, distinct from BSF and EKREL.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfkk.html#module-ase2sprkkr.input_parameters.definitions.bsfkk" title="ase2sprkkr.input_parameters.definitions.bsfkk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsfkk</span></code></a></p></td>
-<td><p>bsfkk task input parameters definition</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bonding.html#module-ase2sprkkr.input_parameters.definitions.bonding" title="ase2sprkkr.input_parameters.definitions.bonding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bonding</span></code></a></p></td>
+<td><p>Experimental molecular bonding analysis (SPR-KKR 9.7).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html#module-ase2sprkkr.input_parameters.definitions.dos" title="ase2sprkkr.input_parameters.definitions.dos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dos</span></code></a></p></td>
-<td><p>DOS task input parameters definition</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsdosij.html#module-ase2sprkkr.input_parameters.definitions.bsdosij" title="ase2sprkkr.input_parameters.definitions.bsdosij"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsdosij</span></code></a></p></td>
+<td><p>Experimental site-resolved back-scattering DOS, SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.html#module-ase2sprkkr.input_parameters.definitions.bsf" title="ase2sprkkr.input_parameters.definitions.bsf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsf</span></code></a></p></td>
+<td><p>BSF input-parameters definition.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.chi.html#module-ase2sprkkr.input_parameters.definitions.chi" title="ase2sprkkr.input_parameters.definitions.chi"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chi</span></code></a></p></td>
+<td><p>Serial ASA magnetic susceptibility; native iterations are disabled.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.chilandau.html#module-ase2sprkkr.input_parameters.definitions.chilandau" title="ase2sprkkr.input_parameters.definitions.chilandau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chilandau</span></code></a></p></td>
+<td><p>Serial periodic ASA Landau susceptibility (SPR-KKR SUSC_LANDAU).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.chixas.html#module-ase2sprkkr.input_parameters.definitions.chixas" title="ase2sprkkr.input_parameters.definitions.chixas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chixas</span></code></a></p></td>
+<td><p>Field-induced XAS dichroism with externally supplied susceptibilities.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.clpes.html#module-ase2sprkkr.input_parameters.definitions.clpes" title="ase2sprkkr.input_parameters.definitions.clpes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clpes</span></code></a></p></td>
+<td><p>Core-level photoemission through native KKRSPEC (serial scope).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.clxps.html#module-ase2sprkkr.input_parameters.definitions.clxps" title="ase2sprkkr.input_parameters.definitions.clxps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clxps</span></code></a></p></td>
+<td><p>Core-level XPS input, audited against CLXPS in SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.compton.html#module-ase2sprkkr.input_parameters.definitions.compton" title="ase2sprkkr.input_parameters.definitions.compton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compton</span></code></a></p></td>
+<td><p>Standard split-contour FREL Compton momentum densities.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html#module-ase2sprkkr.input_parameters.definitions.dos" title="ase2sprkkr.input_parameters.definitions.dos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dos</span></code></a></p></td>
+<td><p>DOS input-parameter definition.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.ekrel.html#module-ase2sprkkr.input_parameters.definitions.ekrel" title="ase2sprkkr.input_parameters.definitions.ekrel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ekrel</span></code></a></p></td>
+<td><p>Ordered-system E(k) and Fermi-surface search, SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.fmag.html#module-ase2sprkkr.input_parameters.definitions.fmag" title="ase2sprkkr.input_parameters.definitions.fmag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmag</span></code></a></p></td>
+<td><p>Magnetic form factor from integrated densities, SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.fscat.html#module-ase2sprkkr.input_parameters.definitions.fscat" title="ase2sprkkr.input_parameters.definitions.fscat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fscat</span></code></a></p></td>
+<td><p>FSCAT input for the fixed backscattering geometries in SPR-KKR 9.7.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html#module-ase2sprkkr.input_parameters.definitions.gilbert" title="ase2sprkkr.input_parameters.definitions.gilbert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gilbert</span></code></a></p></td>
 <td><p>Gilbert task input parameters definition</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html#module-ase2sprkkr.input_parameters.definitions.jxc" title="ase2sprkkr.input_parameters.definitions.jxc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jxc</span></code></a></p></td>
-<td><p>JXC task input parameters definition</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jalf.html#module-ase2sprkkr.input_parameters.definitions.jalf" title="ase2sprkkr.input_parameters.definitions.jalf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jalf</span></code></a></p></td>
+<td><p>Dirac-alpha current density from integrated Green functions, SPR-KKR 9.7.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html#module-ase2sprkkr.input_parameters.definitions.phagen" title="ase2sprkkr.input_parameters.definitions.phagen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phagen</span></code></a></p></td>
-<td><p>PHAGEN task input parameters definition</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jorb.html#module-ase2sprkkr.input_parameters.definitions.jorb" title="ase2sprkkr.input_parameters.definitions.jorb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jorb</span></code></a></p></td>
+<td><p>Paramagnetic current density from integrated Green functions, SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html#module-ase2sprkkr.input_parameters.definitions.jxc" title="ase2sprkkr.input_parameters.definitions.jxc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jxc</span></code></a></p></td>
+<td><p>JXC task definition.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.mecheck.html#module-ase2sprkkr.input_parameters.definitions.mecheck" title="ase2sprkkr.input_parameters.definitions.mecheck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mecheck</span></code></a></p></td>
+<td><p>Matrix-element diagnostics implemented by ME_TEST_11 in SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.meplot.html#module-ase2sprkkr.input_parameters.definitions.meplot" title="ase2sprkkr.input_parameters.definitions.meplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">meplot</span></code></a></p></td>
+<td><p>Dipole matrix-element plots, based on ME_PLOT in SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.nraes.html#module-ase2sprkkr.input_parameters.definitions.nraes" title="ase2sprkkr.input_parameters.definitions.nraes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nraes</span></code></a></p></td>
+<td><p>NRAES postprocessing of existing DOS (SPR-KKR 9.7 NRAES).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.nucsscpl.html#module-ase2sprkkr.input_parameters.definitions.nucsscpl" title="ase2sprkkr.input_parameters.definitions.nucsscpl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nucsscpl</span></code></a></p></td>
+<td><p>Experimental nuclear spin-spin coupling tensor, SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.optabs.html#module-ase2sprkkr.input_parameters.definitions.optabs" title="ase2sprkkr.input_parameters.definitions.optabs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optabs</span></code></a></p></td>
+<td><p>Absorptive optical conductivity, periodic ASA FREL workflow.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html#module-ase2sprkkr.input_parameters.definitions.phagen" title="ase2sprkkr.input_parameters.definitions.phagen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phagen</span></code></a></p></td>
+<td><p>PHAGEN input-parameter definition.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plot2dpot.html#module-ase2sprkkr.input_parameters.definitions.plot2dpot" title="ase2sprkkr.input_parameters.definitions.plot2dpot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot2dpot</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plot2dpr.html#module-ase2sprkkr.input_parameters.definitions.plot2dpr" title="ase2sprkkr.input_parameters.definitions.plot2dpr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot2dpr</span></code></a></p></td>
+<td><p>2D plot windows for ASA and experimental FULLPOT PLY output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plot2drho.html#module-ase2sprkkr.input_parameters.definitions.plot2drho" title="ase2sprkkr.input_parameters.definitions.plot2drho"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot2drho</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotpot.html#module-ase2sprkkr.input_parameters.definitions.plotpot" title="ase2sprkkr.input_parameters.definitions.plotpot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotpot</span></code></a></p></td>
+<td><p>Native PLOTPOT selector.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotprs.html#module-ase2sprkkr.input_parameters.definitions.plotprs" title="ase2sprkkr.input_parameters.definitions.plotprs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotprs</span></code></a></p></td>
+<td><p>Radial potential, density and shape-function plots (SPR-KKR 9.7).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotrho.html#module-ase2sprkkr.input_parameters.definitions.plotrho" title="ase2sprkkr.input_parameters.definitions.plotrho"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotrho</span></code></a></p></td>
+<td><p>Native PLOTRHO selector.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.plotsfn.html#module-ase2sprkkr.input_parameters.definitions.plotsfn" title="ase2sprkkr.input_parameters.definitions.plotsfn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotsfn</span></code></a></p></td>
+<td><p>Native PLOTSFN selector.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.posani.html#module-ase2sprkkr.input_parameters.definitions.posani" title="ase2sprkkr.input_parameters.definitions.posani"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posani</span></code></a></p></td>
+<td><p>Single-contour positron annihilation momentum densities.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.posaniprep.html#module-ase2sprkkr.input_parameters.definitions.posaniprep" title="ase2sprkkr.input_parameters.definitions.posaniprep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posaniprep</span></code></a></p></td>
+<td><p>Prepare the s-like positron state used by POSANI.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.posanitau.html#module-ase2sprkkr.input_parameters.definitions.posanitau" title="ase2sprkkr.input_parameters.definitions.posanitau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posanitau</span></code></a></p></td>
+<td><p>Integrate positron density and calculate the annihilation lifetime.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.pshift.html#module-ase2sprkkr.input_parameters.definitions.pshift" title="ase2sprkkr.input_parameters.definitions.pshift"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pshift</span></code></a></p></td>
+<td><p>Phase-shift diagnostics, based on PSHIFT in SPR-KKR 9.7.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html#module-ase2sprkkr.input_parameters.definitions.scf" title="ase2sprkkr.input_parameters.definitions.scf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scf</span></code></a></p></td>
-<td><p>SCF task input parameters definition</p></td>
+<td><p>SCF input-parameter definition.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html#module-ase2sprkkr.input_parameters.definitions.sections" title="ase2sprkkr.input_parameters.definitions.sections"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sections</span></code></a></p></td>
-<td><p>Definitions of sections to be used in definitions of input parameters (input files for SPR-KKR tasks)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sigma.html#module-ase2sprkkr.input_parameters.definitions.sigma" title="ase2sprkkr.input_parameters.definitions.sigma"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sigma</span></code></a></p></td>
+<td><p>Periodic ASA FREL DC conductivity, surface or sea plus surface.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.torque.html#module-ase2sprkkr.input_parameters.definitions.torque" title="ase2sprkkr.input_parameters.definitions.torque"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torque</span></code></a></p></td>
-<td><p>Torque task input parameters definition</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.socpar.html#module-ase2sprkkr.input_parameters.definitions.socpar" title="ase2sprkkr.input_parameters.definitions.socpar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">socpar</span></code></a></p></td>
+<td><p>SOCPAR: single-site SOC and exchange parameters (SPR-KKR 9.7).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.spleed.html#module-ase2sprkkr.input_parameters.definitions.spleed" title="ase2sprkkr.input_parameters.definitions.spleed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spleed</span></code></a></p></td>
+<td><p>Dedicated SPLEED input, with incident energies in eV.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.stoner.html#module-ase2sprkkr.input_parameters.definitions.stoner" title="ase2sprkkr.input_parameters.definitions.stoner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stoner</span></code></a></p></td>
+<td><p>Stoner parameter input audited against SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.t1.html#module-ase2sprkkr.input_parameters.definitions.t1" title="ase2sprkkr.input_parameters.definitions.t1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">t1</span></code></a></p></td>
+<td><p>Nuclear spin relaxation, with initialization safeguards for SPR-KKR 9.7.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.tdobs.html#module-ase2sprkkr.input_parameters.definitions.tdobs" title="ase2sprkkr.input_parameters.definitions.tdobs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tdobs</span></code></a></p></td>
+<td><p>TDOBS native generic DOS/observable path</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.torque.html#module-ase2sprkkr.input_parameters.definitions.torque" title="ase2sprkkr.input_parameters.definitions.torque"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torque</span></code></a></p></td>
+<td><p>Torque input-parameter definition.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.tutorial.html#module-ase2sprkkr.input_parameters.definitions.tutorial" title="ase2sprkkr.input_parameters.definitions.tutorial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tutorial</span></code></a></p></td>
+<td><p>Complete native SPR-KKR 9.7 TUTORIAL dispatch and input parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.vbpes.html#module-ase2sprkkr.input_parameters.definitions.vbpes" title="ase2sprkkr.input_parameters.definitions.vbpes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vbpes</span></code></a></p></td>
+<td><p>Angle-integrated valence photoemission in KKRGEN (SPR-KKR 9.7).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.wfplot.html#module-ase2sprkkr.input_parameters.definitions.wfplot" title="ase2sprkkr.input_parameters.definitions.wfplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wfplot</span></code></a></p></td>
+<td><p>WFPLOT input parameters, checked against SPR-KKR 9.7 public sources.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xas.html#module-ase2sprkkr.input_parameters.definitions.xas" title="ase2sprkkr.input_parameters.definitions.xas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">xas</span></code></a></p></td>
-<td><p>XAS task input parameters definition</p></td>
+<td><p>X-ray absorption input, audited against SPR-KKR 9.7 XRAYSPEC.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xes.html#module-ase2sprkkr.input_parameters.definitions.xes" title="ase2sprkkr.input_parameters.definitions.xes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">xes</span></code></a></p></td>
+<td><p>X-ray emission input, based on the common SPR-KKR 9.7 XRAYSPEC reader.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xrs.html#module-ase2sprkkr.input_parameters.definitions.xrs" title="ase2sprkkr.input_parameters.definitions.xrs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">xrs</span></code></a></p></td>
+<td><p>X-ray resonant scattering input, based on the common SPR-KKR 9.7 XRAYSPEC reader.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html#module-ase2sprkkr.input_parameters.definitions.marpes" title="ase2sprkkr.input_parameters.definitions.marpes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">marpes</span></code></a></p></td>
-<td><p><strong>Description of the sections and parameters</strong></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -187,7 +365,7 @@ should be named according to the name of the contained task (e.g. DOS, ARPES, SC
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.input_parameters.html" class="btn btn-neutral float-left" title="input_parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.input_parameters.definitions.arpes.html" class="btn btn-neutral float-right" title="arpes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.input_parameters.definitions.aes.html" class="btn btn-neutral float-right" title="aes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

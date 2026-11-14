@@ -39,7 +39,16 @@ Full name: **ase2sprkkr.outputs**
      :recursive:
   
   
+     file_provenance
+  
+  
      output_definitions
+  
+  
+     project_results
+  
+  
+     reader_registry
   
   
      readers

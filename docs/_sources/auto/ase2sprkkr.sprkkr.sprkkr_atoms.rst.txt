@@ -24,6 +24,16 @@ Full name: **ase2sprkkr.sprkkr.sprkkr\_atoms**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _promoted_ase_atoms_class
+      _reduce_promoted_ase_atoms
+      _restore_promoted_ase_atoms
+   
    
 
 

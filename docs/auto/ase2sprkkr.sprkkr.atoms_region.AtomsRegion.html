@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,19 +62,23 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -79,6 +86,8 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.sprkkr.atoms_region.html">atoms_region</a><ul class="current">
@@ -86,23 +95,28 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.build.html">build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculation.html">calculation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.executables.html">executables</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.html">moments</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.projects.html">projects</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.site_equivalence.html">site_equivalence</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.html">spacegroup_info</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html">sprkkr_grammar_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.symmetry.html">symmetry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -162,7 +176,7 @@ a central 2D-symmetric region.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>)</p></li>
-<li><p><strong>slice</strong> (<em>&lt;property object at 0x7ccef60238d0&gt;</em>)</p></li>
+<li><p><strong>slice</strong> (<em>&lt;property object at 0x73bc47062b60&gt;</em>)</p></li>
 <li><p><strong>cell</strong> (<em>Cell</em><em> | </em><em>ndarray</em>)</p></li>
 <li><p><strong>pbc</strong> (<em>List</em><em>[</em><em>bool</em><em> | </em><em>None</em><em>]</em>)</p></li>
 <li><p><strong>inherit_cell</strong> (<em>bool</em><em> | </em><em>List</em><em>[</em><em>bool</em><em>]</em>)</p></li>
@@ -179,7 +193,7 @@ atoms object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>slice</strong> (<em>&lt;property object at 0x7ccef60238d0&gt;</em>) – Which sites (atoms) belong to the region</p></li>
+<li><p><strong>slice</strong> (<em>&lt;property object at 0x73bc47062b60&gt;</em>) – Which sites (atoms) belong to the region</p></li>
 <li><p><strong>cell</strong> (<em>Cell</em><em> | </em><em>ndarray</em>) – The primitive cell</p></li>
 <li><p><strong>pbc</strong> (<em>List</em><em>[</em><em>bool</em><em> | </em><em>None</em><em>]</em>) – The peridodicity vector (see <code class="xref py py-class docutils literal notranslate"><span class="pre">ase.Atoms</span></code>)</p></li>
 <li><p><strong>inherit_cell</strong> (<em>bool</em><em> | </em><em>List</em><em>[</em><em>bool</em><em>]</em>) – Inherit the cell and the pcb from the parent atoms for given axes.
@@ -202,7 +216,7 @@ are taken from it.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>from_atoms</strong> (<em>Atoms</em>)</p></li>
 <li><p><strong>name</strong> (<em>str</em>)</p></li>
-<li><p><strong>slice</strong> (<em>&lt;property object at 0x7ccef60238d0&gt;</em>)</p></li>
+<li><p><strong>slice</strong> (<em>&lt;property object at 0x73bc47062b60&gt;</em>)</p></li>
 <li><p><strong>atoms</strong> (<em>Atoms</em>)</p></li>
 </ul>
 </dd>
@@ -226,6 +240,16 @@ are taken from it.</p>
 <em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pbc</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.pbc" title="Link to this definition"></a></dt>
 <dd><p>Return the pbc</p>
 <p>If the pbc has None items, these are replace with parent atoms pbc values</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.info">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.info" title="Link to this definition"></a></dt>
+<dd><p>ASE metadata shared with the parent atoms object.</p>
+<p><code class="docutils literal notranslate"><span class="pre">AtomsRegion</span></code> deliberately presents the subset-oriented part of the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ase.Atoms</span></code> interface used by symmetry and occupation code. ASE
+<code class="docutils literal notranslate"><span class="pre">info</span></code> is object-level metadata rather than a per-atom array, so the
+authoritative representation is the parent’s dictionary.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -271,7 +295,7 @@ are taken from it.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_of_ids">
 <em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_of_ids</span></span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.set_of_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_of_ids" title="Link to this definition"></a></dt>
-<dd><p>Returns set of ids of sites that belongs to the region</p>
+<dd><p>Return ids of sites that belong to the region.</p>
 </dd></dl>
 
 <dl class="py property">

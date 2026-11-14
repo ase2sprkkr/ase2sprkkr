@@ -38,6 +38,7 @@ Full name: **ase2sprkkr.common.grammar\_types.grammar\_type**
       :toctree:
       :template: custom-base-template.rst
    
+      _apply_after_convert
       compare_numpy_values
       format_for_type
       type_from_default_value

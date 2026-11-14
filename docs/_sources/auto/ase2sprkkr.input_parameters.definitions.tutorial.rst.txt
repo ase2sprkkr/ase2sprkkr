@@ -1,0 +1,51 @@
+tutorial
+========
+
+Full name: **ase2sprkkr.input\_parameters.definitions.tutorial**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.tutorial
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _subtask
+      _tutorial_bzint
+      _tutorial_emin
+      _tutorial_grid
+      _tutorial_ime
+      _tutorial_kkrmode
+      _tutorial_mode
+      _tutorial_ne
+      _validate_tutorial
+      input_parameters_definition
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

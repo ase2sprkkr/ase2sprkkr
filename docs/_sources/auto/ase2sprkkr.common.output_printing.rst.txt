@@ -1,0 +1,60 @@
+output\_printing
+================
+
+Full name: **ase2sprkkr.common.output\_printing**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.output_printing.OutputListener  ase2sprkkr.common.output_printing.PrintAll  ase2sprkkr.common.output_printing.PrintMatching 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.output_printing
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      output_listeners
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      OutputListener
+      PrintAll
+      PrintMatching
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,70 @@
+configuration\_yaml
+===================
+
+Full name: **ase2sprkkr.configuration\_yaml**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.configuration_yaml
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _apply_with_recovery
+      _classify_document
+      _discard_invalid_default_profile
+      _format_issues
+      _recover_configuration
+      _recover_profiles
+      _recover_section
+      _set_persisted_configuration
+      _shell_string
+      _stage_persisted_configuration
+      _storage_configuration
+      _typed_configuration
+      _update_mapping
+      _valid_default_profile
+      _validate_yaml_shape
+      _yaml
+      apply_yaml_document
+      dump_yaml_document
+      explicit_configuration
+      load_configuration_yaml
+      load_yaml_document
+      save_configuration_yaml
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      YamlConfigurationWarning
+   
+   
+
+
+  
+  
+  

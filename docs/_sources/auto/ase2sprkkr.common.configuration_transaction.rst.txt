@@ -1,0 +1,57 @@
+configuration\_transaction
+==========================
+
+Full name: **ase2sprkkr.common.configuration\_transaction**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.configuration_transaction.ConfigurationTransaction 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.configuration_transaction
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ConfigurationTransaction
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      PostChangeHookError
+   
+   
+
+
+  
+  
+  

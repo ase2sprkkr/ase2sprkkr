@@ -1,0 +1,8 @@
+load\_configuration\_yaml
+=========================
+
+Full name: **ase2sprkkr.configuration\_yaml.load\_configuration\_yaml**
+
+.. currentmodule:: ase2sprkkr.configuration_yaml
+
+.. autofunction:: load_configuration_yaml

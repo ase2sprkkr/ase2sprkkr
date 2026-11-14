@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.readers.spec**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.readers.spec.SpecOutputParser  ase2sprkkr.outputs.readers.spec.SpecOutputReader  ase2sprkkr.outputs.readers.spec.SpecResult 
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.spec.SpecOutputParser  ase2sprkkr.outputs.readers.spec.SpecOutputReader  ase2sprkkr.outputs.readers.spec.SpecResult  ase2sprkkr.outputs.readers.spec.SpleedIntensity  ase2sprkkr.outputs.readers.spec._CapturedSpecStream 
       :parts: 1
 
 |
@@ -38,6 +38,8 @@ Full name: **ase2sprkkr.outputs.readers.spec**
       SpecOutputParser
       SpecOutputReader
       SpecResult
+      SpleedIntensity
+      _CapturedSpecStream
    
    
 

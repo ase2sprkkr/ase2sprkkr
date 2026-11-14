@@ -1,0 +1,8 @@
+write\_arpes\_nexus
+===================
+
+Full name: **ase2sprkkr.result\_files.nexus.write\_arpes\_nexus**
+
+.. currentmodule:: ase2sprkkr.result_files.nexus
+
+.. autofunction:: write_arpes_nexus

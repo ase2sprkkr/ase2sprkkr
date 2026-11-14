@@ -45,6 +45,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
@@ -56,10 +59,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -81,6 +84,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.bindings.spglib</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,159 +95,260 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.bindings.spglib</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Wrapper for spglib for computing symmetry of a primitive cell</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Small, single-purpose spglib binding used by SPR-KKR symmetry workflows."""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..sprkkr.atoms_region</span><span class="w"> </span><span class="kn">import</span> <span class="n">AtomsRegion</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">spglib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..common.unique_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..sprkkr.occupations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Occupation</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">spglib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_mic</span>
 
-<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">spglib</span><span class="p">,</span> <span class="s2">&quot;set_error_handling&quot;</span><span class="p">):</span>
-    <span class="n">spglib</span><span class="o">.</span><span class="n">set_error_handling</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="spglib_dataset_wrapper">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.spglib_dataset_wrapper.html#ase2sprkkr.bindings.spglib.spglib_dataset_wrapper">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">spglib_dataset_wrapper</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Backward compatibility&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">dataset</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="s2">&quot;equivalent_atoms&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">dataset</span>
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">Convertor</span><span class="p">:</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">dataset</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">ke</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">ke</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">Convertor</span><span class="p">()</span></div>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">spglib.error</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpglibError</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Before spglib 2.7 the public API returned None on symmetry-search</span>
+    <span class="c1"># failure rather than raising SpglibError.</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">SpglibError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+        <span class="k">pass</span>
 
 
+<div class="viewcode-block" id="_SpglibCompatibilityWrapper">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper.html#ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">_SpglibCompatibilityWrapper</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Provide attribute access to datasets returned as dicts by old spglib."""</span>
 
-<div class="viewcode-block" id="tag_sites">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.tag_sites.html#ase2sprkkr.bindings.spglib.tag_sites">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">tag_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">consider_old</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">return_mapping</span><span class="p">:</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return array of class-equivalence-numbers of sites of a</span>
-<span class="sd">    given Atoms object</span>
+<div class="viewcode-block" id="_SpglibCompatibilityWrapper.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper.html#ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span></div>
 
-<span class="sd">    atoms</span>
-<span class="sd">      The atoms to return the equivalence classes</span>
 
-<span class="sd">    consider_old</span>
-<span class="sd">      If True, tag according to the spacegroup_kinds (which foor SPRKKRAtoms</span>
-<span class="sd">      reflects the site_types.</span>
-<span class="sd">      If False, tag just according to the atomic numbers and, for SPRKKRAtoms,</span>
-<span class="sd">      occupancy (thus, possibly merge the old differnt site_types into one).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="c1"># Avoid recursion if an unpickled instance is not initialized yet.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dataset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">"dataset"</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dataset</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">mapp</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">return_mapping</span> <span class="ow">or</span> <span class="n">consider_old</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">x</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">unmap</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="n">return_mapping</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">mapping</span>
-
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="s2">&quot;are_sites_inited&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">atoms</span><span class="o">.</span><span class="n">are_sites_inited</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">consider_old</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="s2">&quot;sprkkr_sites_data&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">site_type</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-
-            <span class="k">def</span><span class="w"> </span><span class="nf">occ</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">site</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span> <span class="k">if</span> <span class="n">site</span> <span class="k">else</span> <span class="n">Occupation</span><span class="o">.</span><span class="n">for_atom_from_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-
-            <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">occ</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">site</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">))</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">consider_old</span> <span class="ow">and</span> <span class="s2">&quot;spacegroup_kinds&quot;</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">unmap</span><span class="p">(</span><span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="s2">&quot;spacegroup_kinds&quot;</span><span class="p">]))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">mapp</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+<div class="viewcode-block" id="_SpglibCompatibilityWrapper.create_if_needed">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper.html#ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper.create_if_needed">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_if_needed</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dataset</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="s2">"equivalent_atoms"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">dataset</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span></div>
+</div>
 
 
 
-<div class="viewcode-block" id="spglib_dataset">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.spglib_dataset.html#ase2sprkkr.bindings.spglib.spglib_dataset">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">spglib_dataset</span><span class="p">(</span>
-    <span class="n">atoms</span><span class="p">:</span> <span class="s2">&quot;Union[Atoms,AtomsRegion]&quot;</span><span class="p">,</span>
-    <span class="n">atomic_numbers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">consider_old</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">precision</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
-    <span class="n">angular_precision</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">add</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the object that describe equivalence classes of the atoms</span>
-<span class="sd">    from the given Atoms object (i.e. in one equivalence class will be the</span>
-<span class="sd">    atoms with the same atomic number, occupation, etc.)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">atomic_numbers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dtype</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">atomic_numbers</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
-            <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">atomic_numbers</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">atomic_numbers</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">tag_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">consider_old</span><span class="p">,</span> <span class="n">return_mapping</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="TransformedCell">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.TransformedCell.html#ase2sprkkr.bindings.spglib.TransformedCell">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TransformedCell</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Geometry and species labels in the order supplied by spglib."""</span>
 
-    <span class="k">if</span> <span class="n">add</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">equivalent_sites</span><span class="p">,</span> <span class="s2">&quot;mapping&quot;</span><span class="p">):</span>
-            <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">equivalent_sites</span><span class="p">)</span>
-        <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">add</span><span class="p">)</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">start_from</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mapping</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">equivalent_sites</span><span class="p">,</span> <span class="s2">&quot;mapping&quot;</span><span class="p">):</span>
-            <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">start_from</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mapping</span>
+    <span class="n">cell</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">scaled_positions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">tags</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">dataset</span><span class="p">(</span><span class="n">equivalent_sites</span><span class="p">):</span>
-        <span class="n">sg_dataset</span> <span class="o">=</span> <span class="n">spglib</span><span class="o">.</span><span class="n">get_symmetry_dataset</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">(),</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(),</span> <span class="n">equivalent_sites</span><span class="p">),</span>
-            <span class="n">symprec</span><span class="o">=</span><span class="n">precision</span><span class="p">,</span>
-            <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angular_precision</span><span class="p">,</span>
+
+
+<div class="viewcode-block" id="symmetry_dataset">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.symmetry_dataset.html#ase2sprkkr.bindings.spglib.symmetry_dataset">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">symmetry_dataset</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">scaled_positions</span><span class="p">,</span> <span class="n">site_tags</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Find a space-group dataset for explicitly classified atomic sites."""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">spglib</span><span class="o">.</span><span class="n">get_symmetry_dataset</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">scaled_positions</span><span class="p">,</span> <span class="n">site_tags</span><span class="p">),</span>
+            <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angle_tolerance</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sg_dataset</span><span class="p">:</span>
-            <span class="n">dataset</span> <span class="o">=</span> <span class="n">spglib_dataset_wrapper</span><span class="p">(</span><span class="n">sg_dataset</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">dataset</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="n">dataset</span>
+    <span class="k">except</span> <span class="n">SpglibError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"spglib symmetry search failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">if</span> <span class="n">dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"spglib could not determine the space-group symmetry"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_SpglibCompatibilityWrapper</span><span class="o">.</span><span class="n">create_if_needed</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span></div>
 
-    <span class="n">sg_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">(</span><span class="n">equivalent_sites</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span>
-        <span class="n">sg_dataset</span>
-        <span class="ow">and</span> <span class="n">consider_old</span>
-        <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="s2">&quot;are_sites_inited&quot;</span><span class="p">)</span>
-        <span class="ow">and</span> <span class="n">atoms</span><span class="o">.</span><span class="n">are_sites_inited</span><span class="p">()</span>
-        <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="s2">&quot;sprkkr_sites_data&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-    <span class="p">):</span>
-        <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">sg_dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span>
-        <span class="n">types</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">counter</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">equivalent_sites</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">typ</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="s2">&quot;sprkkr_sites_data&quot;</span><span class="p">],</span> <span class="n">equivalent_sites</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">site</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">stype</span> <span class="o">=</span> <span class="n">site</span><span class="o">.</span><span class="n">site_type</span>
-            <span class="k">if</span> <span class="n">typ</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
-                <span class="n">types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">stype</span><span class="p">:</span> <span class="n">typ</span><span class="p">}</span>
-                <span class="n">out</span> <span class="o">=</span> <span class="n">typ</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">out</span> <span class="o">=</span> <span class="n">types</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">stype</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">equivalent_sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">types</span><span class="p">[</span><span class="n">typ</span><span class="p">][</span><span class="n">stype</span><span class="p">]</span> <span class="o">=</span> <span class="n">counter</span>
-                <span class="n">equivalent_sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">counter</span>
-        <span class="n">sg_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">(</span><span class="n">equivalent_sites</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">sg_dataset</span></div>
+
+<div class="viewcode-block" id="transform_cell">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.transform_cell.html#ase2sprkkr.bindings.spglib.transform_cell">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">transform_cell</span><span class="p">(</span>
+    <span class="n">cell</span><span class="p">,</span> <span class="n">scaled_positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">to_primitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Standardize without idealization, retaining the spglib species labels.</span>
+
+<span class="sd">    Every output tag identifies the source SiteType/occupation class. Site</span>
+<span class="sd">    metadata transfer is independent of origin, orientation, and atom order.</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">spglib</span><span class="o">.</span><span class="n">standardize_cell</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">scaled_positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">),</span>
+            <span class="n">to_primitive</span><span class="o">=</span><span class="n">to_primitive</span><span class="p">,</span> <span class="n">no_idealize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">,</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angle_tolerance</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">SpglibError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"spglib cell standardization failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"spglib could not standardize the unit cell"</span><span class="p">)</span>
+    <span class="c1"># spglib already returns NumPy arrays with the required numeric dtypes.</span>
+    <span class="k">return</span> <span class="n">TransformedCell</span><span class="p">(</span><span class="o">*</span><span class="n">result</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="primitive_site_groups">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.primitive_site_groups.html#ase2sprkkr.bindings.spglib.primitive_site_groups">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">primitive_site_groups</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">scaled_positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">transformed</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Relate each output atom to its input primitive translation class.</span>
+
+<span class="sd">    mapping_to_primitive distinguishes inequivalent primitive sites, unlike</span>
+<span class="sd">    the chemical-species tags. Match in Cartesian coordinates modulo the</span>
+<span class="sd">    primitive lattice, without assuming that numeric primitive IDs of</span>
+<span class="sd">    independently generated cells have identical meaning. The</span>
+<span class="sd">    no_idealize=True output retains the input Cartesian origin and orientation.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Only normalize caller-provided inputs; dataset fields are ndarrays.</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">scaled_positions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+    <span class="n">primitive_ids</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">mapping_to_primitive</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">primitive_ids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid spglib mapping_to_primitive length"</span><span class="p">)</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">primitive_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">primitive_ids</span><span class="p">):</span>
+        <span class="n">classes</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">primitive_id</span><span class="p">),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="n">input_cart</span> <span class="o">=</span> <span class="n">positions</span> <span class="o">@</span> <span class="n">cell</span>
+    <span class="n">output_cart</span> <span class="o">=</span> <span class="n">transformed</span><span class="o">.</span><span class="n">scaled_positions</span> <span class="o">@</span> <span class="n">transformed</span><span class="o">.</span><span class="n">cell</span>
+    <span class="n">primitive_cell</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">primitive_lattice</span>
+
+    <span class="n">by_tag</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">classes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">tags</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">group</span><span class="p">}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"A primitive site contains multiple species"</span><span class="p">)</span>
+        <span class="n">by_tag</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+    <span class="n">output_groups</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">tolerance</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">symprec</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">output_index</span><span class="p">,</span> <span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">output_cart</span><span class="p">,</span> <span class="n">transformed</span><span class="o">.</span><span class="n">tags</span><span class="p">)):</span>
+        <span class="n">possible</span> <span class="o">=</span> <span class="n">by_tag</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">tag</span><span class="p">),</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">possible</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown output species tag </span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">representatives</span> <span class="o">=</span> <span class="p">[</span><span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">possible</span><span class="p">]</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">distances</span> <span class="o">=</span> <span class="n">find_mic</span><span class="p">(</span>
+            <span class="n">input_cart</span><span class="p">[</span><span class="n">representatives</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">primitive_cell</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">distances</span><span class="p">[</span><span class="n">best</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Cannot map transformed atom </span><span class="si">{</span><span class="n">output_index</span><span class="si">}</span><span class="s2"> to a primitive site: "</span>
+                <span class="sa">f</span><span class="s2">"nearest distance </span><span class="si">{</span><span class="n">distances</span><span class="p">[</span><span class="n">best</span><span class="p">]</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2"> Å"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">distances</span> <span class="o">&lt;=</span> <span class="n">tolerance</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Ambiguous primitive class for transformed atom </span><span class="si">{</span><span class="n">output_index</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">output_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">possible</span><span class="p">[</span><span class="n">best</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">output_groups</span></div>
+
+
+
+<div class="viewcode-block" id="symmetry_site_permutations">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.symmetry_site_permutations.html#ase2sprkkr.bindings.spglib.symmetry_site_permutations">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">symmetry_site_permutations</span><span class="p">(</span>
+    <span class="n">cell</span><span class="p">,</span> <span class="n">scaled_positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">rotations</span><span class="p">,</span> <span class="n">translations</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the atomic permutation for each space-group operation.</span>
+
+<span class="sd">    The same periodic, species-aware matching is used by both metric/site</span>
+<span class="sd">    idealization and SpacegroupInfo.kto_kyda_table.</span>
+<span class="sd">    """</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">scaled_positions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+    <span class="n">by_tag</span> <span class="o">=</span> <span class="p">{</span><span class="n">tag</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">tags</span> <span class="o">==</span> <span class="n">tag</span><span class="p">)</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tags</span><span class="p">)}</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rotations</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">tolerance</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">symprec</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">translation</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">rotations</span><span class="p">,</span> <span class="n">translations</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">)):</span>
+            <span class="n">transformed</span> <span class="o">=</span> <span class="n">position</span> <span class="o">@</span> <span class="n">rotation</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">translation</span>
+            <span class="n">candidates</span> <span class="o">=</span> <span class="n">by_tag</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">distances</span> <span class="o">=</span> <span class="n">find_mic</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">positions</span><span class="p">[</span><span class="n">candidates</span><span class="p">]</span> <span class="o">-</span> <span class="n">transformed</span><span class="p">)</span> <span class="o">@</span> <span class="n">cell</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">distances</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Cannot map operation </span><span class="si">{</span><span class="n">g</span><span class="si">}</span><span class="s2">, site </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> within </span><span class="si">{</span><span class="n">tolerance</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2"> Å"</span>
+                <span class="p">)</span>
+            <span class="n">table</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">g</span><span class="p">]))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Operation </span><span class="si">{</span><span class="n">g</span><span class="si">}</span><span class="s2"> does not permute all sites"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">table</span></div>
+
+
+
+<div class="viewcode-block" id="idealize_cell">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.idealize_cell.html#ase2sprkkr.bindings.spglib.idealize_cell">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">idealize_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">scaled_positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Symmetrize lattice metric and atomic positions in the ORIGINAL basis.</span>
+
+<span class="sd">    The metric is projected onto the point-group-invariant subspace.</span>
+<span class="sd">    For each atomic image, the inverse symmetry operation maps it back</span>
+<span class="sd">    near its source site; minimum-image displacements are then averaged.</span>
+<span class="sd">    This keeps the incoming basis setting, atom count, and ordering.</span>
+<span class="sd">    """</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">scaled_positions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+    <span class="n">rotations</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">rotations</span>
+    <span class="n">translations</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">translations</span>
+
+    <span class="n">metric</span> <span class="o">=</span> <span class="n">cell</span> <span class="o">@</span> <span class="n">cell</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">sym_metric</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">rotation</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">metric</span> <span class="o">@</span> <span class="n">rotation</span> <span class="k">for</span> <span class="n">rotation</span> <span class="ow">in</span> <span class="n">rotations</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
+    <span class="n">sym_metric</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">sym_metric</span> <span class="o">+</span> <span class="n">sym_metric</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_root</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">eigenvalues</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"A positive-definite lattice metric is required"</span><span class="p">)</span>
+        <span class="n">powers</span> <span class="o">=</span> <span class="n">eigenvalues</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="k">if</span> <span class="n">inverse</span> <span class="k">else</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">eigenvectors</span> <span class="o">*</span> <span class="n">powers</span><span class="p">)</span> <span class="o">@</span> <span class="n">eigenvectors</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="n">metric_change</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span>
+        <span class="n">metric</span><span class="p">,</span> <span class="n">sym_metric</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span>
+    <span class="p">)</span>
+    <span class="c1"># Preserve an already symmetric lattice exactly, avoiding round-off from</span>
+    <span class="c1"># reconstructing it through two eigendecompositions.</span>
+    <span class="n">new_cell</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">symmetric_root</span><span class="p">(</span><span class="n">sym_metric</span><span class="p">)</span> <span class="o">@</span> <span class="n">symmetric_root</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">@</span> <span class="n">cell</span>
+        <span class="k">if</span> <span class="n">metric_change</span> <span class="k">else</span> <span class="n">cell</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">inverse_cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+
+    <span class="n">delta_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+    <span class="n">permutations</span> <span class="o">=</span> <span class="n">symmetry_site_permutations</span><span class="p">(</span>
+        <span class="n">cell</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">rotations</span><span class="p">,</span> <span class="n">translations</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rotations</span><span class="p">,</span> <span class="n">translations</span><span class="p">,</span> <span class="n">permutations</span><span class="p">):</span>
+        <span class="n">inverse_rotation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">rotation</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mapping</span><span class="p">):</span>
+            <span class="n">back</span> <span class="o">=</span> <span class="p">(</span><span class="n">positions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">translation</span><span class="p">)</span> <span class="o">@</span> <span class="n">inverse_rotation</span>
+            <span class="n">correction</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">find_mic</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">back</span> <span class="o">-</span> <span class="n">positions</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">@</span> <span class="n">cell</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">delta_sum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">correction</span> <span class="o">@</span> <span class="n">inverse_cell</span>
+
+    <span class="n">ideal_positions</span> <span class="o">=</span> <span class="p">(</span><span class="n">positions</span> <span class="o">+</span> <span class="n">delta_sum</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">rotations</span><span class="p">))</span> <span class="o">%</span> <span class="mf">1.0</span>
+    <span class="c1"># Compare displacement, not modulo-wrapped coordinates.</span>
+    <span class="n">displacement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">((</span><span class="n">delta_sum</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">rotations</span><span class="p">))</span> <span class="o">@</span> <span class="n">cell</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">geometry_changed</span> <span class="o">=</span> <span class="n">metric_change</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">displacement</span> <span class="o">&gt;</span> <span class="mf">1e-8</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">TransformedCell</span><span class="p">(</span><span class="n">new_cell</span><span class="p">,</span> <span class="n">ideal_positions</span><span class="p">,</span> <span class="n">tags</span><span class="o">.</span><span class="n">copy</span><span class="p">()),</span> <span class="n">geometry_changed</span></div>
 
 </pre></div>
 

@@ -1,0 +1,8 @@
+<map id="inheritance7f71d8311c" name="inheritance7f71d8311c">
+<area shape="rect" id="node1" href="#ase2sprkkr.configuration.ProfilesSection" target="_top" title="Definition of the dict&#45;like named execution&#45;profile section." alt="" coords="838,3,957,19"/>
+<area shape="rect" id="node2" href="ase2sprkkr.configuration.Section.html#ase2sprkkr.configuration.Section" target="_top" title="configuration.Section" alt="" coords="730,3,821,19"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.common.container_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="557,3,713,19"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="3,3,164,19"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="181,3,358,19"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="375,3,540,19"/>
+</map>

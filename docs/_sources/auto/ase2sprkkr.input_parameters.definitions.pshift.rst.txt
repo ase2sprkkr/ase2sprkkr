@@ -1,0 +1,59 @@
+pshift
+======
+
+Full name: **ase2sprkkr.input\_parameters.definitions.pshift**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.definitions.pshift.PshiftInputParametersDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.pshift
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _validate_pshift
+      input_parameters_definition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      PshiftInputParametersDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.input_parameters.definitions.tutorial &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../execution.html">Execution, persistence and remote runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.input_parameters.definitions.tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.input_parameters.definitions.tutorial</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Complete native SPR-KKR 9.7 TUTORIAL dispatch and input parameters."""</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">STRCONST</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">,</span> <span class="n">SetOf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataValidityError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..task_definition</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InputParametersDefinition</span><span class="p">,</span> <span class="n">InputSectionDefinition</span> <span class="k">as</span> <span class="n">Section</span><span class="p">,</span>
+    <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">TUTORIAL_TASKS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"YLM"</span><span class="p">:</span> <span class="s2">"Plot a real spherical harmonic, with positive and negative parts separated"</span><span class="p">,</span>
+    <span class="s2">"JLX"</span><span class="p">:</span> <span class="s2">"Plot spherical Bessel j_l(x) and Neumann n_l(x) functions"</span><span class="p">,</span>
+    <span class="s2">"JLX-ASYMPT"</span><span class="p">:</span> <span class="s2">"Compare spherical Bessel/Neumann functions with small- or large-x asymptotes"</span><span class="p">,</span>
+    <span class="s2">"CHR-POT"</span><span class="p">:</span> <span class="s2">"Plot stored potential, charge/spin density and FULLPOT shape functions"</span><span class="p">,</span>
+    <span class="s2">"POT-DECOMP"</span><span class="p">:</span> <span class="s2">"Decompose an ASA potential; input XC must be VBH, MJW or VWN"</span><span class="p">,</span>
+    <span class="s2">"POT-XC"</span><span class="p">:</span> <span class="s2">"Compare VBH, MJW, VWN and PBE XC potentials on the same stored ASA density"</span><span class="p">,</span>
+    <span class="s2">"RWF-L"</span><span class="p">:</span> <span class="s2">"Compare regular scalar-relativistic radial wave functions for different l at EMIN"</span><span class="p">,</span>
+    <span class="s2">"RWF-E"</span><span class="p">:</span> <span class="s2">"Compare regular scalar-relativistic radial wave functions across energies for one l"</span><span class="p">,</span>
+    <span class="s2">"CORE-ALL"</span><span class="p">:</span> <span class="s2">"Plot nonmagnetic core states of potential type 1; ASA with occupied core shells required"</span><span class="p">,</span>
+    <span class="s2">"DOS-FEG"</span><span class="p">:</span> <span class="s2">"Single-site DOS with constant V=0.0001 Ry and B=0 (free-electron demonstration)"</span><span class="p">,</span>
+    <span class="s2">"DOS-SS"</span><span class="p">:</span> <span class="s2">"Single-site DOS using the supplied potential"</span><span class="p">,</span>
+    <span class="s2">"DOS-CLU"</span><span class="p">:</span> <span class="s2">"DOS using an explicitly configured real-space cluster"</span><span class="p">,</span>
+    <span class="s2">"DOS-BULK"</span><span class="p">:</span> <span class="s2">"DOS using an explicitly configured periodic BZ integration"</span><span class="p">,</span>
+    <span class="s2">"GEN"</span><span class="p">:</span> <span class="s2">"General DOS/observable calculation with the supplied potential and TAU settings"</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="_subtask">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial._subtask.html#ase2sprkkr.input_parameters.definitions.tutorial._subtask">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_subtask</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">TASK</span><span class="p">[</span><span class="s2">"TUT-TASK"</span><span class="p">]()</span></div>
+
+
+
+<div class="viewcode-block" id="_tutorial_ne">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial._tutorial_ne.html#ase2sprkkr.input_parameters.definitions.tutorial._tutorial_ne">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_tutorial_ne</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">_subtask</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mi">10</span> <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"RWF-"</span><span class="p">)</span> <span class="k">else</span> <span class="mi">300</span> <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"DOS-"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"GEN"</span> <span class="k">else</span> <span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="_tutorial_grid">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial._tutorial_grid.html#ase2sprkkr.input_parameters.definitions.tutorial._tutorial_grid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_tutorial_grid</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">_subtask</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">"3"</span> <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"RWF-"</span><span class="p">,</span> <span class="s2">"DOS-"</span><span class="p">))</span> <span class="ow">or</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"GEN"</span> <span class="k">else</span> <span class="s2">"0"</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="_tutorial_emin">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial._tutorial_emin.html#ase2sprkkr.input_parameters.definitions.tutorial._tutorial_emin">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_tutorial_emin</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">1e-7</span> <span class="k">if</span> <span class="n">_subtask</span><span class="p">(</span><span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"RWF-"</span><span class="p">)</span> <span class="k">else</span> <span class="o">-</span><span class="mf">.2</span></div>
+
+
+
+<div class="viewcode-block" id="_tutorial_ime">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial._tutorial_ime.html#ase2sprkkr.input_parameters.definitions.tutorial._tutorial_ime">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_tutorial_ime</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">_subtask</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">.01</span> <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"DOS-"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"GEN"</span> <span class="k">else</span> <span class="mf">0.0</span></div>
+
+
+
+<div class="viewcode-block" id="_tutorial_mode">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial._tutorial_mode.html#ase2sprkkr.input_parameters.definitions.tutorial._tutorial_mode">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_tutorial_mode</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">"SREL"</span> <span class="k">if</span> <span class="n">_subtask</span><span class="p">(</span><span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"RWF-"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"FREL"</span></div>
+
+
+
+<div class="viewcode-block" id="_tutorial_bzint">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial._tutorial_bzint.html#ase2sprkkr.input_parameters.definitions.tutorial._tutorial_bzint">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_tutorial_bzint</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span>
+    <span class="k">return</span> <span class="s2">"CLUSTER"</span> <span class="k">if</span> <span class="n">tau</span><span class="o">.</span><span class="n">CLUSTER</span><span class="p">()</span> <span class="ow">or</span> <span class="n">tau</span><span class="o">.</span><span class="n">MOL</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"POINTS"</span></div>
+
+
+
+<div class="viewcode-block" id="_tutorial_kkrmode">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial._tutorial_kkrmode.html#ase2sprkkr.input_parameters.definitions.tutorial._tutorial_kkrmode">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_tutorial_kkrmode</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">"STANDARD"</span></div>
+
+
+
+<div class="viewcode-block" id="_validate_tutorial">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial._validate_tutorial.html#ase2sprkkr.input_parameters.definitions.tutorial._validate_tutorial">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_tutorial</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">_container</span><span class="p">,</span> <span class="n">why</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">why</span> <span class="o">==</span> <span class="s2">"set"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">TASK</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">ENERGY</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s2">"TUT-TASK"</span><span class="p">]()</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DataValidityError</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"YLM"</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">M</span><span class="p">())</span> <span class="o">&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">L</span><span class="p">():</span>
+        <span class="n">error</span><span class="p">(</span><span class="s2">"YLM requires abs(M)&lt;=L; native silently clamps M."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">task</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"JLX"</span><span class="p">,</span> <span class="s2">"JLX-ASYMPT"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">XMIN</span><span class="p">())</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">XMAX</span><span class="p">())</span> <span class="ow">or</span> <span class="n">t</span><span class="o">.</span><span class="n">XMIN</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">.001</span> <span class="ow">or</span> <span class="n">t</span><span class="o">.</span><span class="n">XMAX</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">t</span><span class="o">.</span><span class="n">XMIN</span><span class="p">():</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"JLX requires finite XMAX&gt;XMIN&gt;=0.001."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"JLX-ASYMPT"</span> <span class="ow">and</span> <span class="n">t</span><span class="p">[</span><span class="s2">"X-RANGE"</span><span class="p">]()</span> <span class="o">==</span> <span class="s2">"SMALL"</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">XMIN</span><span class="p">()</span> <span class="o">!=</span> <span class="mf">.001</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"JLX-ASYMPT SMALL forces XMIN=0.001."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">task</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"POT-DECOMP"</span><span class="p">,</span> <span class="s2">"POT-XC"</span><span class="p">,</span> <span class="s2">"CORE-ALL"</span><span class="p">,</span> <span class="s2">"RWF-L"</span><span class="p">,</span> <span class="s2">"RWF-E"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">FULLPOT</span><span class="p">():</span>
+        <span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2"> requires ASA in this definition; native FULLPOT is unsupported or inconsistent."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"RWF-"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"NREL"</span><span class="p">,</span> <span class="s2">"SREL"</span><span class="p">,</span> <span class="s2">"SP-SREL"</span><span class="p">):</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"RWF uses WAVFUN_READ_SRA; choose NREL, SREL or SP-SREL."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">NE</span><span class="p">())</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">e</span><span class="o">.</span><span class="n">NE</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">e</span><span class="o">.</span><span class="n">SPLITSS</span><span class="p">():</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"RWF requires one mesh with NE&gt;=2 and no SPLITSS (native EPATH(3))."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">EMINEV</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">or</span> <span class="n">e</span><span class="o">.</span><span class="n">EMAXEV</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"RWF rereads absolute EMIN/EMAX in Ry and ignores EMINEV/EMAXEV."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">EMIN</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">e</span><span class="o">.</span><span class="n">EMAX</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">EMIN</span><span class="p">())</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">EMAX</span><span class="p">())</span> <span class="ow">or</span> <span class="n">e</span><span class="o">.</span><span class="n">EMAX</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">e</span><span class="o">.</span><span class="n">EMIN</span><span class="p">():</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"RWF requires finite absolute EMAX&gt;EMIN."</span><span class="p">)</span>
+        <span class="n">nl</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">SITES</span><span class="o">.</span><span class="n">NL</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"RWF-E"</span> <span class="ow">and</span> <span class="n">nl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">L</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nl</span><span class="p">):</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"RWF-E requires L&lt;NL; native clamps L to NL-1."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"DOS-"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"GEN"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">NE</span><span class="p">())</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">GRID</span><span class="p">())</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">e</span><span class="o">.</span><span class="n">SPLITSS</span><span class="p">():</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"Use a single TUTORIAL DOS mesh without SPLITSS."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">GRID</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"2"</span><span class="p">,</span> <span class="s2">"3"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">NE</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"DOS GRID=2/3 requires NE&gt;=2."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">ImE</span><span class="p">())</span> <span class="ow">or</span> <span class="n">e</span><span class="o">.</span><span class="n">ImE</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"DOS ImE must be finite and nonnegative."</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"EMIN"</span><span class="p">,</span> <span class="s2">"EMAX"</span><span class="p">,</span> <span class="s2">"EMINEV"</span><span class="p">,</span> <span class="s2">"EMAXEV"</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">name</span><span class="p">]()</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ENERGY.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite."</span><span class="p">)</span>
+    <span class="n">cluster</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">TAU</span><span class="o">.</span><span class="n">CLUSTER</span><span class="p">()</span> <span class="ow">or</span> <span class="n">p</span><span class="o">.</span><span class="n">TAU</span><span class="o">.</span><span class="n">MOL</span><span class="p">()</span> <span class="ow">or</span> <span class="n">p</span><span class="o">.</span><span class="n">TAU</span><span class="o">.</span><span class="n">BZINT</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"CLUSTER"</span>
+    <span class="k">if</span> <span class="n">task</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"DOS-FEG"</span><span class="p">,</span> <span class="s2">"DOS-SS"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cluster</span> <span class="ow">or</span> <span class="n">p</span><span class="o">.</span><span class="n">TAU</span><span class="o">.</span><span class="n">KKRMODE</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"STANDARD"</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"DOS-FEG/DOS-SS require STANDARD KKR without a cluster to use native tau=t."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"DOS-CLU"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cluster</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"DOS-CLU needs TAU.CLUSTER, MOL or BZINT=CLUSTER; its name alone does not configure a cluster."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">TAU</span><span class="o">.</span><span class="n">CLURAD</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">TAU</span><span class="o">.</span><span class="n">NSHLCLU</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="s2">"DOS-CLU requires TAU.CLURAD or NSHLCLU."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">"DOS-BULK"</span> <span class="ow">and</span> <span class="p">(</span><span class="n">cluster</span> <span class="ow">or</span> <span class="n">p</span><span class="o">.</span><span class="n">TAU</span><span class="o">.</span><span class="n">BZINT</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"POINTS"</span><span class="p">,</span> <span class="s2">"WEYL"</span><span class="p">)):</span>
+        <span class="n">error</span><span class="p">(</span><span class="s2">"DOS-BULK requires periodic POINTS or WEYL integration."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">errors</span> <span class="ow">or</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="input_parameters_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.tutorial.input_parameters_definition.html#ase2sprkkr.input_parameters.definitions.tutorial.input_parameters_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_definition</span><span class="p">():</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">TASK</span><span class="p">(</span><span class="s2">"TUTORIAL"</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"TUT-TASK"</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">(</span><span class="n">TUTORIAL_TASKS</span><span class="p">),</span> <span class="s2">"YLM"</span><span class="p">,</span> <span class="n">is_always_added</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+          <span class="n">info</span><span class="o">=</span><span class="s2">"Select the native educational or diagnostic calculation."</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"L"</span><span class="p">,</span> <span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"YLM angular momentum; RWF-E selected l (must be below NL)."</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"M"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"YLM real harmonic index, abs(M)&lt;=L."</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"LMAX"</span><span class="p">,</span> <span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Largest l in JLX plots."</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"NX"</span><span class="p">,</span> <span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="mi">300</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"JLX mesh point count."</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"XMIN"</span><span class="p">,</span> <span class="mf">.001</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"JLX lower bound; SMALL asymptote forces .001."</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"XMAX"</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"JLX upper bound."</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"X-RANGE"</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">(</span><span class="s2">"SMALL"</span><span class="p">,</span> <span class="s2">"LARGE"</span><span class="p">),</span> <span class="s2">"SMALL"</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"JLX-ASYMPT limit; ignored by plain JLX."</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"ITSEL"</span><span class="p">,</span> <span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Potential type used by RWF-L/RWF-E; must exist in POTFIL."</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s2">"NORMALISATION"</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"MST"</span><span class="p">),</span> <span class="s2">"1"</span><span class="p">,</span>
+          <span class="n">info</span><span class="o">=</span><span class="s2">"RWF: 1 normalizes the plotted real radial part; MST retains multiple-scattering normalization."</span><span class="p">),</span>
+    <span class="p">])</span>
+    <span class="n">scf</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s2">"SCF"</span><span class="p">,</span> <span class="p">[</span><span class="n">V</span><span class="p">(</span><span class="s2">"FULLPOT"</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"Native potential format takes precedence; POT-DECOMP/POT-XC/CORE-ALL and audited RWF require ASA."</span><span class="p">)],</span>
+        <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">MODE</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+        <span class="n">add</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">MODE</span><span class="p">[</span><span class="s2">"MODE"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">Keyword</span><span class="p">(</span><span class="s2">"NREL"</span><span class="p">,</span> <span class="s2">"SREL"</span><span class="p">,</span> <span class="s2">"SP-SREL"</span><span class="p">,</span> <span class="s2">"FREL"</span><span class="p">),</span> <span class="n">default_value</span><span class="o">=</span><span class="n">_tutorial_mode</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">is_expert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">TAU</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+        <span class="n">add</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">TAU</span><span class="p">[</span><span class="s2">"BZINT"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">default_value</span><span class="o">=</span><span class="n">_tutorial_bzint</span><span class="p">),</span>
+            <span class="n">TAU</span><span class="p">[</span><span class="s2">"KKRMODE"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">default_value</span><span class="o">=</span><span class="n">_tutorial_kkrmode</span><span class="p">,</span> <span class="n">is_always_added</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">ENERGY</span><span class="p">(</span><span class="n">emin</span><span class="o">=</span><span class="p">(</span><span class="n">_tutorial_emin</span><span class="p">,</span> <span class="s2">"Absolute lower energy in Ry; RWF ignores relative eV bounds"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">emax</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">"Absolute upper energy in Ry"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"GRID"</span><span class="p">:</span> <span class="n">_tutorial_grid</span><span class="p">,</span> <span class="s2">"NE"</span><span class="p">:</span> <span class="n">_tutorial_ne</span><span class="p">,</span> <span class="s2">"ImE"</span><span class="p">:</span> <span class="n">_tutorial_ime</span><span class="p">})</span>
+    <span class="n">energy</span><span class="o">.</span><span class="n">copy_member</span><span class="p">(</span><span class="s2">"NE"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">SetOf</span><span class="p">(</span><span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">InputParametersDefinition</span><span class="p">(</span>
+        <span class="s2">"tutorial"</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">CONTROL</span><span class="p">(</span><span class="s2">"TUTORIAL"</span><span class="p">),</span> <span class="n">tau</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">],</span>
+        <span class="n">validators</span><span class="o">=</span><span class="n">_validate_tutorial</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"Educational and diagnostic KKR calculations selected by TASK.TUT-TASK: real spherical harmonics "</span>
+             <span class="s2">"(YLM), spherical Bessel/Neumann functions and asymptotes (JLX, JLX-ASYMPT), stored potential and "</span>
+             <span class="s2">"densities (CHR-POT), potential decomposition (POT-DECOMP), XC comparison on one density (POT-XC), "</span>
+             <span class="s2">"radial valence wave functions across l or energy (RWF-L, RWF-E), nonmagnetic core states of "</span>
+             <span class="s2">"type 1 (CORE-ALL), and free-electron, single-site, cluster or bulk DOS (DOS-FEG, DOS-SS, "</span>
+             <span class="s2">"DOS-CLU, DOS-BULK). GEN runs the general observable calculation. All branches use native "</span>
+             <span class="s2">"kkrgen startup and require a potential file. Several branches have native limitations; see their descriptions."</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"POT-DECOMP requires ASA with XC=VBH/MJW/VWN. POT-XC compares VBH/MJW/VWN/PBE on the same density, "</span>
+                    <span class="s2">"without separate SCF runs. CORE-ALL uses only type 1 and forces B=0. RWF uses scalar-relativistic "</span>
+                    <span class="s2">"wave functions and absolute Ry bounds. DOS-CLU requires explicit TAU cluster geometry; DOS-BULK "</span>
+                    <span class="s2">"and GEN retain the supplied TAU settings. Native diagnostic branches are not certified for MPI."</span>
+    <span class="p">)</span>
+    <span class="n">schema</span><span class="o">.</span><span class="n">_task_definition</span> <span class="o">=</span> <span class="n">TaskDefinition</span><span class="p">(</span><span class="s2">"TUTORIAL"</span><span class="p">,</span> <span class="n">experimental</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrgen"</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">schema</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

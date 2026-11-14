@@ -1,0 +1,50 @@
+reader\_registry
+================
+
+Full name: **ase2sprkkr.outputs.reader\_registry**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.reader_registry.OutputReaderRegistry 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.reader_registry
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      OutputReaderRegistry
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

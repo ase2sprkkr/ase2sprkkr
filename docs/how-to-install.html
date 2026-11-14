@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="ASE2SPR-KKR’s philosophy for the developers" href="philosophy.html" />
-    <link rel="prev" title="How to use ASE2SPRKKR" href="usage.html" /> 
+    <link rel="prev" title="Execution, persistent runs and KKRunner" href="execution.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,8 +48,12 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">More about the package installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation-of-the-package-using-package-managers">Installation of the package using package managers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kkrunner-dependency">KKRunner dependency</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#further-notes">Further notes</a></li>
 </ul>
 </li>
@@ -76,10 +80,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -134,6 +138,21 @@ you can install the packages from github:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
 </pre></div>
 </div>
+<section id="kkrunner-dependency">
+<h3>KKRunner dependency<a class="headerlink" href="#kkrunner-dependency" title="Link to this heading"></a></h3>
+<p>Pip installs KKRunner as a separate runtime dependency. For source development,
+install it before ASE2SPRKKR. Run the following from the ASE2SPRKKR checkout:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install -e "&lt;path-to-kkrunner&gt;"</span>
+<span class="go">python -m pip install -e .</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;path-to-kkrunner&gt;</span></code> with the location of your KKRunner checkout.</p>
+<p>For scheduler support install <code class="docutils literal notranslate"><span class="pre">ase2sprkkr[psij]</span></code>. On an SSH target, install
+<code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> (or <code class="docutils literal notranslate"><span class="pre">kkrunner[psij]</span></code> for a scheduler), SPR-KKR and its required MPI
+runtime. The target does not need ASE2SPRKKR just to run its executables.
+See the <a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a>
+for backend requirements and installation details.</p>
+</section>
 <section id="further-notes">
 <h3>Further notes<a class="headerlink" href="#further-notes" title="Link to this heading"></a></h3>
 <p>In some systems, the <code class="docutils literal notranslate"><span class="pre">pip</span></code> utility for <code class="docutils literal notranslate"><span class="pre">python3</span></code> is called <code class="docutils literal notranslate"><span class="pre">pip3</span></code>.
@@ -161,7 +180,7 @@ package sources.</p>
 <section id="requirements">
 <h3>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Python &gt;= 3.8</p></li>
+<li><p>Python &gt;= 3.9</p></li>
 <li><p>SPR-KKR (not checked by the installer)</p></li>
 <li><p>Python packages: see the the pypoject.toml file</p></li>
 <li><p>Git (to obtain the sources)</p></li>
@@ -218,7 +237,7 @@ copying them out from pyproject.toml:</p>
 to update this help) run the following snippet to install all the build-dependencies
 mentioned in pyproject.toml:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>tomllib
-pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import tomllib; print(&#39; &#39;.join(tomllib.load(open(&#39;pyproject.toml&#39;,&#39;rb&#39;))[&#39;build-system&#39;][&#39;requires&#39;]))&quot;</span><span class="k">)</span>
+pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import tomllib; print(' '.join(tomllib.load(open('pyproject.toml','rb'))['build-system']['requires']))"</span><span class="k">)</span>
 </pre></div>
 </div>
 <p>2. The limitation of the editable install is, that it won’t see
@@ -263,7 +282,7 @@ building the documentation.
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="usage.html" class="btn btn-neutral float-left" title="How to use ASE2SPRKKR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="execution.html" class="btn btn-neutral float-left" title="Execution, persistent runs and KKRunner" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="philosophy.html" class="btn btn-neutral float-right" title="ASE2SPR-KKR’s philosophy for the developers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -1,0 +1,69 @@
+grace
+=====
+
+Full name: **ase2sprkkr.result\_files.grace**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.result_files.grace.GraceDataset  ase2sprkkr.result_files.grace.GraceFile  ase2sprkkr.result_files.grace.GraceGraph 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.result_files.grace
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _store_setting
+      _value
+      read_agr
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      GraceDataset
+      GraceFile
+      GraceGraph
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      GraceParseError
+   
+   
+
+
+  
+  
+  

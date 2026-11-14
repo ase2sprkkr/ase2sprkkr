@@ -1,0 +1,59 @@
+posani
+======
+
+Full name: **ase2sprkkr.input\_parameters.definitions.posani**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.definitions.posani.PosaniInputParametersDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.posani
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _validate_posani
+      input_parameters_definition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      PosaniInputParametersDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

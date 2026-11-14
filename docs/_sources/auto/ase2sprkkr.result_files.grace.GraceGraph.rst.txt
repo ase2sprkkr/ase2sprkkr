@@ -1,0 +1,36 @@
+GraceGraph
+==========
+
+
+.. currentmodule:: ase2sprkkr.result_files.grace
+
+.. autoclass:: GraceGraph
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.result_files.grace.GraceGraph
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

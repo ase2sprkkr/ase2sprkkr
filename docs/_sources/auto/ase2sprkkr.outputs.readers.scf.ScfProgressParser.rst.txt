@@ -1,0 +1,36 @@
+ScfProgressParser
+=================
+
+
+.. currentmodule:: ase2sprkkr.outputs.readers.scf
+
+.. autoclass:: ScfProgressParser
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.readers.scf.ScfProgressParser
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

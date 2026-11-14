@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="FilenameTemplator" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html" />
-    <link rel="prev" title="vacuum_like" href="ase2sprkkr.sprkkr.build.vacuum_like.html" /> 
+    <link rel="prev" title="PreparedCalculation" href="ase2sprkkr.sprkkr.calculation.PreparedCalculation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,19 +62,23 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -79,32 +86,38 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atoms_region.html">atoms_region</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.build.html">build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculation.html">calculation</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">calculator</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#module-calculator">Module calculator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html">FilenameTemplator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html">SPRKKR</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.executables.html">executables</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.html">moments</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.projects.html">projects</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.site_equivalence.html">site_equivalence</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.html">spacegroup_info</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html">sprkkr_grammar_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.symmetry.html">symmetry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -140,30 +153,26 @@
 <h1>calculator<a class="headerlink" href="#calculator" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.sprkkr.calculator</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-b28a48821013944d9bfca5e59fc9493499a53284.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.calculator.FilenameTemplator, ase2sprkkr.sprkkr.calculator.SPRKKR" usemap="#inheritancee5a6d15eb2" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-591c915c2b782171473fd2f0dbcf687f5e318fc6.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.calculator.FilenameTemplator, ase2sprkkr.sprkkr.calculator.SPRKKR" usemap="#inheritancee5a6d15eb2" class="inheritance graphviz" /></div>
 <map id="inheritancee5a6d15eb2" name="inheritancee5a6d15eb2">
-<area shape="rect" id="node6" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR" target="_top" title="ASE calculator for SPR&#45;KKR." alt="" coords="622,57,695,85"/>
-<area shape="rect" id="node5" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator" target="_top" title="Class that replaces the placeholders in filenames with propper values," alt="" coords="5,5,152,33"/>
+<area shape="rect" id="node5" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR" target="_top" title="ASE&#45;facing calculator for SPR&#45;KKR." alt="" coords="505,81,579,109"/>
+<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator" target="_top" title="Backward&#45;compatible facade for the historical calculator&#45;based API." alt="" coords="5,29,152,57"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<section id="module-calculator">
-<span id="module-ase2sprkkr.sprkkr.calculator"></span><h2>Module calculator<a class="headerlink" href="#module-calculator" title="Link to this heading"></a></h2>
-<p>This module contains different classes used to define a new calculator for
-specific spectroscopies understood by MsSpec.</p>
-<p>For more informations about SPR-KKR, follow this
-<cite>link &lt;http://olymp.cup.uni-muenchen.de/index.php?option=com_content&amp;
-view=article&amp;id=8%3Asprkkr&amp;catid=4%3Asoftware&amp;Itemid=7&amp;lang=en&gt;</cite></p>
-</section>
+<p id="module-ase2sprkkr.sprkkr.calculator">ASE calculator facade for SPR-KKR.</p>
+<p>The calculator stores persistent user/ASE defaults.  Materialization of one
+concrete calculation lives in <a class="reference internal" href="ase2sprkkr.sprkkr.calculation.html#module-ase2sprkkr.sprkkr.calculation" title="ase2sprkkr.sprkkr.calculation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.calculation</span></code></a>; process
+execution is delegated to the generic execution subsystem.</p>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator" title="ase2sprkkr.sprkkr.calculator.FilenameTemplator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FilenameTemplator</span></code></a>(calculator, task, symbols)</p></td>
-<td><p>Class that replaces the placeholders in filenames with propper values, see the replacements property of the class.</p></td>
+<td><p>Backward-compatible facade for the historical calculator-based API.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR" title="ase2sprkkr.sprkkr.calculator.SPRKKR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SPRKKR</span></code></a>([restart, label, atoms, directory, ...])</p></td>
-<td><p>ASE calculator for SPR-KKR.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR" title="ase2sprkkr.sprkkr.calculator.SPRKKR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SPRKKR</span></code></a>([label, directory, atoms, potential, ...])</p></td>
+<td><p>ASE-facing calculator for SPR-KKR.</p></td>
 </tr>
 </tbody>
 </table>
@@ -173,7 +182,7 @@ view=article&amp;id=8%3Asprkkr&amp;catid=4%3Asoftware&amp;Itemid=7&amp;lang=en&g
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.sprkkr.build.vacuum_like.html" class="btn btn-neutral float-left" title="vacuum_like" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.sprkkr.calculation.PreparedCalculation.html" class="btn btn-neutral float-left" title="PreparedCalculation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html" class="btn btn-neutral float-right" title="FilenameTemplator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

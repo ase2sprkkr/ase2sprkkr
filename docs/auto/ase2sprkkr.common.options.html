@@ -48,6 +48,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -59,50 +62,60 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.async_utils.html">async_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.backward_compatibility.html">backward_compatibility</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_versions.html">file_versions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">options</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.BaseOption.html">BaseOption</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.CustomOption.html">CustomOption</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.DangerousValue.html">DangerousValue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.Dummy.html">Dummy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.DummyStub.html">DummyStub</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.Option.html">Option</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options._DiscardInvalidValue.html">ase2sprkkr.common.options._DiscardInvalidValue</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.output_printing.html">output_printing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.temporary.html">temporary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a></li>
@@ -111,6 +124,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -118,8 +134,9 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
@@ -155,15 +172,14 @@
 <h1>options<a class="headerlink" href="#options" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.options</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-b68e0470d167642755ba0756bb85d922fe5cac06.png" alt="Inheritance diagram of ase2sprkkr.common.options.BaseOption, ase2sprkkr.common.options.CustomOption, ase2sprkkr.common.options.DangerousValue, ase2sprkkr.common.options.Dummy, ase2sprkkr.common.options.DummyStub, ase2sprkkr.common.options.Option" usemap="#inheritance6a0763ea41" class="inheritance graphviz" /></div>
-<map id="inheritance6a0763ea41" name="inheritance6a0763ea41">
-<area shape="rect" id="node1" href="ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" target="_top" title="A base placeholder for a leaf element of a grammar file," alt="" coords="162,57,258,85"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="288,31,360,58"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.options.Dummy.html#ase2sprkkr.common.options.Dummy" target="_top" title="Dummy" alt="" coords="288,83,361,110"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="15,57,123,85"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" target="_top" title="An user&#45;added option (configuration value). It can be removed from the section." alt="" coords="390,31,505,58"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.options.DangerousValue.html#ase2sprkkr.common.options.DangerousValue" target="_top" title="This class is used to store (encapsulate) a value, which should not be validated" alt="" coords="5,5,133,33"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.options.DummyStub.html#ase2sprkkr.common.options.DummyStub" target="_top" title="DummyStub" alt="" coords="396,83,499,110"/>
+<div class="graphviz"><img src="../_images/inheritance-34ff99c5f826daba0c9e8999ef376c4a89e84c28.png" alt="Inheritance diagram of ase2sprkkr.common.options.BaseOption, ase2sprkkr.common.options.CustomOption, ase2sprkkr.common.options.Dummy, ase2sprkkr.common.options.DummyStub, ase2sprkkr.common.options.Option" usemap="#inheritance90f5e2ea32" class="inheritance graphviz" /></div>
+<map id="inheritance90f5e2ea32" name="inheritance90f5e2ea32">
+<area shape="rect" id="node1" href="ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" target="_top" title="A base placeholder for a leaf element of a grammar file," alt="" coords="143,32,239,60"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="269,5,341,33"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.options.Dummy.html#ase2sprkkr.common.options.Dummy" target="_top" title="Dummy" alt="" coords="269,57,342,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,32,114,60"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" target="_top" title="An user&#45;added option (configuration value). It can be removed from the section." alt="" coords="371,5,486,33"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.options.DummyStub.html#ase2sprkkr.common.options.DummyStub" target="_top" title="DummyStub" alt="" coords="377,57,480,85"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -178,17 +194,22 @@
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" title="ase2sprkkr.common.options.CustomOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomOption</span></code></a>(definition[, container, value])</p></td>
 <td><p>An user-added option (configuration value).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.options.DangerousValue.html#ase2sprkkr.common.options.DangerousValue" title="ase2sprkkr.common.options.DangerousValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DangerousValue</span></code></a>(value[, value_type, validate])</p></td>
-<td><p>This class is used to store (encapsulate) a value, which should not be validated - to  overcame sometimes too strict enforment of the options values.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.options.Dummy.html#ase2sprkkr.common.options.Dummy" title="ase2sprkkr.common.options.Dummy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dummy</span></code></a>(definition[, container])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.options.Dummy.html#ase2sprkkr.common.options.Dummy" title="ase2sprkkr.common.options.Dummy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dummy</span></code></a>(definition[, container])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.options.DummyStub.html#ase2sprkkr.common.options.DummyStub" title="ase2sprkkr.common.options.DummyStub"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DummyStub</span></code></a>(definition[, container])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.options.DummyStub.html#ase2sprkkr.common.options.DummyStub" title="ase2sprkkr.common.options.DummyStub"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DummyStub</span></code></a>(definition[, container])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Option</span></code></a>(definition[, container, value])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Option</span></code></a>(definition[, container, value])</p></td>
 <td><p>Class for one option (a configuration value) of SPRKKR - either to be used as a part of InputParameters or Potential configuration.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Exceptions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.options._DiscardInvalidValue.html#ase2sprkkr.common.options._DiscardInvalidValue" title="ase2sprkkr.common.options._DiscardInvalidValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_DiscardInvalidValue</span></code></a></p></td>
+<td><p>The proposed value was reported but must not be staged.</p></td>
 </tr>
 </tbody>
 </table>

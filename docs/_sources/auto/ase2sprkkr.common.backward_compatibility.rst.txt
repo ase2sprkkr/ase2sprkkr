@@ -26,6 +26,13 @@ Full name: **ase2sprkkr.common.backward\_compatibility**
 
    
    
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      _FallbackExceptionGroup
+   
    
 
 

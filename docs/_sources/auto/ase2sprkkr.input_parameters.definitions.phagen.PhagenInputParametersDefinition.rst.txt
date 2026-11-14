@@ -1,0 +1,36 @@
+PhagenInputParametersDefinition
+===============================
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.definitions.phagen
+
+.. autoclass:: PhagenInputParametersDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.phagen.PhagenInputParametersDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

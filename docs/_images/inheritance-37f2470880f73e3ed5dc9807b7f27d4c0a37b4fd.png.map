@@ -1,0 +1,14 @@
+<map id="inheritancee662f51714" name="inheritancee662f51714">
+<area shape="rect" id="node1" href="ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey" target="_top" title="ArrayKey" alt="" coords="247,57,327,85"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.parsing_results.DefArrayKey.html#ase2sprkkr.common.parsing_results.DefArrayKey" target="_top" title="Dense&#45;array key accepting both ``NAME`` and ``NAME&lt;number&gt;``." alt="" coords="356,57,460,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.parsing_results.SubKey.html#ase2sprkkr.common.parsing_results.SubKey" target="_top" title="A base class for items that have subkeys" alt="" coords="128,83,200,110"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.parsing_results.DictKey.html#ase2sprkkr.common.parsing_results.DictKey" target="_top" title="DictKey" alt="" coords="251,109,323,137"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.parsing_results.DefDictKey.html#ase2sprkkr.common.parsing_results.DefDictKey" target="_top" title="DefDictKey" alt="" coords="361,109,455,137"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.parsing_results.IgnoredKey.html#ase2sprkkr.common.parsing_results.IgnoredKey" target="_top" title="This key is totaly and silently ignored. Use it" alt="" coords="116,135,211,162"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key" target="_top" title="A base class for items, that have to be treated in a special way" alt="" coords="7,161,79,189"/>
+<area shape="rect" id="node9" href="ase2sprkkr.common.parsing_results.RepeatedKey.html#ase2sprkkr.common.parsing_results.RepeatedKey" target="_top" title="RepeatedKey" alt="" coords="110,187,217,214"/>
+<area shape="rect" id="node11" href="ase2sprkkr.common.parsing_results.ValidateKey.html#ase2sprkkr.common.parsing_results.ValidateKey" target="_top" title="Keep a named deferred validation without storing the parsed value." alt="" coords="114,239,213,266"/>
+<area shape="rect" id="node8" href="ase2sprkkr.common.parsing_results.KeyType.html#ase2sprkkr.common.parsing_results.KeyType" target="_top" title="KeyType" alt="" coords="5,109,81,137"/>
+<area shape="rect" id="node10" href="ase2sprkkr.common.parsing_results.Result.html#ase2sprkkr.common.parsing_results.Result" target="_top" title="When data are parsed, some (repeated) options can yield" alt="" coords="7,57,79,85"/>
+<area shape="rect" id="node12" href="ase2sprkkr.common.parsing_results.Values.html#ase2sprkkr.common.parsing_results.Values" target="_top" title="Parsed values with named deferred checks and their presence policy." alt="" coords="7,5,79,33"/>
+</map>

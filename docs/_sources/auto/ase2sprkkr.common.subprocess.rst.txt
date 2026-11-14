@@ -22,7 +22,9 @@ Full name: **ase2sprkkr.common.subprocess**
       :toctree:
       :template: custom-base-template.rst
    
+      _call
       _call_function
+      close_subprocess_pool
       ignore_signal
       in_subprocess
    

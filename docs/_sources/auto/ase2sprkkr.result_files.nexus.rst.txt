@@ -1,0 +1,51 @@
+nexus
+=====
+
+Full name: **ase2sprkkr.result\_files.nexus**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.result_files.nexus
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _companion_input_file
+      _dataset
+      _describe
+      _exporter_version
+      _resolve_input
+      _spc_arrays
+      _spc_value
+      _value
+      _write_nexus
+      write_arpes_nexus
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

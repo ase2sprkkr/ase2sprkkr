@@ -1,0 +1,8 @@
+pytest\_collection\_modifyitems
+===============================
+
+Full name: **ase2sprkkr.conftest.pytest\_collection\_modifyitems**
+
+.. currentmodule:: ase2sprkkr.conftest
+
+.. autofunction:: pytest_collection_modifyitems

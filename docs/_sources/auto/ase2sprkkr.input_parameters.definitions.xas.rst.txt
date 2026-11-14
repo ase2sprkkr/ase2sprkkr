@@ -22,7 +22,8 @@ Full name: **ase2sprkkr.input\_parameters.definitions.xas**
       :toctree:
       :template: custom-base-template.rst
    
-      input_parameters
+      _validate_xas
+      input_parameters_definition
    
    
 

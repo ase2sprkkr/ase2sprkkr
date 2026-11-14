@@ -1,0 +1,36 @@
+ExecutableDefinition
+====================
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.executables
+
+.. autoclass:: ExecutableDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.executables.ExecutableDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

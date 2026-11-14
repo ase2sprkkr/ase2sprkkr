@@ -1,0 +1,44 @@
+site\_equivalence
+=================
+
+Full name: **ase2sprkkr.sprkkr.site\_equivalence**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.site_equivalence
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      occupation_key
+      refine_partial_site_tags
+      site_equivalence_tags
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  
