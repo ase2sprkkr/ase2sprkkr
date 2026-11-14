@@ -41,6 +41,11 @@ Symmetry, plotting and GUI support
   site equivalence, symmetry operations and cell transformations.
 * Added parsing and direct plotting of SPR-KKR Grace ``.agr`` files through
   ``ase2sprkkr plot``.
+* Added ARPES SPC-to-NeXus/HDF5 export through ``ResultFile.to_nexus()``
+  and the new ``ase2sprkkr nexus SPECTRUM.spc`` command. The export
+  preserves native spectra and physical axes and includes available
+  calculation provenance and descriptive metadata. The NeXus writer's
+  optional dependencies are provided by ``ase2sprkkr[nexus]``.
 * Added APIs for calculation preparation, monitoring, persistent project
   history and result-file actions used by the separately published
   ``ase2sprkkr-gui`` desktop application.
@@ -52,6 +57,21 @@ Compatibility
   architectural refactoring.
 * ``kkrunner`` is a required dependency; the execution and task-definition
   APIs have changed substantially from the 3.x series.
+
+Version 4.0.0-beta4
+-------------------
+
+ARPES NeXus export
+~~~~~~~~~~~~~~~~~~
+* Added ``ase2sprkkr nexus SPECTRUM.spc`` to export native ARPES SPC
+  spectra to NeXus/HDF5; ``-o/--output`` selects the output file and
+  ``-i/--input-file`` supplies the original SPR-KKR input when available.
+  Without ``-o``, the command writes beside the SPC file using ``.nxs``.
+  Dependencies for exporting are optional (``ase2sprkkr[nexus]``).
+* Enriched ARPES NeXus exports with physical-axis labels and HDF5
+  dimension scales, descriptive signal units and names, exporter details,
+  native SPC header/column provenance and available input parameters,
+  without changing sampled intensities or axis ordering.
 
 Version 4.0.0-beta3
 -------------------

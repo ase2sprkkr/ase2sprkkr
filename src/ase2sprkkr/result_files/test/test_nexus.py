@@ -539,3 +539,163 @@ def test_native_mo2se4_k_parallel_physical_unit(tmp_path):
         assert ds.attrs["units"] == "1/angstrom"
         assert "native_units" not in ds.attrs
         np.testing.assert_array_equal(ds, spc.K())
+
+
+def test_export_metadata_provenance_and_native_header(tmp_path):
+    """Labels, version provenance and native header must be recoverable."""
+    from datetime import datetime
+
+    class HeaderSPC(SPC):
+        def KEYWORD(self): return "ARPES"
+        def TITLE(self): return "SPR-KKR ARPES example"
+        def SYSTEM(self): return "Test material"
+        def NQ_EFF(self): return 2
+        def NT_EFF(self): return 1
+        def IREL(self): return 3
+        def EFERMI(self): return .47291
+        def INFO(self): return "FP-SPR-KKR"
+
+    spc = HeaderSPC("energy")
+    spc._filename = str(tmp_path / "original.spc")
+    target = tmp_path / "enriched.nxs"
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(spc, target)
+
+    with h5py.File(target) as f:
+        assert f.attrs["creator"] == "ase2sprkkr"
+        datetime.fromisoformat(f.attrs["file_time"])
+        assert f["entry/program_name"].asstr()[()] == "ase2sprkkr"
+        assert f["entry/export"].attrs["NX_class"] == "NXprocess"
+        assert f["entry/export/program"].asstr()[()] == "ase2sprkkr"
+        datetime.fromisoformat(f["entry/export/date"].asstr()[()])
+        assert f["entry/calculation/program"].asstr()[()] == "SPR-KKR"
+        data = f["entry/data"]
+        assert data["title"].asstr()[()].startswith("SPR-KKR ARPES")
+        assert data["data"].attrs["interpretation"] == "image"
+        assert data["data"].attrs["units"] == "arbitrary"
+        assert "intensity" in data["data"].attrs["long_name"].lower()
+        assert data["spin_up"].attrs["units"] == "arbitrary"
+        assert data["spin_down"].attrs["units"] == "arbitrary"
+        assert data["spin_polarization"].attrs["units"] == "1"
+        assert data["determinant"].attrs["long_name"]
+        assert "units" not in data["determinant"].attrs
+        assert data["energy"].attrs["long_name"] == "Initial-state energy E - E_F"
+        assert data["theta"].attrs["long_name"] == "Photoelectron polar angle"
+        assert data["k_parallel"].attrs["long_name"] == "Parallel photoelectron momentum"
+        assert list(data.attrs["axes"]) == ["energy", "theta"]
+        assert data.attrs["energy_indices"] == 0
+        assert data.attrs["theta_indices"] == 1
+        assert data["data"].dims[0].label == "energy"
+        assert data["data"].dims[1].label == "theta"
+        assert list(data["data"].dims[0]) == ["energy"]
+        assert list(data["data"].dims[1]) == ["theta"]
+        np.testing.assert_array_equal(data["data"], spc.TOTAL())
+
+        native = f["entry/sprkkr_spc"]
+        assert native["source_filename"].asstr()[()] == "original.spc"
+        assert native["mode"].asstr()[()] == "energy"
+        np.testing.assert_array_equal(native["raw_data"], spc.RAW_DATA())
+        assert list(native["raw_data"].attrs["record_shape"]) == [2, 3]
+        assert "NT fastest" in native["raw_data"].attrs["record_order"]
+        assert len(native["raw_data"].attrs["column_units"]) == 8
+        header = native["header"]
+        assert header.attrs["NX_class"] == "NXcollection"
+        assert header["keyword"].asstr()[()] == "ARPES"
+        assert header["calculation_info"].asstr()[()] == "FP-SPR-KKR"
+        assert header["fermi_energy_native"][()] == pytest.approx(.47291)
+        assert "unit" in header["fermi_energy_native"].attrs["long_name"]
+        assert header["number_of_energies"][()] == 2
+        assert header["number_of_sites"][()] == 2
+
+
+def test_export_metadata_of_original_input_is_labelled_without_inference(tmp_path):
+    class Opt:
+        def __init__(self, value): self.value = value
+        def __call__(self): return self.value
+    class Sect:
+        def __init__(self, **values):
+            for name, value in values.items():
+                setattr(self, name, Opt(value))
+    class Parameters:
+        TASK = Sect(INPVER=1, STRVER=1, MILLER_HKL=[1, 0, 0])
+        ENERGY = Sect(EWORK_EV=4.5, IMV_FIN_EV=0.05)
+        SPEC_PH = Sect(EPHOT=21.2, THETA=33., PHI=14., POL_P="P")
+        SPEC_EL = Sect(K1=[1., 0.], NK1=3)
+        def to_string(self, *, validate): return "TASK ARPES"
+
+    dest = tmp_path / "input-metadata.nxs"
+    spc = SPC("kx_ky", 2)
+    write_arpes_nexus(spc, dest, input_parameters=Parameters())
+    with h5py.File(dest) as f:
+        instrument = f["entry/instrument"]
+        assert instrument["source/energy"][()] == pytest.approx(21.2)
+        assert instrument["source/energy"].attrs["units"] == "eV"
+        assert instrument["photon_geometry/theta"].attrs["units"] == "degree"
+        assert instrument["photon_geometry/phi"].attrs["long_name"]
+        sample = f["entry/sample"]
+        assert sample["work_function"][()] == pytest.approx(4.5)
+        assert sample["work_function"].attrs["units"] == "eV"
+        np.testing.assert_array_equal(sample["miller_hkl"], [1, 0, 0])
+        original = f["entry/calculation/original_input"]
+        assert original["ENERGY/EWORK_EV"].attrs["units"] == "eV"
+        assert original["ENERGY/IMV_FIN_EV"].attrs["units"] == "eV"
+        assert original["SPEC_PH/EPHOT"].attrs["units"] == "eV"
+        assert original["SPEC_PH/THETA"].attrs["units"] == "degree"
+        assert original["SPEC_EL"].attrs["NX_class"] == "NXcollection"
+        assert "k_basis" not in f["entry/data"]
+        assert list(f["entry/data"].attrs["axes"]) == ["k_y", "k_x"]
+        assert list(f["entry/data/data"].dims[0]) == ["k_y"]
+        assert list(f["entry/data/data"].dims[1]) == ["k_x"]
+
+
+def test_3d_metadata_defines_default_azimuth_slice(tmp_path):
+    spc = SPC("energy", 3)
+    dest = tmp_path / "3d.nxs"
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(spc, dest)
+    with h5py.File(dest) as f:
+        data = f["entry/data"]
+        assert data["data"].shape == (2, 3, 3)
+        assert list(data.attrs["default_slice"]) == [".", "0", "."]
+        assert "interpretation" not in data["data"].attrs
+        assert list(data.attrs["axes"]) == [
+            "energy", "azimuth_index", "theta"
+        ]
+        assert data["azimuth_index"].attrs["units"] == "1"
+        assert "Zero-based" in data["azimuth_index"].attrs["long_name"]
+        assert [data["data"].dims[i].label for i in range(3)] == [
+            "energy", "azimuth_index", "theta"
+        ]
+        assert [list(data["data"].dims[i]) for i in range(3)] == [
+            ["energy"], ["azimuth_index"], ["theta"]
+        ]
+        np.testing.assert_array_equal(data["data"][:, 0, :],
+                                      spc.TOTAL()[:, 0, :])
+        np.testing.assert_array_equal(f["entry/sprkkr_spc/raw_data"],
+                                      spc.RAW_DATA())
+
+
+def test_hdf5_scales_do_not_flatten_nonseparable_coordinates(tmp_path):
+    spc = SPC("kx_ky", 3)
+    for i in range(spc.NP()):
+        for j in range(spc.NT()):
+            n = i * spc.NT() + j
+            spc.raw[n, 0] = j + 0.3 * i
+            spc.raw[n, 1] = i + 0.2 * j
+    dest = tmp_path / "oblique-scales.nxs"
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(spc, dest)
+    with h5py.File(dest) as f:
+        data = f["entry/data"]
+        assert data["k_x"].shape == spc.TOTAL().shape
+        assert data["k_y"].shape == spc.TOTAL().shape
+        assert list(data.attrs["k_x_indices"]) == [0, 1]
+        assert list(data.attrs["k_y_indices"]) == [0, 1]
+        assert [data["data"].dims[i].label for i in range(2)] == [
+            "k_y", "k_x"
+        ]
+        assert list(data["data"].dims[0]) == []
+        assert list(data["data"].dims[1]) == []
+        np.testing.assert_array_equal(data["data"], spc.TOTAL())
+        np.testing.assert_array_equal(data["k_x"], spc.KX())
+        np.testing.assert_array_equal(data["k_y"], spc.KY())

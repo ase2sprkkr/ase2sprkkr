@@ -6,6 +6,7 @@ spin, photon, or reciprocal-space transformations.
 """
 
 from datetime import datetime, timezone
+from importlib.metadata import PackageNotFoundError, version as distribution_version
 from pathlib import Path
 import os
 import tempfile
@@ -37,6 +38,61 @@ _EXPORT_METADATA = {
     "work_function": ("ENERGY", "EWORK_EV"),
     "surface_hkl": ("TASK", "MILLER_HKL"),
 }
+
+# Units of original input parameters are added only where their semantics
+# are established by the parameter names/definitions. Do not infer effective
+# photon or electron geometry from the input.
+_INPUT_UNITS = {
+    ("ENERGY", "EWORK_EV"): "eV",
+    ("ENERGY", "IMV_INI_EV"): "eV",
+    ("ENERGY", "IMV_FIN_EV"): "eV",
+    ("SPEC_PH", "EPHOT"): "eV",
+    ("SPEC_PH", "THETA"): "degree",
+    ("SPEC_PH", "PHI"): "degree",
+    ("SPEC_EL", "THETA"): "degree",
+    ("SPEC_EL", "PHI"): "degree",
+}
+# Native SPC header fields that the parser exposes directly. The original
+# values are preserved, without guessing the units of EFERMI or applying
+# physical conversions.
+_SPC_HEADER = {
+    "keyword": "KEYWORD",
+    "title": "TITLE",
+    "system": "SYSTEM",
+    "number_of_sites": "NQ_EFF",
+    "number_of_atom_types": "NT_EFF",
+    "number_of_energies": "NE",
+    "relativity_setting": "IREL",
+    "fermi_energy_native": "EFERMI",
+    "calculation_info": "INFO",
+}
+# Column-by-column units of the native mixed-unit records. An empty string
+# marks an unknown native unit rather than assuming a physical meaning.
+_SPC_COLUMN_UNITS = {
+    "energy": ("degree", "eV", "arbitrary", "arbitrary", "arbitrary",
+               "1", "1/angstrom", ""),
+    "kx_ky": ("1/angstrom", "1/angstrom", "arbitrary", "arbitrary",
+              "arbitrary", "1", ""),
+}
+
+
+def _exporter_version():
+    try:
+        return distribution_version("ase2sprkkr")
+    except PackageNotFoundError:
+        return None
+
+
+def _spc_value(spc, field):
+    value = getattr(spc, field, None)
+    return value() if callable(value) else value
+
+
+def _describe(dataset, long_name, units=None):
+    dataset.attrs["long_name"] = long_name
+    if units is not None:
+        dataset.attrs["units"] = units
+    return dataset
 
 
 def _value(parameters, section, name):
@@ -177,14 +233,30 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
         settings["surface_hkl"] = None
     settings.update(metadata)
 
+    exported_at = datetime.now(timezone.utc).isoformat()
+    exporter_version = _exporter_version()
     with h5py.File(path, "w") as f:
         f.attrs.update(NX_class="NXroot", default="entry", creator="ase2sprkkr",
-                       file_name=filename.name,
-                       file_time=datetime.now(timezone.utc).isoformat())
+                       file_name=filename.name, file_time=exported_at)
+        if exporter_version is not None:
+            f.attrs["creator_version"] = exporter_version
         entry = f.create_group("entry")
         entry.attrs.update(NX_class="NXentry", default="data")
         entry.create_dataset("title", data="SPR-KKR calculated ARPES")
         entry.create_dataset("experiment_type", data="simulation")
+        program_name = entry.create_dataset("program_name", data="ase2sprkkr")
+        if exporter_version is not None:
+            program_name.attrs["version"] = exporter_version
+
+        export = entry.create_group("export")
+        export.attrs["NX_class"] = "NXprocess"
+        export.create_dataset("program", data="ase2sprkkr")
+        export.create_dataset("date", data=exported_at)
+        export.create_dataset(
+            "description", data="Conversion of native SPR-KKR SPC records to NeXus"
+        )
+        if exporter_version is not None:
+            export.create_dataset("version", data=exporter_version)
 
         process = entry.create_group("calculation")
         process.attrs["NX_class"] = "NXprocess"
@@ -207,8 +279,12 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
                     options = [(name, value) for name, value in options if value is not None]
                     if options:
                         group = original.create_group(section)
+                        group.attrs["NX_class"] = "NXcollection"
                         for name, value in options:
-                            _dataset(group, name, value)
+                            field = _dataset(group, name, value)
+                            unit = _INPUT_UNITS.get((section, name))
+                            if unit is not None:
+                                field.attrs["units"] = unit
                 if inpver == 0 or strver == 0:
                     original.attrs["native_external_input_incomplete"] = True
         if metadata:
@@ -225,26 +301,53 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
         source.create_dataset("probe", data="photon")
         if settings["photon_energy"] is not None:
             photon = _dataset(source, "energy", float(settings["photon_energy"]))
-            photon.attrs["units"] = "eV"
+            _describe(photon, "Specified incident photon energy", "eV")
+            photon.attrs["source"] = (
+                "export_metadata" if "photon_energy" in metadata
+                else "SPR-KKR input SPEC_PH.EPHOT"
+            )
         beam = instrument.create_group("photon_geometry")
         beam.attrs["NX_class"] = "NXcollection"
         for name in ("photon_theta", "photon_phi", "photon_polarization"):
             _dataset(beam, name.removeprefix("photon_"), settings[name])
         beam.attrs["values_are"] = "specified input, not reconstructed effective parameters"
-        for name in ("theta", "phi"):
+        for name, label in (
+            ("theta", "Specified photon polar angle"),
+            ("phi", "Specified photon azimuthal angle"),
+            ("polarization", "Specified photon polarization"),
+        ):
             if name in beam:
-                beam[name].attrs["units"] = "degree"
+                _describe(beam[name], label,
+                          "degree" if name in ("theta", "phi") else None)
 
         sample = entry.create_group("sample")
         sample.attrs["NX_class"] = "NXsample"
         sample.create_dataset("description", data="Calculated crystalline surface")
         if settings["surface_hkl"] is not None:
-            _dataset(sample, "miller_hkl", settings["surface_hkl"])
+            _describe(_dataset(sample, "miller_hkl", settings["surface_hkl"]),
+                      "Specified surface Miller indices", "1")
+        if settings["work_function"] is not None:
+            work = _dataset(sample, "work_function", settings["work_function"])
+            _describe(work, "Specified work function", "eV")
+            work.attrs["source"] = (
+                "export_metadata" if "work_function" in metadata
+                else "SPR-KKR input ENERGY.EWORK_EV"
+            )
 
         data = entry.create_group("data")
         data.attrs.update(NX_class="NXdata", signal="data", sprkkr_mode=mode)
+        data.create_dataset(
+            "title", data="SPR-KKR ARPES intensity (calculated spectrum)"
+        )
         main = data.create_dataset("data", data=arrays["data"])
-        main.attrs["units"] = "arbitrary_units"
+        _describe(main, "Total ARPES intensity (arbitrary units)", "arbitrary")
+        # Interpretation is a display hint, not an instruction to transpose.
+        # For 3D (energy, azimuth, angle) data a default slice describes the
+        # 2D image without mislabelling the 3D signal as a 2D image.
+        if len(shape) == 2:
+            main.attrs["interpretation"] = "image"
+        elif len(shape) == 3:
+            data.attrs["default_slice"] = [".", "0", "."]
         # Coordinate columns are preserved verbatim in the raw SPC below.
         if mode == "kx_ky":
             # SPC records are ordered (NP, NT): y/row index first,
@@ -267,7 +370,10 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
                 else:
                     data.create_dataset(name, data=coordinate)
                     data.attrs[name + "_indices"] = [0, 1]
-                data[name].attrs["units"] = "1/angstrom"
+                _describe(
+                    data[name], "Parallel photoelectron momentum " + name,
+                    "1/angstrom"
+                )
             if parameters is not None and _value(parameters, "SPEC_EL", "K1") is not None:
                 data.attrs["scan_definition"] = "../calculation/original_input/SPEC_EL"
         elif len(shape) == 3:
@@ -276,7 +382,11 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
             # scan index is retained without inventing angles from input.
             energy, theta = arrays["energy"], arrays["theta"]
             data.attrs["axes"] = ["energy", "azimuth_index", "theta"]
-            data.create_dataset("azimuth_index", data=np.arange(shape[1]))
+            _describe(
+                data.create_dataset("azimuth_index", data=np.arange(shape[1])),
+                "Zero-based azimuth scan index (angle not present in SPC)",
+                "1",
+            )
             data.attrs["azimuth_index_indices"] = 1
             for name, coordinate, dim, reduced in (
                 ("energy", energy, 0, energy[:, :1, :1]),
@@ -304,28 +414,78 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
                     data.attrs[name + "_indices"] = [0, 1]
 
         if mode == "energy":
-            data["energy"].attrs["units"] = "eV"
-            data["theta"].attrs["units"] = "degree"
-            data.create_dataset("k_parallel", data=arrays["k_parallel"])
-            data["k_parallel"].attrs["units"] = "1/angstrom"
+            _describe(data["energy"], "Initial-state energy E - E_F", "eV")
+            _describe(data["theta"], "Photoelectron polar angle", "degree")
+            _describe(
+                data.create_dataset("k_parallel", data=arrays["k_parallel"]),
+                "Parallel photoelectron momentum", "1/angstrom",
+            )
             data.attrs["k_parallel_indices"] = list(range(len(shape)))
         for name in ("spin_up", "spin_down", "spin_polarization", "determinant"):
             data.create_dataset(name, data=arrays[name])
-        for name in ("spin_up", "spin_down"):
-            data[name].attrs["units"] = "arbitrary_units"
-        data["spin_polarization"].attrs["units"] = "1"
+        _describe(data["spin_up"], "Spin-up ARPES intensity (arbitrary units)",
+                  "arbitrary")
+        _describe(data["spin_down"], "Spin-down ARPES intensity (arbitrary units)",
+                  "arbitrary")
+        _describe(data["spin_polarization"], "Spin polarization", "1")
         data["spin_polarization"].attrs["formula"] = "(I_1 - I_2) / (I_1 + I_2)"
+        _describe(data["determinant"], "Native SPR-KKR spectral determinant")
+        # The determinant's physical units are not documented by the SPC
+        # parser, so do not assign a potentially incorrect unit.
         data.attrs["auxiliary_signals"] = [
             "spin_up", "spin_down", "spin_polarization", "determinant"
         ]
 
+        # Add HDF5 dimension labels/scales as a compatibility aid for generic
+        # HDF5 viewers. NeXus axes and *_indices remain authoritative. A
+        # coupled (multidimensional) coordinate is never flattened to invent
+        # a one-dimensional scale.
+        for dimension, axis_name in enumerate(data.attrs["axes"]):
+            main.dims[dimension].label = axis_name
+            coordinate = data[axis_name]
+            if coordinate.ndim == 1 and coordinate.shape[0] == shape[dimension]:
+                coordinate.make_scale(axis_name)
+                main.dims[dimension].attach_scale(coordinate)
+
         native = entry.create_group("sprkkr_spc")
         native.attrs["NX_class"] = "NXcollection"
+        native.create_dataset("mode", data=mode)
+        spc_name = (
+            getattr(spc, "original_filename", None)
+            or getattr(spc, "_filename", None)
+        )
+        if spc_name is not None:
+            native.create_dataset("source_filename", data=Path(spc_name).name)
         raw_ds = native.create_dataset("raw_data", data=raw)
         raw_ds.attrs["columns"] = spc.spc_columns()
+        raw_ds.attrs["column_units"] = _SPC_COLUMN_UNITS[mode]
+        raw_ds.attrs["long_name"] = "Unmodified numerical records from SPR-KKR SPC"
+        raw_ds.attrs["record_shape"] = shape
+        raw_ds.attrs["record_order"] = (
+            "NE, NP, NT (NT fastest)" if len(shape) == 3 else
+            ("NE, NT (NT fastest)" if mode == "energy"
+             else "NP, NT (NT fastest)")
+        )
         native.create_dataset("nt", data=int(spc.NT()))
         native.create_dataset("np", data=int(spc.NP()))
         native.create_dataset("comment", data=str(spc.COMMENT()))
+        header = [
+            (name, _spc_value(spc, field))
+            for name, field in _SPC_HEADER.items()
+        ]
+        header = [(name, value) for name, value in header if value is not None]
+        if header:
+            original_header = native.create_group("header")
+            original_header.attrs["NX_class"] = "NXcollection"
+            for name, value in header:
+                ds = _dataset(original_header, name, value)
+                if name in ("number_of_sites", "number_of_atom_types",
+                            "number_of_energies"):
+                    ds.attrs["units"] = "1"
+                if name == "fermi_energy_native":
+                    ds.attrs["long_name"] = (
+                        "Native SPC EFERMI value (unit not inferred)"
+                    )
 
 
 def write_arpes_nexus(spc, filename, *, input_parameters=None,
