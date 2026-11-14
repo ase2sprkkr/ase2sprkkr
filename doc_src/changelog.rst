@@ -1,6 +1,98 @@
 Changelog
 =========
 
+Version 4.0.0 (beta series)
+---------------------------
+
+Version 4.0.0 is a major refactoring of ASE2SPRKKR, extending the available
+SPR-KKR tasks, calculation execution, result processing and GUI integration.
+The highlights below summarize the beta series; the release-specific notes
+retain the detailed technical changes.
+
+SPR-KKR tasks and input parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Added more than 40 native task definitions based on the SPR-KKR sources.
+  Many of the advanced tasks are experimental.
+* Separated native task identity from reusable input-parameter definitions.
+  Multiple tasks can share a schema: ``BSFEK`` and ``BSFKK`` share the BSF
+  input parameters, while ``JXC`` and ``DMI`` select different task modes
+  through a common definition.
+* Improved task validation, dependent and optional parameters, user-defined
+  input-parameter presets and canonical task handling.
+* Tasks now declare their known input, output and auxiliary/cache files for
+  result discovery, postprocessing and remote file management.
+
+Completely redesigned execution
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Rewrote SPR-KKR program execution around the independently distributed
+  ``kkrunner`` run manager, which also supports other scientific programs.
+* Added local and remote execution over SSH, MPI launchers, and optional
+  scheduler support, including Slurm through PSI/J.
+* Added project databases that retain calculation records, statuses and files,
+  with reconnection to supported running jobs after client restart.
+  Project history is particularly useful for the GUI, but is also accessible
+  from Python and the command line.
+* Added named execution profiles stored in YAML configuration, and output
+  filtering using regular expressions.
+
+Symmetry, plotting and GUI support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Added ``ase2sprkkr symmetry`` for crystallographic space-group analysis,
+  site equivalence, symmetry operations and cell transformations.
+* Added parsing and direct plotting of SPR-KKR Grace ``.agr`` files through
+  ``ase2sprkkr plot``.
+* Added APIs for calculation preparation, monitoring, persistent project
+  history and result-file actions used by the separately published
+  ``ase2sprkkr-gui`` desktop application.
+
+Compatibility
+~~~~~~~~~~~~~
+* Python 3.9 or newer is required. Version 3.6.0 is the final stable
+  release supporting Python 3.8 and the last release before this
+  architectural refactoring.
+* ``kkrunner`` is a required dependency; the execution and task-definition
+  APIs have changed substantially from the 3.x series.
+
+Version 4.0.0-beta3
+-------------------
+
+Results and plotting
+~~~~~~~~~~~~~~~~~~~~
+* Added parsing of Grace ``.agr`` result files into graph and dataset
+  models, with Matplotlib plots including multiple panels.
+* Added AGR support to ``ase2sprkkr plot`` and result-file plot actions.
+* Exposed existing task-declared output files in parsed scientific results,
+  including files that do not have specialized result parsers.
+* Improved historical result loading when auxiliary files are missing or
+  stored input-parameter schemas differ from the current definitions.
+
+Execution and fixes
+~~~~~~~~~~~~~~~~~~~
+* Persisted resolved execution-profile identity and application metadata
+  with project runs.
+* Updated the required ``kkrunner`` version to 0.2.0b2.
+* Fixed output-file discovery, historical-result and CI regressions.
+
+Version 4.0.0-beta2
+-------------------
+
+Execution and remote monitoring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Adopted the KKRunner 0.2 execution architecture, including independent
+  backends and transports and Run-owned resources.
+* Improved persistent run recovery, result reconstruction, execution
+  lifecycle handling and integration with direct, supervised and PSI/J jobs.
+* Added SPR-KKR-aware ``ase2sprkkr remote status`` and
+  ``ase2sprkkr remote follow`` commands, with SCF iteration progress and
+  historical output handling.
+
+Command line and compatibility
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Added third-party command discovery through the
+  ``ase2sprkkr:cli`` entry-point group.
+* Continued extraction of the lightweight ``ase2sprkkr_cli`` package.
+* Improved NumPy compatibility, execution test coverage and resource
+  cleanup.
 
 Version 4.0.0-beta1
 -------------------
@@ -147,6 +239,11 @@ Internals
 
 Version 3.6.0
 -------------
+This is the final stable release of the original ASE2SPRKKR architecture
+before the major 4.0.0 refactoring, and the last release supporting Python 3.8.
+Users needing Python 3.8 or the previous execution architecture should
+remain on the 3.6.x series.
+
 * Added support for ANDERSON mixing (experimental), BSF task improved
 * A better debugging in `ase2sprkkr shell`
 * `promote_ase_atoms` can be directly imported from the `ase2sprkkr` root package
