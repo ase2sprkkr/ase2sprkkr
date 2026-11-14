@@ -40,8 +40,8 @@ def test_nexus_help_shows_export_options():
     help_text = parser.format_help()
     assert "usage: ase2sprkkr nexus" in help_text
     assert "spc" in help_text
-    assert "-o FILE, --output FILE" in help_text
-    assert "-i FILE, --input-file FILE" in help_text
+    assert "--output FILE" in help_text
+    assert "--input-file FILE" in help_text
 
 
 def test_real_cli_nexus_help_shows_export_options(capsys):

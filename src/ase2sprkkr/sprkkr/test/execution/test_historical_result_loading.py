@@ -4,7 +4,6 @@ import pytest
 from kkrunner import ExecutionSpec, RunState, RunStore
 from kkrunner.files import ArtifactAvailabilityState, FileManifest, FileState
 from kkrunner.runs.manager import RunManager
-from kkrunner.runs import HistoricalFileMismatchError
 from kkrunner.client.pool import ClientPool
 
 from ase2sprkkr.outputs import project_results
@@ -90,8 +89,14 @@ def test_history_listing_is_lazy_but_loading_restores_missing_output(tmp_path, m
     assert result.run_record.files.availability_state == ArtifactAvailabilityState.AVAILABLE
 
 
-@pytest.mark.parametrize('entrypoint, expected_error', [pytest.param('load', ProjectResultUnavailableError, id='load-project-result'), pytest.param('retrieve', HistoricalFileMismatchError, id='retrieve-files')])
-def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypatch, entrypoint, expected_error):
+@pytest.mark.parametrize(
+    'entrypoint',
+    [
+        pytest.param('load', id='load-project-result'),
+        pytest.param('retrieve', id='retrieve-files'),
+    ],
+)
+def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypatch, entrypoint):
     manager, executor, record = _terminal_run(tmp_path)
     path = tmp_path / 'run.out'
     path.unlink()
@@ -104,19 +109,22 @@ def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypat
             def read_from_file(self, *args, **kwargs):
                 raise AssertionError('overwritten historical output must not be parsed')
         monkeypatch.setattr(project_results, '_reader_for_record', lambda manager, record: Reader())
-    with pytest.raises(expected_error, match='overwritten') as error:
-        if entrypoint == 'load':
+        with pytest.raises(ProjectResultUnavailableError, match='overwritten') as error:
             load_project_result(manager, record.id)
-        else:
-            manager.retrieve_result_files(record.id)
+        restored = error.value.record
+    else:
+        # The run manager reports per-artifact failures rather than aborting
+        # retrieval, so other historical files can still be recovered.
+        restored = manager.retrieve_result_files(record.id)
+
     stored = manager.store.get(record.id)
     assert stored.state == RunState.FINISHED
     assert not path.exists()
     assert not list(tmp_path.glob('.run.out.*.tmp'))
-    if entrypoint == 'load':
-        assert error.value.record.files.availability_state == ArtifactAvailabilityState.FAILED
-        assert stored.files.state == FileState.MISSING
-        assert stored.files.availability_state == ArtifactAvailabilityState.FAILED
+    for result in (restored, stored):
+        assert result.files.state == FileState.MISSING
+        assert result.files.availability_state == ArtifactAvailabilityState.FAILED
+        assert 'overwritten' in result.files.availability_message
 
 
 def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_path):
