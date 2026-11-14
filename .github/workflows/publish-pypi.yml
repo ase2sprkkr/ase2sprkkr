@@ -42,7 +42,8 @@ jobs:
         shell: bash
         run: |
           git fetch --no-tags origin +refs/heads/develop:refs/remotes/origin/develop
-          if ! git merge-base --is-ancestor HEAD refs/remotes/origin/develop; then
+          if ( ! git merge-base --is-ancestor HEAD refs/remotes/origin/develop ) &&
+             ( ! git merge-base --is-ancestor HEAD refs/remotes/origin/release ) ; then
             echo 'The release tag must point to a commit on develop.' >&2
             exit 1
           fi
