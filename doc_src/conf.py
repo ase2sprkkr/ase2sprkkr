@@ -126,8 +126,9 @@ def setup(app):
 
 exclude_patterns = ['*/test/*', '*/test', 'remarks/**', 'README.rst', 'examples_generated.rst', 'auto/modules.rst']
 
-inheritance_graph_attrs = dict(size='"10.0, 10.0"',
-    fontsize=14, ranksep=0.3 )
+# Use scalable SVGs without forcing wide hierarchies into a small box.
+graphviz_output_format = 'svg'
+inheritance_graph_attrs = dict(fontsize=14, ranksep=0.3)
 inheritance_edge_attrs = { 'arrowsize': 0.7 }
 inheritance_parent_node_attrs = { 'color' : 'gray28', 'fontcolor' : 'gray28', 'style' : 'solid' }
 inheritance_node_attrs = { 'style' : '"filled"', 'fillcolor' : 'lightgray' }

@@ -38,6 +38,12 @@ ASE2SPRKKR: SPR-KKR from Python and ASE
    migration
    optional-dependencies
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Class documentation
+
+   API reference <api.rst>
+
 .. sidebar-links::
    :caption: Links
 
@@ -49,16 +55,6 @@ ASE2SPRKKR: SPR-KKR from Python and ASE
    KKRunner documentation <https://ase2sprkkr.github.io/kkrunner/>
    KKRunner GitHub <https://github.com/ase2sprkkr/kkrunner>
    PyPI package <https://pypi.org/project/ase2sprkkr>
-
-API reference
--------------
-
-.. autosummary::
-   :toctree: auto
-   :recursive:
-   :template: custom-module-template.rst
-
-   ase2sprkkr
 
 Indices
 -------
