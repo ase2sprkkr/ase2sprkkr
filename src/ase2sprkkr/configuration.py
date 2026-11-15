@@ -1,7 +1,10 @@
 """ASE2SPRKKR user configuration."""
 
 import os
+import warnings
 from collections.abc import Mapping
+
+from ruamel.yaml.error import YAMLError
 from .common.grammar_types import CustomMixed, AlwaysQString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
 from .common.configuration_containers import RootConfigurationContainer, Section as ConfigurationSection
@@ -131,21 +134,35 @@ def _profile_overlay_values(yaml_file):
 def load_user_preferences():
     """Load the Python hook and then overlay ``config.yaml`` if present.
 
-    Expected invalid YAML values are handled by ``load_configuration_yaml`` at
-    the narrow boundary where they can be recovered safely. Unexpected loader
-    and Python-hook exceptions deliberately propagate instead of silently
-    falling back to a partially/default configured process.
+    Invalid YAML values are recovered individually. An unreadable YAML
+    *document* cannot be recovered, so its values are skipped with a warning
+    and the original file is kept unchanged. Unexpected loader and Python-hook
+    exceptions still propagate.
     """
+    from .configuration_yaml import (
+        InvalidYamlDocumentError, YamlConfigurationWarning,
+        load_configuration_yaml,
+    )
+
     yaml_file = user_preferences_file()
     legacy_file = legacy_user_preferences_file()
 
     if os.path.isfile(legacy_file):
         _load_legacy_user_preferences(legacy_file)
     if os.path.isfile(yaml_file):
-        from .configuration_yaml import load_configuration_yaml
-
-        overlay = _profile_overlay_values(yaml_file)
-        load_configuration_yaml(config, yaml_file)
+        try:
+            overlay = _profile_overlay_values(yaml_file)
+            load_configuration_yaml(config, yaml_file)
+        except (YAMLError, InvalidYamlDocumentError) as exc:
+            # A syntax error makes the whole YAML document unusable. Do not
+            # hide programming errors from the loader or mutate the bad file.
+            warnings.warn(
+                f"Cannot parse ASE2SPRKKR configuration '{yaml_file}':\n"
+                f"{exc}\nThe file was not changed and its YAML values were not loaded.",
+                YamlConfigurationWarning,
+                stacklevel=2,
+            )
+            return
         if overlay:
             with config.profiles._mutation("set") as (transaction, _policy):
                 config.profiles._stage_persisted(
@@ -425,3 +442,4 @@ definition = ConfigFileDefinition(
 )
 
 config = definition.create_object()
+

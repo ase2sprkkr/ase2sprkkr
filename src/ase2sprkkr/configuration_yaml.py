@@ -23,7 +23,11 @@ from .common.warnings import DataValidityError
 
 
 class YamlConfigurationWarning(UserWarning):
-    """Problems found while recovering a syntactically valid YAML config."""
+    """Problems found while reading an invalid user YAML config."""
+
+
+class InvalidYamlDocumentError(ValueError):
+    """The YAML document has no usable top-level mapping."""
 
 
 _EXPECTED_USER_ERRORS = (KeyError, TypeError, ValueError, DataValidityError)
@@ -45,7 +49,7 @@ def load_yaml_document(file):
     if data is None:
         return CommentedMap()
     if not isinstance(data, Mapping):
-        raise ValueError("ASE2SPRKKR configuration YAML must contain a mapping")
+        raise InvalidYamlDocumentError("ASE2SPRKKR configuration YAML must contain a mapping")
     return data
 
 

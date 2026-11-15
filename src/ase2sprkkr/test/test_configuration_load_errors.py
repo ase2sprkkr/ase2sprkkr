@@ -34,3 +34,39 @@ def test_user_preferences_propagate_loader_errors(tmp_path, monkeypatch, source)
 
     with pytest.raises(exception, match=message):
         configuration.load_user_preferences()
+
+
+@pytest.mark.parametrize("bad_yaml", (
+    "profiles: [\n", "- not a mapping\n",
+))
+def test_unparseable_user_yaml_warns_but_preserves_file(
+    tmp_path, monkeypatch, bad_yaml,
+):
+    from ase2sprkkr.configuration_yaml import (
+        YamlConfigurationWarning, InvalidYamlDocumentError,
+    )
+    from ruamel.yaml.error import YAMLError
+
+    path = tmp_path / "config.yaml"
+    path.write_text(bad_yaml, encoding="utf8")
+    monkeypatch.setattr(configuration, "config", fresh_config())
+    monkeypatch.setattr(configuration, "user_preferences_file", lambda: str(path))
+    monkeypatch.setattr(
+        configuration, "legacy_user_preferences_file",
+        lambda: str(tmp_path / "__init__.py"),
+    )
+
+    with pytest.warns(YamlConfigurationWarning, match="were not loaded"):
+        configuration.load_user_preferences()
+    assert configuration.config.default_profile() is None
+    assert path.read_text(encoding="utf8") == bad_yaml
+
+    # Saving must not overwrite an invalid document with default values.
+    with pytest.raises((YAMLError, InvalidYamlDocumentError)):
+        configuration.config.save_user_preferences()
+    assert path.read_text(encoding="utf8") == bad_yaml
+
+    # Correcting the file clears the reported error and restores normal load.
+    path.write_text("running:\n  empty_spheres: true\n", encoding="utf8")
+    configuration.load_user_preferences()
+    assert configuration.config.running.empty_spheres() is True
