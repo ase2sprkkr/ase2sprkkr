@@ -183,17 +183,47 @@ Processing callbacks should be idempotent or transactional because an explicit
 retry after a crash can repeat side effects; exactly-once side effects are not
 promised.
 
-Remote commands for users
----------------------------
+Command-line project runs
+-------------------------
+
+The ``run`` command can use a named execution profile and optionally persist
+a calculation in an existing project. The project is identified by its UUID
+(not its display name). Supplying ``--project-id`` creates a tracked KKRunner
+run; without it, the command retains its ordinary untracked behavior.
 
 .. code-block:: console
 
-   ase2sprkkr remote status HANDLE
-   ase2sprkkr remote follow HANDLE
-   ase2sprkkr remote cancel HANDLE
+   ase2sprkkr run sample.pot --task SCF --profile cluster --project-id PROJECT_UUID
 
-These commands act on the host where they run and delegate to KKRunner.
-They currently accept a target-side execution handle, not a project run ID.
+By default, the CLI waits for the result and prints the run ID after
+submission. ``--submit-only`` submits the run and exits without waiting:
+
+.. code-block:: console
+
+   ase2sprkkr run sample.pot --task SCF --profile cluster --project-id PROJECT_UUID --submit-only
+   ase2sprkkr remote status RUN_ID
+   ase2sprkkr remote follow RUN_ID --info
+
+The submit-only mode requires a managed ``process`` or ``psij`` backend.
+A direct backend may still be used for a tracked run that the CLI observes
+until completion. Tracking and surviving client exit are distinct properties.
+The run's working directory defaults to the project's configured directory
+when available, otherwise the current directory; ``--directory PATH``
+overrides it. Projects must already exist, and run IDs can subsequently be
+used by GUI or CLI clients sharing the same project repository.
+
+Remote commands for users
+-------------------------
+
+.. code-block:: console
+
+   ase2sprkkr remote status RUN_ID
+   ase2sprkkr remote follow RUN_ID
+   ase2sprkkr remote cancel RUN_ID
+
+These commands accept persisted run IDs and resolve their recorded backend
+identity and file mappings. Use ``--remote-id HANDLE`` instead to operate
+directly on a backend handle without a stored run record.
 Internal submit/recovery/acknowledgement and MPI commands belong to
 ``kkrunner``. See the
 `KKRunner command-line guide <https://ase2sprkkr.github.io/kkrunner/command-line.html>`_

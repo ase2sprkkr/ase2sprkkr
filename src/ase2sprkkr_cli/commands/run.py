@@ -43,11 +43,49 @@ def parser(parser):
         action=bool_arg,
     )
     parser.add_argument(
+        "--profile", metavar="NAME",
+        help="Use the named SPR-KKR execution profile (default: configured default).",
+    )
+    parser.add_argument(
+        "--project-id", metavar="UUID",
+        help="Create a persistent run associated with this existing project ID.",
+    )
+    parser.add_argument(
+        "--submit-only", action="store_true",
+        help="Submit a project run without waiting; requires a managed backend.",
+    )
+    parser.add_argument(
+        "--directory", metavar="PATH",
+        help="Calculation working directory (default: project directory or current directory).",
+    )
+    parser.add_argument(
         "options", nargs="*", help="Input parameters in the form <name>=<value>.", type=str
     )
 
 
+def _project_manager(identifier):
+    """Resolve an existing project UUID through ASE2SPRKKR's storage policy."""
+    from uuid import UUID
+
+    from ase2sprkkr.sprkkr.projects import project_execution_manager
+
+    try:
+        project_id = UUID(identifier).hex
+    except (ValueError, TypeError, AttributeError):
+        raise CLIUsageError(f"Invalid project ID {identifier!r}; expected a UUID") from None
+
+    try:
+        manager = project_execution_manager(project=project_id)
+        project = manager.projects.project(manager.project_id)
+    except (KeyError, FileNotFoundError, ValueError):
+        raise CLIUsageError(f"Project ID {identifier!r} does not exist") from None
+    return manager, project
+
+
 def run(args, global_args):
+    if args.submit_only and not args.project_id:
+        raise CLIUsageError("--submit-only requires --project-id")
+
     from ase2sprkkr import InputParameters
     from ase2sprkkr.common.module_registry import RegistryEntryNotFound
     from ase2sprkkr.common.tools import parse_named_option
@@ -65,7 +103,7 @@ def run(args, global_args):
     from ase2sprkkr import SPRKKR, Potential  # NOQA
     import sys
 
-    calc = SPRKKR()
+    calc = SPRKKR(profile=args.profile) if args.profile is not None else SPRKKR()
     ip = None
     try:
         potential = Potential.from_file(args.pot)
@@ -87,5 +125,46 @@ def run(args, global_args):
         if o is not None:
             kwargs[i] = o
 
-    calc.calculate(potential=potential, input_parameters=ip, options=options, **kwargs)
+    manager = None
+    if args.project_id is not None:
+        manager, project = _project_manager(args.project_id)
+        kwargs["project"] = manager
+    else:
+        project = None
+
+    if args.directory is not None:
+        kwargs["directory"] = args.directory
+    elif project is not None and project.directory is not None:
+        kwargs["directory"] = project.directory
+
+    if manager is None:
+        return calc.calculate(
+            potential=potential, input_parameters=ip, options=options, **kwargs
+        )
+
+    runner = calc.create_run(
+        potential=potential, input_parameters=ip, options=options, **kwargs
+    )
+    if args.submit_only and runner.client.backend.execution_mode != "managed":
+        runner.close()
+        raise CLIUsageError(
+            "--submit-only requires a managed backend (process or psij); "
+            "select one using --profile"
+        )
+
+    runner.submit()
+    print(f"Run ID: {runner.id}", flush=True)
+    if args.submit_only:
+        return
+
+    result = runner.wait()
+    from ase.calculators.calculator import CalculationFailed
+    from kkrunner import RunState
+
+    if runner.state != RunState.FINISHED:
+        raise CalculationFailed(
+            f"SPR-KKR calculation {runner.state.value} "
+            f"(return code {runner.return_code}): {runner.failure_message}"
+        )
+    return result
 

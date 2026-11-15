@@ -74,7 +74,9 @@ def run(argv=None):
     )
     parser.add_argument("--version", "-v", action="store_true", help="Show ASE2SPRKKR version.")
     parser.add_argument("--debug", "-G", action="store_true", help="Enable debugger on unhandled exceptions.")
-    parser.add_argument("--profile", "-P", action="store_true", help="Run a Python profiler on the command.")
+    parser.add_argument("--cprofile", "-P", dest="cli_profile", action="store_true", help="Profile CLI execution with cProfile.")
+    # Preserve the legacy global spelling, distinct from 'run --profile NAME'.
+    parser.add_argument("--profile", dest="cli_profile", action="store_true", help=argparse.SUPPRESS)
     subs = parser.add_subparsers(dest="ase2sprkkr_command", description="Use <command> -h for details.")
 
     from . import commands
@@ -196,7 +198,7 @@ def run(argv=None):
 
             add_debug_hook()
 
-        global_args = {"debug": args.debug, "profile": args.profile}
+        global_args = {"debug": args.debug, "profile": args.cli_profile}
         if args.version:
             from importlib.metadata import PackageNotFoundError, version
 
@@ -209,14 +211,14 @@ def run(argv=None):
                 parser.print_help()
             return
 
-        for name in ("ase2sprkkr_command", "version", "debug", "profile"):
+        for name in ("ase2sprkkr_command", "version", "debug", "cli_profile"):
             delattr(args, name)
         try:
             modules[selected].run(args, global_args)
         except CLIUsageError as exc:
             parser_error(parsers[selected], f" ! {exc} !")
 
-    if args.profile:
+    if args.cli_profile:
         import cProfile
         import io
         import pstats
