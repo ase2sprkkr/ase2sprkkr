@@ -1,0 +1,52 @@
+name: docs
+
+on:
+  pull_request:
+    branches: [develop]
+  push:
+    branches: [develop]
+    paths:
+      - 'doc_src/**'
+      - 'src/**'
+      - 'Makefile'
+      - 'pyproject.toml'
+      - '.github/workflows/docs.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sphinx:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install documentation system tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz pandoc
+      - name: Install KKRunner beta3 candidate for this coordinated prerelease
+        # Remove this temporary source bootstrap after kkrunner 0.2.0b3 is on PyPI.
+        run: >-
+          python -m pip install
+          git+https://github.com/lokik/kkrunner-chat.git@1985f3c7f59bc98518cd6f108652efb952c2d96f
+      - name: Install ASE2SPRKKR and documentation tools
+        run: |
+          python -m pip install -e '.[plot]'
+          python -m pip install 'sphinx>=8,<9' sphinx-toolbox sphinx-rtd-theme
+      - name: Build complete Sphinx HTML with warnings as errors
+        env:
+          MPLBACKEND: Agg
+        run: |
+          make doc-gather doc-examples
+          sphinx-build -j auto -W --keep-going doc_src docs/
+      - name: Verify generated README
+        run: make doc-readme-check
+      - name: Run documentation regression tests
+        run: python -m pytest -q tests/test_doc_*.py
