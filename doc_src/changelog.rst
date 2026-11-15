@@ -34,6 +34,13 @@ Completely redesigned execution
   from Python and the command line.
 * Added named execution profiles stored in YAML configuration, and output
   filtering using regular expressions.
+* Centralized output-filter normalization in ``NormalizedOutputFilter``:
+  the special ``"info"`` mode stays separate from compiled regular expressions,
+  repeated regexes are deduplicated, and ``True`` overrides the other standard
+  output modes. Reusable matching predicates use search across each output line.
+* Added an unambiguous display form for multiple regex filters
+  (``"ERROR"|"WARNING"``), with doubled inner quotation marks, and a parser
+  for converting edited GUI values back into the existing configuration format.
 
 Symmetry, plotting and GUI support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
