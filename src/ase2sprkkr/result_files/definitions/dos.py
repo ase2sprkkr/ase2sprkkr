@@ -6,14 +6,13 @@ from ..result_files_definitions import (
 from typing import Optional
 from numbers import Number
 import numpy as np
-import matplotlib
 import copy
 
 from ..result_files import CommonResultFile, Arithmetic
 from ...common.grammar_types import NumpyArray
 from ...common.decorators import cached_property
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
-from ...gui.plot import Multiplot, set_up_common_plot
+from .._plot_support import Multiplot, set_up_common_plot
 
 from ase.units import Rydberg
 from packaging.version import Version
@@ -89,6 +88,8 @@ class DOS(Arithmetic):
                 if len(handles):
                     handles.append(plot_l(np.sum(data, axis=0), spin, "total"))
             if legend and not self.l:
+                import matplotlib
+
                 ncols = "ncols" if Version(matplotlib.__version__) >= Version("3.6") else "ncol"
                 axis.legend(
                     handles=handles,

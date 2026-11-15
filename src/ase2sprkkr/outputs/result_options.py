@@ -132,7 +132,15 @@ class OutputFileOption(OutputOption):
             result_class = self.definition().result_class
             if result_class.can_be_plotted():
                 out.append("plot")
-            out.extend(result_class.additional_actions)
+            for action in result_class.additional_actions:
+                # Several unrelated formats use .spc. When the filename only
+                # supplies that ambiguous extension, do not advertise ARPES
+                # conversion for SPLEED/BAND/AIPES calculations.
+                if action == "export_nexus" and self.file_type == "spc":
+                    owner = getattr(self._container, "result", None)
+                    if str(getattr(owner, "task_name", "")).upper() != "ARPES":
+                        continue
+                out.append(action)
         return tuple(out)
 
     def __getattr__(self, name):
@@ -155,6 +163,25 @@ class OutputFileOption(OutputOption):
             try_only=self.file_type,
             potential=potential,
         )
+
+    def export_nexus(self, parent=None):
+        """Export an eligible ARPES spectrum using the canonical NeXus writer."""
+        import h5py  # noqa: F401 - check optional dependency before file dialog
+        from PyQt6.QtWidgets import QFileDialog
+
+        spectrum = self.parsed_file()
+        exporter = getattr(spectrum, "to_nexus", None)
+        if not callable(exporter):
+            raise ValueError(f"NeXus export is unavailable for {self.path()}")
+
+        proposed = os.path.splitext(os.fspath(self.path()))[0] + ".nxs"
+        filename, _ = QFileDialog.getSaveFileName(
+            parent, "Export ARPES Spectrum to NeXus", proposed,
+            "NeXus files (*.nxs);;All files (*)",
+        )
+        if not filename:
+            return None
+        return exporter(filename)
 
     def plot(self, parent=None):
         self.parsed_file().plot()

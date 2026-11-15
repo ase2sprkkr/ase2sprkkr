@@ -29,7 +29,23 @@ def test_symbol_number_and_valence_do_not_require_mendeleev(monkeypatch):
 
 def test_mendeleev_property_remains_optional(monkeypatch):
     _block_mendeleev_import(monkeypatch)
-    AtomicType._mendeleev_module = None
+    from ase2sprkkr.physics.atomic_data import mendeleev_element
 
+    mendeleev_element.cache_clear()
     with pytest.raises(ImportError, match=r"ase2sprkkr\[mendeleev\]"):
         _ = AtomicType("Ni").mendeleev
+
+
+def test_mendeleev_provider_rejects_vacuum():
+    from ase2sprkkr.physics.atomic_data import mendeleev_element
+
+    with pytest.raises(ValueError, match="no element"):
+        mendeleev_element(0)
+
+
+def test_mendeleev_property_shares_provider(monkeypatch):
+    from ase2sprkkr.physics import atomic_data
+
+    sentinel = object()
+    monkeypatch.setattr(atomic_data, "mendeleev_element", lambda z: sentinel if z == 28 else None)
+    assert AtomicType("Ni").mendeleev is sentinel

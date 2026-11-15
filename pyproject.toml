@@ -58,7 +58,7 @@ mendeleev = [
 es_finder = [
     "pymatgen",
 ]
-plotting = [
+plot = [
     "matplotlib",
     "scipy",
     "scikit-image",

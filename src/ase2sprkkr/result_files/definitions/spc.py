@@ -11,7 +11,7 @@ from ..result_files import Arithmetic, CommonResultFile
 from ...common.grammar_types import NumpyArray, Prefixed
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV, GeneratedValueDefinition as GV
 from ...common.configuration_definitions import switch
-from ...gui.plot import change_default_kwargs, colormesh, lineplot, Multiplot
+from .._plot_support import change_default_kwargs, colormesh, lineplot, Multiplot
 
 
 # Native SPC columns are shared by the reader and the NeXus writer.
@@ -24,6 +24,9 @@ SPC_COLUMNS = {
 
 
 class ARPESResultFile(CommonResultFile, Arithmetic):
+    # The GUI presents this action only for ARPES, not other SPC formats.
+    additional_actions = ("export_nexus",)
+
     def to_nexus(self, filename, *, input_parameters=None, input_file=None,
                  metadata=None):
         """Export an ARPES spectrum together with its available input data."""

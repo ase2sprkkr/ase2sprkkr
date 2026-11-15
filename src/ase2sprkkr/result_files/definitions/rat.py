@@ -9,7 +9,6 @@ from typing import Optional
 import numpy as np
 from ase.units import Rydberg
 from ase2sprkkr.physics.broadening import create_lorentz_broadener, create_gaussian_broadener, compute_wlortab
-from scipy.interpolate import interp1d
 import pyparsing as pp
 
 from ...common.grammar import generate_grammar
@@ -17,7 +16,7 @@ from ..result_files import CommonResultFile
 from ...common.grammar_types import Array, Keyword, Char, Table, Sequence, Complex, Real
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
 from ...common.configuration_definitions import KeywordSeparator, SeparatorDefinition, BaseDefinition
-from ...gui.plot import Multiplot, set_up_common_plot, single_plot
+from .._plot_support import Multiplot, set_up_common_plot, single_plot
 from ...common.decorators import cached_property, add_to_signature
 
 
@@ -471,6 +470,7 @@ class RATResultFile(CommonResultFile):
 
             eval_energies = energies
             out_view = out
+            from scipy.interpolate import interp1d
 
             for i in range(e_core.shape[0]):
                 for k in range(n_ktypes):

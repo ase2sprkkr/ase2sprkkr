@@ -12,11 +12,9 @@ from ..result_files import Arithmetic, CommonResultFile
 from ...common.grammar_types import Array, NumpyArray, Keyword
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
 from ...common.configuration_definitions import gather, switch
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 from functools import lru_cache
 from ase.units import Rydberg
-from ...gui.plot import colormesh, Multiplot
+from .._plot_support import colormesh, Multiplot
 
 
 class BSFResultFile(CommonResultFile, Arithmetic):
@@ -94,14 +92,18 @@ class BSFDefinition(ResultFileDefinition):
 
 
 def create_definition():
-    cmap1 = plt.cm.bone_r(np.linspace(0.0, 1.0, 256))
-    cmap2 = plt.cm.hot(np.linspace(0.0, 1.0, 256))
-    cmap = np.vstack((cmap1, cmap2))
-    mymap = mcolors.LinearSegmentedColormap.from_list("my_colormap", cmap)
 
     def plot(title, colormap="bwr", negative=True):
 
         def plot(option, colormap=colormap, sites=None, fermi=None, **kwargs):
+            if colormap == "__bsf_total__":
+                from matplotlib import pyplot as plt, colors as mcolors
+
+                cmap1 = plt.cm.bone_r(np.linspace(0.0, 1.0, 256))
+                cmap2 = plt.cm.hot(np.linspace(0.0, 1.0, 256))
+                colormap = mcolors.LinearSegmentedColormap.from_list(
+                    "my_colormap", np.vstack((cmap1, cmap2))
+                )
             c = option._container
             mesh = c.MESH()
             data = option()
@@ -350,7 +352,7 @@ def create_definition():
                     "BSF-SPN": "BSF-SPOL",
                 },
             ),
-            NV("I", "RAW_DATA", i(-1), reorder=reorder, plot=plot(negative=True, colormap=mymap, title="Total")),
+            NV("I", "RAW_DATA", i(-1), reorder=reorder, plot=plot(negative=True, colormap="__bsf_total__", title="Total")),
         ],
         cls=BSFDefinition,
         name="BSF",

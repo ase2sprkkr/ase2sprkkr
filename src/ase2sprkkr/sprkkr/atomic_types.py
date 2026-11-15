@@ -19,8 +19,6 @@ class AtomicType:
     It also determine the number of electrons and valence electrons.
     """
 
-    _mendeleev_module = None
-
     @classmethod
     def to_atomic_type(cls, value, for_mesh=None):
         if isinstance(value, cls):
@@ -29,18 +27,10 @@ class AtomicType:
 
     @cached_property
     def mendeleev(self):
-        if self.atomic_number == 0:
-            raise Exception("Vaccuum (pseudo)atom is not in Mendeleev package database")
-        if not AtomicType._mendeleev_module:
-            try:
-                import mendeleev
-            except ImportError as e:
-                raise ImportError(
-                    "The optional Mendeleev integration is not installed. Install it with:\n\n"
-                    '    python -m pip install "ase2sprkkr[mendeleev]"'
-                ) from e
-            AtomicType._mendeleev_module = mendeleev
-        return AtomicType._mendeleev_module.element(self.atomic_number or self.symbol)
+        """Optional detailed elemental metadata from the shared provider."""
+        from ..physics.atomic_data import mendeleev_element
+
+        return mendeleev_element(self.atomic_number)
 
     def __init__(
         self, symbol, atomic_number=None, n_core=None, n_valence=None, n_semicore=None, n_electrons=None, mesh=None

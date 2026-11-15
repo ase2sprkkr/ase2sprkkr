@@ -16,7 +16,7 @@ from ..result_files_definitions import (
 from ..result_files import CommonResultFile
 from ...common.grammar_types import NumpyArray, Prefixed
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
-from ...gui.plot import single_plot
+from .._plot_support import single_plot
 
 
 class BandSPCResultFile(CommonResultFile):

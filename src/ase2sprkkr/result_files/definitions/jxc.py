@@ -4,7 +4,6 @@ import numpy as np
 import re
 import itertools
 from enum import Enum
-from matplotlib import cm
 import warnings
 from collections import namedtuple
 
@@ -12,7 +11,7 @@ from ..result_files import ResultFile
 from ...common.decorators import cached_property, cached_class_property
 from ...common.grammar_types import RawData, Table, Integer, Real, Array, Sequence, String, LineString, NumpyArray
 from ...common.configuration_definitions import SeparatorDefinition
-from ...gui.plot import Multiplot
+from .._plot_support import Multiplot
 
 
 class Coordinates(Enum):
@@ -293,6 +292,8 @@ class JXCResultFile(ResultFile):
 
         extremum = max((np.abs(y[col]).max() for col in y.dtype.names))
         extremum += max(0.1, extremum * 0.1)
+        from matplotlib import cm
+
         colorspace = cm.Paired(np.linspace(0, 1, 2 * self.NT() + 2))
 
         layout = _resolve_layout(len(type_indexes), len(y.dtype.names))
