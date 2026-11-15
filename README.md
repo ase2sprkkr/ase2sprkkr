@@ -1,227 +1,61 @@
-# ASE2SPRKKR
+# ASE2SPRKKR — a Python interface for SPR-KKR
 
-ASE2SPRKKR package provide an interface that allow use of the [SPR-KKR
-package](https://www.ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr)
-to electronic structure calculation within [Atomic Simulation
-Environment](https://wiki.fysik.dtu.dk/ase/) (abbreviated as ASE)
-\-\--Python tool that integrates the various tools for electronic
-structure calculation.
+Ase2sprkkr is a modern, comprehensive replacement for [XBAND](https://sprkkr.org/xband/), providing a unified framework for [SPR-KKR](https://sprkkr.org/) calculations, ranging from easy interactive use to efficient, highly automated workflows on HPC systems. It integrates with the [Atomic Simulation Environment (ASE)](https://wiki.fysik.dtu.dk/ase/) and supports preparing, running, and analyzing calculations through Python.
 
-## Usefull links
+SPR-KKR uses the multiple-scattering KKR Green's-function method and supports electronic structure, magnetism, chemically disordered alloys (CPA), Bloch spectral functions and spectroscopy. See the [SPR-KKR manual](https://sprkkr.org/manual/) for the physics and numerical choices; this documentation focuses on the Python interface.
 
-- [SPR-KKR](https://www.sprkkr.org/)
-- [Online version of this
-  documentation](https://ase2sprkkr.github.io/ase2sprkkr/)
-- [E-mail group for news and
-  discussion](https://groups.google.com/g/ase2sprkkr/)
-- [GitHub repository of the ASE2SPRKKR
-  package](https://github.com/ase2sprkkr/ase2sprkkr/)
-- [SPR-KKR manual](https://www.sprkkr.org/manual/)
-- [ASE - Atomic Simulation Environment](https://wiki.fysik.dtu.dk/ase/)
+ASE2SPRKKR creates input files and starting potentials from ASE structures, runs native SPR-KKR tasks and parses supported results. [KKRunner](https://ase2sprkkr.github.io/kkrunner/) provides local, MPI, SSH and scheduler execution. **SPR-KKR executables are installed separately**; they are not included in the Python distribution.
 
-## Installation of the package using package managers
+## Start here
 
-The simplest way how to install and use the package is to install them
-using package managers: either pip
+- [First calculation: SCF to DOS](doc_src/quickstart.rst)
+- [Installation, upgrading, virtual environments and optional dependencies](doc_src/installation.rst)
+- [Python usage and task parameters](doc_src/usage.rst)
+- [Examples generated from Python sources](doc_src/examples.rst)
+- [Command-line interface](doc_src/cli.rst)
 
-``` bash
-pip install ase2sprkkr
+Install or upgrade the latest stable release:
+
+    python -m pip install --upgrade ase2sprkkr
+    ase2sprkkr --version
+
+To install an available **beta** release (including the 4.0 series), use `python -m pip install --upgrade --pre ase2sprkkr`. Some features described in the development documentation may not yet be available in a published version.
+
+For a separate test environment or a distribution-managed Python installation, see [virtual environments](doc_src/installation.rst#virtual-environments).
+
+The native executables (e.g. `kkrscf` and `kkrgen`) can be found on `PATH` or configured through the active execution profile:
+
+    ase2sprkkr config --set profiles.default.executable_dir /opt/sprkkr/bin
+
+The `profiles.default` alias uses an explicitly selected named profile or otherwise ASE's `[sprkkr]` configuration. To edit the ASE profile directly, use `profiles.ase`. A suffix can also be configured:
+
+    ase2sprkkr config --set profiles.ase.executable_suffix _v8
+
+A short SCF calculation starts with ASE atoms:
+
+``` python
+from ase.build import bulk
+from ase2sprkkr import SPRKKR
+
+result = SPRKKR(atoms=bulk("Al", "fcc", a=4.05)).calculate()
+print("Energy (eV):", result.energy)
+print("SCF converged:", result.converged)
+print("Potential:", result.potential_filename)
 ```
 
-or conda
+Always check convergence before reusing an SCF potential for other tasks. The [first-calculation tutorial](doc_src/quickstart.rst) continues with a DOS calculation.
 
-``` bash
-conda install -c ase2sprkkr ase2sprkkr
-```
+## Further documentation
 
-I reccomend to install beta version: there can be some bugs, but mostly
-it has more bugs repaired than introduced, moreover, you can enjoy new
-properties. The beta versions are available only through `pip`:
+- [Result files, plotting and NeXus](doc_src/result-files.rst)
+- [Remote running, MPI and execution profiles](doc_src/remote.rst)
+- [Persistent project calculations](doc_src/execution.rst)
+- [Crystal symmetry](doc_src/symmetry.rst)
+- [Architecture for developers and TaskDefinition](doc_src/philosophy.rst)
+- [Changelog](doc_src/changelog.rst)
 
-``` bash
-pip install --pre ase2sprkkr
-```
+For upgrades from ASE2SPRKKR 3.x, configuration migration and optional features such as plotting or NeXus export, see the [installation guide](doc_src/installation.rst).
 
-To use bleading edge sources (the newest features, but you risk to
-encounter bugs), you can install the packages from github:
+## Contributing
 
-``` bash
-pip install git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
-```
-
-### KKRunner dependency
-
-Pip installs KKRunner as a separate runtime dependency. For source
-development, install it before ASE2SPRKKR. Run the following from the
-ASE2SPRKKR checkout:
-
-``` console
-python -m pip install -e "<path-to-kkrunner>"
-python -m pip install -e .
-```
-
-Replace `<path-to-kkrunner>` with the location of your KKRunner
-checkout.
-
-For scheduler support install `ase2sprkkr[psij]`. On an SSH target,
-install `kkrunner` (or `kkrunner[psij]` for a scheduler), SPR-KKR and
-its required MPI runtime. The target does not need ASE2SPRKKR just to
-run its executables. See the [KKRunner
-documentation](https://ase2sprkkr.github.io/kkrunner/) for backend
-requirements and installation details.
-
-### Further notes
-
-In some systems, the `pip` utility for `python3` is called `pip3`. It
-may be possible, that `pip` is installed, but it is not in `PATH`. In
-such case, the pip utility can be runned using `python -m pip` or
-`python3 -m pip3`.
-
-If `pip` is not installed, you can install it using the linux
-distribution package manager, e.g. in Debian/Ubuntu
-
-``` bash
-apt install pip3
-```
-
-or
-
-``` bash
-zypper install pip
-```
-
-For the conda installation instructions, see the Anaconda documentation
-<https://docs.anaconda.com/anaconda/install/linux/> however, for the
-users unexperienced with conda, the (simpler) pip way is recommended.
-
-## Install the packages from GIT (and/or source codes)
-
-If you do not want to use public package managers as pip or conda, or
-you want to contribute to development, you can use GIT to obtain the
-package sources.
-
-### Requirements
-
-- Python \>= 3.9
-- SPR-KKR (not checked by the installer)
-- Python packages: see the the pypoject.toml file
-- Git (to obtain the sources)
-
-### Obtaining the package using GIT
-
-``` bash
-git clone https://github.com/ase2sprkkr/ase2sprkkr.git
-git checkout release
-```
-
-The first line fetches the code of the package. The second one checks
-out the stable (production) version of the code.
-
-If you want to obtain the current version of the (earlier-downloaded)
-code, run
-
-``` bash
-git fetch
-git checkout release
-```
-
-Alternatively, you can checkout `master` branch
-
-``` bash
-git checkout master
-```
-
-to obtain a newer (not thorougly tested yet) version or `develop`\`
-
-``` bash
-git checkout develop
-```
-
-to obtain the bleeding edge version (feel free to try it, test it and
-report the bugs).
-
-### Using the package (without installing the pip/conda packages)
-
-You can install the package from the obtained sources using
-
-``` bash
-pip install .
-```
-
-Or, if you want to develop ase2sprkkr, it is better idea to do an
-[editable]{.title-ref} installation, where the package will see the
-changes made.
-
-``` bash
-pip install --no-build-isolation --editable .
-```
-
-You can add `--no-deps` switch for a faster rebuild.
-
-#### The known issues of the editable build
-
-1\. Unfortunatelly, pip is not able to install the build requirements.
-So if they are not installed, the previous command will fail. You can
-either install the dependencies manually, copying them out from
-pyproject.toml:
-
-``` bash
-pip install scikit-build cmake ninja cython
-```
-
-or (which will be usefull if I add a build requirement and forgot to
-update this help) run the following snippet to install all the
-build-dependencies mentioned in pyproject.toml:
-
-``` bash
-pip install tomllib
-pip install --no-build-isolation $(python -c "import tomllib; print(' '.join(tomllib.load(open('pyproject.toml','rb'))['build-system']['requires']))")
-```
-
-2\. The limitation of the editable install is, that it won\'t see newly
-created files automatically: you need run the command above again to
-make it notice it.
-
-3\. If the build process fail, try to remove the `build` directory
-created by the previous build (if it exists). Mostly, it happens if the
-`--no-build-isolation` switch is ommited.
-
-## Documentation of the package
-
-The documentation is published online at
-<https://ase2sprkkr.github.io/ase2sprkkr/>
-
-If you are using Git cloned sources, you can run
-
-    open docs/index.html
-
-to see the (offline version of the) documentation. The documentation
-contains parts, that are generated from the docstrings in the source
-code. You can regenerate these by
-
-``` bash
-make docs
-```
-
-Sphinx and sphinx-toolbox python packages (installable e.g. using pip)
-and pandoc (for generating README.md) are needed for the build.
-
-However, the official build of Sphinx miss some attributes when it is
-used to build the documentation. So, till the pullrequest that corrects
-the Sphinx behavior will be merged into Sphinx, please use the following
-fork for building the documentation.
-<https://github.com/lokik/sphinx.git>
-
-## How to contribute or to report a bug
-
-Please feel free to make a pull-request or post an issue at:
-<https://github.com/ase2sprkkr/ase2sprkkr>
-
-## Execution and persistent runs
-
-The separate [KKRunner library](https://ase2sprkkr.github.io/kkrunner/)
-owns processes, SSH/scheduler execution, manifests, transfers and
-durable history. ASE2SPRKKR prepares SPR-KKR inputs and constructs
-scientific results. See the [application execution
-guide](https://ase2sprkkr.github.io/ase2sprkkr/execution.html) for
-project runs, reconnect, profiles and historical result loading.
+Report problems and propose changes on [GitHub](https://github.com/ase2sprkkr/ase2sprkkr).

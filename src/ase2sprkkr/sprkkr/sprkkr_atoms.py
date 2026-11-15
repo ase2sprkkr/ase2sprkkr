@@ -65,28 +65,29 @@ class SPRKKRAtoms(Atoms):
 
     @staticmethod
     def promote_ase_atoms(obj, symmetry=None, update_info=None):
-        """Convert ASE Atoms object to the one usable by SPRKKR.
-        For the case of the usability it is a bit ugly hack: The __class__ attribute
-        is replaced so the extra methods and properties of the objects will
-        be available.
+        """Promote an ASE atoms object for SPR-KKR calculations.
+
+        The object is promoted in place by replacing its ``__class__``
+        with an SPRKKR-enabled subclass.
 
         Parameters
         ----------
-        obj: ase.Atoms
-         The atoms object to be promoted to be used for SPRKKR calculations
+        obj : ase.Atoms
+            Atoms to promote.
+        symmetry : bool or None, optional
+            If enabled, symmetry-equivalent atoms share a site type.
+            For an unpromoted object, ``None`` behaves as ``True``;
+            for an existing SPRKKRAtoms object, ``None`` retains its
+            present site symmetry.
+        update_info : bool or None, optional
+            If ``True``, recompute space-group information; if ``False``,
+            never recompute it. If ``None``, update it when site
+            information has already been initialized.
 
-        symmetry: bool or None
-         The sites property of the resulting object will consider the symmetry of the structure.
-         I.e., the by-symmetry-equal atomic sites will share the same sites object.
-         Default None is the same as True, however it does not change the symmetry
-         of the already promoted obj passed into the routine.
-
-        update_info:
-         If True, always update spacegroup info
-         If False, never
-         If None, update it, if it seems to be inited, since it can be messed up by the
-                  Atoms-manipulating routines
-
+        Returns
+        -------
+        SPRKKRAtoms or None
+            The promoted object, or ``None`` for a ``None`` input.
         """
         if obj is None:
             return None

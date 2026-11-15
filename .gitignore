@@ -9,3 +9,4 @@ docs/.doctrees/**
 docs/.buildinfo
 build/**
 **/__*/**
+doc_src/examples_generated.inc

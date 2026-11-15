@@ -160,9 +160,16 @@ class Configuration(RootConfigurationContainer):
     def _generic_info(self):
         return "ASE2SPRKKR Configuration"
 
-    def save_user_preferences(self):
-        """Persist explicit configuration values to the YAML user config."""
+    def save_user_preferences(self, *, system=False):
+        """Persist staged ASE profile values and explicit YAML configuration.
+
+        ASE-owned settings are written into ASE config.ini, not copied to
+        ASE2SPRKKR YAML. System-wide writes require system=True.
+        """
         from .configuration_yaml import load_yaml_document, save_configuration_yaml
+
+        # Do not save YAML if persisting the ASE profile fails.
+        self.profiles.save_ase_changes(system=system)
 
         file = user_preferences_file()
         document = load_yaml_document(file) if os.path.isfile(file) else None
@@ -170,14 +177,14 @@ class Configuration(RootConfigurationContainer):
 
 
 class ConfigurationOption(Option):
-    def set_permanent(self, value, doc=None, doc_regex=False):
-        """Set the value and persist the complete user configuration."""
+    def set_permanent(self, value, doc=None, doc_regex=False, *, system=False):
+        """Set and persist configuration; allow system ASE writes if requested."""
         self.set(value)
-        self.store_permanent()
+        self.store_permanent(system=system)
 
-    def store_permanent(self, doc=None, doc_regex=False):
-        """Persist the current configuration to the YAML user config."""
-        self._get_root_container().save_user_preferences()
+    def store_permanent(self, doc=None, doc_regex=False, *, system=False):
+        """Persist staged configuration to its owning files."""
+        self._get_root_container().save_user_preferences(system=system)
 
 
 class GeneratedConfigurationOption(ConfigurationOption):
@@ -262,13 +269,13 @@ definition = ConfigFileDefinition(
                     "executor",
                     EXECUTOR,
                     is_optional=True,
-                    info="Execution location: local, ssh or legacy psij. Use backend to choose direct, process or psij.",
+                    info="Execution location: local, ssh or legacy psij. Use backend to select direct, kkrunner or psij.",
                 ),
                 V(
                     "backend",
                     Keyword({
-                        "direct": "Attached process on the selected transport.",
-                        "process": "Supervised, recoverable process.",
+                        "direct": "Run without an installed supervisor (limited reattachment).",
+                        "kkrunner": "Supervised process with durable completion information.",
                         "psij": "PSI/J scheduler.",
                     }, transform='lower'),
                     is_optional=True,
@@ -348,7 +355,7 @@ definition = ConfigFileDefinition(
             ],
             is_repeated="DICT_SECTION",
             is_optional=True,
-            info="Named SPR-KKR execution profiles. The reserved 'ase' profile is virtual; 'legacy' is persisted but read-only through the profiles API.",
+            info="Named SPR-KKR execution profiles. Reserved 'default' selects the active profile; 'ase' is a virtual editable view of ASE config.ini; 'legacy' is persisted but read-only through the profiles API.",
         ),
         Section(
             "running",

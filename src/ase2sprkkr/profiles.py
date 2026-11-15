@@ -1,6 +1,7 @@
 """Execution-profile views used by the ase2sprkkr configuration.
 
-Persistent named profiles live in the ase2sprkkr configuration. ``ase`` is a
+Persistent named profiles live in the ase2sprkkr configuration. ``default``
+is a virtual alias for the selected execution profile. ``ase`` is a
 virtual read-only profile backed by ASE's own configuration. ``legacy`` is a
 persisted compatibility profile, but is exposed through a read-only view and
 can only be modified through the deprecated configuration options.
@@ -145,12 +146,42 @@ class LegacyProfile:
         )
 
 
+class ASEProfileValue(ReadOnlyProfileValue):
+    """Option-like field backed by ASE's own INI configuration."""
+
+    def __init__(self, profile, name, getter):
+        super().__init__(getter, name)
+        self._profile = profile
+
+    def set(self, value):
+        """Validate and stage a value without writing to disk."""
+        self._profile.set({self.name: value})
+
+    def clear(self):
+        """Stage removal of a value without writing to disk."""
+        self._profile.unset(self.name)
+
+    def store_permanent(self, *, system=False):
+        """Save pending ASE configuration changes, permitting /etc if requested."""
+        self._profile.store_permanent(system=system)
+
+    def set_permanent(self, value, *, system=False):
+        """Set and save a value, optionally permitting system-file writes."""
+        self.set(value)
+        self.store_permanent(system=system)
+
+
 class ASEProfile:
-    """Typed read-only view of ASE's ``[sprkkr]`` calculator configuration."""
+    """Editable, virtual view of ASE's [sprkkr] configuration.
+
+    Values are edited in memory and saved explicitly to ASE's own
+    configuration file using store_permanent() or the root
+    save_user_preferences(). The ASE profile is never stored in YAML.
+    """
 
     name = "ase"
     source = "ase"
-    read_only = True
+    read_only = False
 
     def __init__(self, profiles, ase_config):
         self._profiles = profiles
@@ -158,11 +189,16 @@ class ASEProfile:
 
     @property
     def _section(self):
-        return self._ase_config.parser["sprkkr"]
+        parser = self._ase_config.parser
+        return parser["sprkkr"] if parser.has_section("sprkkr") else None
 
     def configuration_profile(self):
-        """Return a typed, non-persistent profile snapshot."""
-        return self._profiles._parse_ase_profile(self._ase_config)
+        """Return a typed view without changing the ASE configuration."""
+        if self._profiles._ase_available():
+            return self._profiles._parse_ase_profile(self._ase_config)
+        return self._profiles._definition.create_object(
+            self._profiles, repeated=False
+        )
 
     def __getattr__(self, name):
         if name.startswith("_"):
@@ -171,14 +207,16 @@ class ASEProfile:
             getattr(self.configuration_profile(), name)
         except AttributeError:
             raise AttributeError(name) from None
-        return ReadOnlyProfileValue(
-            lambda: getattr(self.configuration_profile(), name)(),
-            name,
+        return ASEProfileValue(
+            self, name, lambda: getattr(self.configuration_profile(), name)(),
         )
 
     @property
     def command(self):
-        return ReadOnlyProfileValue(lambda: self._section.get("command"), "command")
+        return ASEProfileValue(
+            self, "command",
+            lambda: self._section.get("command") if self._section else None,
+        )
 
     def as_dict(self, *args, **kwargs):
         values = self.configuration_profile().as_dict(
@@ -188,11 +226,133 @@ class ASEProfile:
 
     get = as_dict
 
-    def set(self, *args, **kwargs):
-        raise TypeError(
-            "The 'ase' profile is read-only in this configuration API; "
-            "edit the ASE [sprkkr] configuration instead"
+    @staticmethod
+    def _ini_value(value):
+        """Represent a typed profile value for ASE's INI parser."""
+        if isinstance(value, bool):
+            return "true" if value else "false"
+        return str(value)
+
+    def _edit(self, changes=None, *, remove=()):
+        """Validate a proposed ASE profile and stage the change in memory."""
+        import copy
+        import shlex
+        from types import SimpleNamespace
+
+        changes = dict(changes or {})
+        removals = tuple(remove)
+        if not changes and not removals:
+            return
+        if changes.keys() & set(removals):
+            raise ValueError("Cannot set and unset the same ASE profile option")
+
+        for name in (*changes, *removals):
+            if name == "command":
+                continue
+            try:
+                getattr(self.configuration_profile(), name)
+            except AttributeError:
+                raise ValueError(
+                    f"Unknown ASE execution-profile option: {name}"
+                ) from None
+
+        if "command" in changes and (
+            {"executable_dir", "executable_suffix"} & changes.keys()
+        ):
+            raise ValueError(
+                "Specify either command or executable_dir/executable_suffix"
+            )
+        if "command" in removals:
+            raise ValueError(
+                "Unsetting the ASE command would leave the profile unusable; "
+                "use another command or edit ASE config.ini directly"
+            )
+
+        original_command = self.command()
+        original_parts = (
+            ase_command_profile_values(original_command)
+            if original_command else {"executable_dir": "", "executable_suffix": ""}
         )
+        updates = {}
+        if "command" in changes:
+            command = changes.pop("command")
+            ase_command_profile_values(command)
+            updates["command"] = command
+        elif (
+            {"executable_dir", "executable_suffix"} &
+            (changes.keys() | set(removals))
+        ) or not original_command:
+            directory = changes.pop(
+                "executable_dir", original_parts.get("executable_dir", "")
+            )
+            suffix = changes.pop(
+                "executable_suffix", original_parts.get("executable_suffix", "")
+            )
+            if "executable_dir" in removals:
+                directory = ""
+            if "executable_suffix" in removals:
+                suffix = ""
+            if not isinstance(directory, str) or not isinstance(suffix, str):
+                raise TypeError("Executable directory and suffix must be strings")
+            filename = "kkrscf" + suffix
+            filename = os.path.join(directory, filename) if directory else filename
+            command = shlex.quote(filename)
+            ase_command_profile_values(command)
+            updates["command"] = command
+
+        for name, value in changes.items():
+            updates[name] = self._ini_value(value)
+        for name in removals:
+            if name not in ("executable_dir", "executable_suffix"):
+                updates[name] = None
+
+        for value in updates.values():
+            if value is not None and any(char in value for char in (chr(10), chr(13))):
+                raise ValueError("ASE profile INI values must be single-line")
+
+        parser = copy.deepcopy(self._ase_config.parser)
+        if not parser.has_section("sprkkr"):
+            parser.add_section("sprkkr")
+        section = parser["sprkkr"]
+        for name, value in updates.items():
+            if value is None:
+                section.pop(name, None)
+            else:
+                section[name] = value
+
+        # One shared schema validates command syntax and profile options.
+        self._profiles._parse_ase_profile(SimpleNamespace(parser=parser))
+
+        # Stage only after successful validation: rejected changes do not
+        # affect the parser or pending writes. All ASEProfile views share the
+        # same staged state through the profiles container.
+        pending = getattr(self._profiles, "_ase_pending_updates", {})
+        self._profiles._ase_pending_updates = {**pending, **updates}
+        self._ase_config.parser = parser
+
+    def set(self, values=None, **kwargs):
+        """Validate and stage ASE profile fields without saving to disk."""
+        from collections.abc import Mapping
+        if values is None:
+            values = {}
+        if not isinstance(values, Mapping):
+            raise TypeError("ASE profile values must be a mapping")
+        proposed = dict(values)
+        proposed.update(kwargs)
+        self._edit(proposed)
+
+    def unset(self, name):
+        """Stage removal of one ASE profile field without saving."""
+        self._edit(remove=(name,))
+
+    def store_permanent(self, *, system=False):
+        """Persist all staged ASE fields to ASE's authoritative INI file."""
+        self._profiles.save_ase_changes(system=system)
+
+    def set_permanent(self, values=None, *, system=False, **kwargs):
+        """Set and persist ASE profile fields in one operation."""
+        self.set(values, **kwargs)
+        self.store_permanent(system=system)
 
 
 class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
@@ -211,7 +371,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         def rollback(self):
             self.profiles._values = self.old_values
 
-    reserved_names = frozenset(("legacy", "ase"))
+    reserved_names = frozenset(("legacy", "ase", "default"))
     legacy_fields = (
         "mpi",
         "mpi_warning",
@@ -221,8 +381,8 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
 
     def _add(self, id=None):
         """Create one stored profile while keeping ``ase`` strictly virtual."""
-        if id == "ase":
-            raise ValueError("'ase' is a virtual profile and cannot be stored")
+        if id in ("ase", "default"):
+            raise ValueError(f"{id!r} is a virtual profile and cannot be stored")
         return super()._add(id)
 
     def _legacy_profile(self, create=False):
@@ -372,7 +532,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         reserved = self._reserved_in(values)
         if reserved:
             names = ", ".join(repr(name) for name in reserved)
-            raise ValueError(f"Reserved profiles are read-only: {names}")
+            raise ValueError(f"Reserved profiles are read-only in ASE2SPRKKR YAML: {names}. Edit ASE settings via profiles.ase.")
 
         legacy = self._values.get("legacy")
         changed = super().stage(
@@ -430,18 +590,34 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             del self._values[name]
             transaction.push(change)
 
+    @property
+    def ase(self):
+        """ASE-owned profile, editable via the ASE configuration file."""
+        return self["ase"]
+
+    @property
+    def default(self):
+        """Selected profile; a virtual alias, not a stored configuration."""
+        return self["default"]
+
     def __getitem__(self, name):
+        if name == "default":
+            # This is a virtual name, not a serialized profile.
+            return self[self.resolve_name() or "ase"]
         if name == "legacy":
             if self._legacy_available():
                 return LegacyProfile(self)
             raise KeyError(name)
         if name == "ase":
-            if self._ase_available():
-                return ASEProfile(self, self._ase_config())
-            raise KeyError(name)
+            cfg = self._ase_config()
+            if cfg is not None:
+                return ASEProfile(self, cfg)
+            raise KeyError("ASE configuration support is not installed")
         return super().__getitem__(name)
 
     def __contains__(self, name):
+        if name == "default":
+            return self.resolve_name() is not None or self._ase_config() is not None
         if name == "legacy":
             return self._legacy_available()
         if name == "ase":
@@ -498,7 +674,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         # The backing legacy section is an implementation detail. Generic
         # lookup must not expose mutable options below its read-only public view.
         head = name.split(".", 1)[0] if isinstance(name, str) else name
-        if head == "legacy":
+        if head in ("legacy", "default"):
             return
         yield from super()._get_members(
             name,
@@ -509,9 +685,15 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         )
 
     def resolve_name(self, name=None):
-        """Resolve a profile name according to configuration precedence."""
-        if name is None:
+        """Resolve a profile name according to configuration precedence.
+
+        The reserved name "default" always means the currently selected
+        profile, never a persistent profile called "default".
+        """
+        if name in (None, "default"):
             name = self._container.default_profile()
+            if name == "default":
+                raise ValueError("default_profile cannot refer to the 'default' alias")
         if name is not None:
             if name not in self:
                 raise KeyError(f"Unknown execution profile {name!r}")
@@ -521,6 +703,39 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         if "legacy" in self:
             return "legacy"
         return None
+
+    def default_write_target(self):
+        """Resolve a write to the default profile without redundant state.
+
+        An explicitly selected named profile remains the write target.
+        Otherwise ASE's [sprkkr] settings are the natural user default.
+        A write to a missing ASE profile creates that section in the
+        authoritative ASE config.ini, rather than a parallel YAML copy.
+        """
+        name = self._container.default_profile()
+        if name == "default":
+            raise ValueError("default_profile cannot refer to the default alias")
+        if name == "legacy":
+            raise ValueError(
+                "The legacy profile is read-only; select a named profile "
+                "or edit profiles.ase instead"
+            )
+        return name or "ase"
+
+    def save_ase_changes(self, *, system=False):
+        """Write staged ASE changes, leaving the staging intact on failure.
+
+        This is the single persistence boundary for ASE-owned profiles,
+        shared by explicit profile saving, CLI writes, and the root
+        Configuration.save_user_preferences() method.
+        """
+        from .ase_profile_storage import write_ase_sprkkr
+
+        updates = getattr(self, "_ase_pending_updates", {})
+        if not updates:
+            return
+        write_ase_sprkkr(updates, system=system)
+        self._ase_pending_updates = {}
 
     def resolve(self, name=None):
         """Return the resolved profile object, or ``None`` for auto fallback."""

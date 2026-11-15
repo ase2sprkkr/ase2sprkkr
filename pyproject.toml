@@ -11,7 +11,7 @@ ase2sprkkr = "ase2sprkkr_cli.main:run"
 
 [project]
 name = "ase2sprkkr"
-version = "4.0.0-beta4"
+version = "4.0.0-beta5"
 requires-python = ">=3.9"
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },
@@ -24,7 +24,7 @@ description = "Wrapper/calculator for SPR-KKR to be used within ASE (Atomic Simu
 license-files = ["LICENCE"]
 
 dependencies = [
-    "kkrunner>=0.2.0b2,<0.3",
+    "kkrunner>=0.2.0b3,<0.3",
     "ase>=3.22.0",
 		"colorama",
     "spglib",
@@ -64,7 +64,7 @@ plot = [
     "scikit-image",
 ]
 psij = [
-    "kkrunner[psij]>=0.2.0b2,<0.3",
+    "kkrunner[psij]>=0.2.0b3,<0.3",
 ]
 
 [project.urls]

@@ -66,7 +66,7 @@ def test_project_id_resolves_existing_application_project(monkeypatch, tmp_path)
         command._project_manager(uuid4().hex)
 
 
-def _fake_calculator(monkeypatch, *, backend="process", state=None):
+def _fake_calculator(monkeypatch, *, backend="managed", state=None):
     import ase2sprkkr
     from kkrunner import RunState
 

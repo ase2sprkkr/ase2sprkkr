@@ -9,7 +9,7 @@ from .backward_compatibility import ExceptionGroup
 from .warnings import InvalidValuePolicy
 
 if TYPE_CHECKING:
-    from .configuration import Configuration
+    from .configuration import Configuration as BaseConfiguration
 
 
 class PostChangeHookError(RuntimeError, ExceptionGroup):
@@ -75,7 +75,7 @@ class ConfigurationTransaction:
 
     def __init__(
         self,
-        configuration: "Configuration",
+        configuration: "BaseConfiguration",
         policy: Optional[InvalidValuePolicy] = None,
     ) -> None:
         """Create a transaction for ``configuration`` and its root tree.
@@ -97,7 +97,7 @@ class ConfigurationTransaction:
 
     @classmethod
     def current(
-        cls, configuration: "Configuration"
+        cls, configuration: "BaseConfiguration"
     ) -> Optional["ConfigurationTransaction"]:
         """Return the active transaction for ``configuration``, if any."""
         root = configuration._get_root_container()
@@ -106,7 +106,7 @@ class ConfigurationTransaction:
     @classmethod
     def use(
         cls,
-        configuration: "Configuration",
+        configuration: "BaseConfiguration",
         policy: Optional[InvalidValuePolicy] = None,
     ) -> "ConfigurationTransaction":
         """Return a context for the transaction applicable to ``configuration``.

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import numpy as np
+from . import atomic_types
 from .atomic_types import AtomicType
 from typing import Dict, Union, Optional, List, Tuple
 from numbers import Integral
@@ -40,7 +41,7 @@ class SiteOccupation(SitePropertyProxy):
 
     def set(
         self,
-        dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
+        dct: Union[Dict[Union[atomic_types.AtomicType, str], float], List[Tuple[Union[atomic_types.AtomicType, str], float]]],
         for_mesh=None,
     ) -> None:
         self._check_mutation_allowed()
@@ -76,11 +77,12 @@ class SiteOccupation(SitePropertyProxy):
 
 
 class Occupation:
-    """Occupation of the atomic site, given by AtomicType : value
+    """Occupation of an atomic site, mapping
+    :class:`AtomicType <ase2sprkkr.sprkkr.atomic_types.AtomicType>` to
+    its occupation fraction.
 
-    The value determine the probability, that a given atomic type will
-    be found on a given place (which can be used e.g. for computing
-    alloys).
+    Each fraction is the probability of finding that atomic type
+    at the site, as used for example in alloy calculations.
     """
 
     _occupation = {}
@@ -112,7 +114,7 @@ class Occupation:
 
     def __init__(
         self,
-        dct: Dict[Union[AtomicType, str], float],
+        dct: Dict[Union[atomic_types.AtomicType, str], float],
         site_type: Optional[SiteType] = None,
         mesh: Optional[Mesh] = None,
     ):
@@ -129,7 +131,7 @@ class Occupation:
 
     def set(
         self,
-        dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
+        dct: Union[Dict[Union[atomic_types.AtomicType, str], float], List[Tuple[Union[atomic_types.AtomicType, str], float]]],
         for_mesh=None,
     ) -> None:
         """Set (replace) the occupation data and synchronize the owning Atoms object."""
@@ -138,7 +140,7 @@ class Occupation:
 
     def _set(
         self,
-        dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
+        dct: Union[Dict[Union[atomic_types.AtomicType, str], float], List[Tuple[Union[atomic_types.AtomicType, str], float]]],
         for_mesh=None,
     ) -> None:
         """Set occupation data without synchronizing, for object initialization."""
@@ -188,7 +190,7 @@ class Occupation:
                 return i
         raise KeyError(f"No {name} in the occupation")
 
-    def atomic_type(self, name: Union[str, int, AtomicType]) -> AtomicType | None:
+    def atomic_type(self, name: Union[str, int, atomic_types.AtomicType]) -> atomic_types.AtomicType | None:
         """Find the corresponding atomic type according to the provided argument.
 
         Parameters
@@ -206,7 +208,7 @@ class Occupation:
         name = self._find_key(name)
         return self._occupation[name]
 
-    def replace_type(self, name: Union[str, int, AtomicType], to: Union[str, AtomicType]):
+    def replace_type(self, name: Union[str, int, atomic_types.AtomicType], to: Union[str, atomic_types.AtomicType]):
         """
         Replace the given atomic type (see :meth:`atomic_type<ase2sprkkr.sprkkr.occupations.Occupation.atomic_type>`, how
         it can be identified) by the new one (given either by AtomicType or by its chemical symbol)
@@ -307,7 +309,7 @@ class Occupation:
         value : float
           Desired value
 
-        except_from: AtomicType
+        except_from: ase2sprkkr.sprkkr.atomic_types.AtomicType
           Skip the given atom during normalizing
         """
         suma = 0.0
@@ -374,7 +376,7 @@ class Occupation:
     def to_tuple(self):
         return tuple(self._occupation.items())
 
-    def atomic_types(self) -> Iterable[AtomicType]:
+    def atomic_types(self) -> Iterable[atomic_types.AtomicType]:
         """Returns the atomic types that can be present on the site."""
         return self._occupation.keys()
 

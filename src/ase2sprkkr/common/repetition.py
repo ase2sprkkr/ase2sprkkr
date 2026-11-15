@@ -70,7 +70,7 @@ class Repeated(Enum):
         """Condition controlling output numbering, if there is one."""
         return None
 
-    def numbering_for(self, option: "Option") -> "Repeated.Numbering":
+    def numbering_for(self, option: "Option") -> "ase2sprkkr.common.repetition.Repeated.Numbering":
         """Return the numbering to use when writing ``option``."""
         return self.is_numbered
 
@@ -142,7 +142,7 @@ class RepeatedNumberedIf:
     def is_dict(self):
         return False
 
-    def numbering_for(self, option: "Option") -> Repeated.Numbering:
+    def numbering_for(self, option: "Option") -> "ase2sprkkr.common.repetition.Repeated.Numbering":
         """Evaluate numbering for runtime ``option``."""
         return (
             Repeated.Numbering.YES

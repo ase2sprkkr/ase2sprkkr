@@ -1,6 +1,6 @@
 all: install
 
-.PHONY: all install editable_install ei clean test doc docs doc-gather doc-clean doc-debug doc-build doc-readme package package_clean publish anaconda conda checkout-docs
+.PHONY: all install editable_install ei clean test doc docs doc-gather doc-clean doc-debug doc-build doc-examples doc-examples-check doc-readme doc-readme-check package package_clean publish anaconda conda checkout-docs
 
 install:
 	pip install .
@@ -18,10 +18,10 @@ test:
 
 doc: docs
 
-docs: doc-gather doc-build doc-readme
+docs: doc-build doc-readme
 
 doc-gather: doc-clean
-	(cd doc_src ; sphinx-apidoc -feM -o ./auto ../src/ase2sprkkr \
+	(cd doc_src ; sphinx-apidoc -feMT -o ./auto ../src/ase2sprkkr \
 	"../src/ase2sprkkr/*/test" \
 	"../src/ase2sprkkr/*/test/*" \
 	)
@@ -31,15 +31,25 @@ doc-clean:
 	rm -rf docs/*
 	rm -rf docs/.??*
 
-doc-debug:
+doc-debug: doc-examples
 	sphinx-build -P doc_src docs/
 
-doc-build:
+doc-examples:
+	python doc_src/examples.py
+
+doc-examples-check:
+	python doc_src/examples.py --check
+
+doc-build: doc-gather doc-examples
 	sphinx-build -j auto doc_src docs/
 	cp -r doc_src/_root/* doc_src/_root/.??* docs/
 
 doc-readme:
-	cd doc_src; pandoc README.rst -o ../README.md
+	pandoc -f rst -t gfm --wrap=none doc_src/README.rst -o README.md
+
+# Check that the checked-in GitHub README matches its RST source.
+doc-readme-check:
+	pandoc -f rst -t gfm --wrap=none doc_src/README.rst | diff -u README.md -
 
 package: | package_clean
 	python -m build --sdist

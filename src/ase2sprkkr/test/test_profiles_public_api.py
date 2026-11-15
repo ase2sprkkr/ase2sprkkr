@@ -42,7 +42,7 @@ def test_profile_collection_exposes_only_public_views(monkeypatch):
 
     assert items["local"] is local
     assert items["legacy"].read_only is True
-    assert items["ase"].read_only is True
+    assert items["ase"].read_only is False
 
     with pytest.raises(TypeError, match="read-only"):
         items["legacy"].mpi.set(8)
@@ -88,3 +88,22 @@ def test_generic_lookup_does_not_expose_legacy_backing():
 
     with pytest.raises(KeyError):
         config.profiles.get_member("legacy.mpi", unknown="fail")
+
+def test_default_is_reserved_and_resolves_ase_fallback(monkeypatch):
+    import configparser
+    from types import SimpleNamespace
+    parser = configparser.ConfigParser()
+    parser["sprkkr"] = {"command": "/opt/kkrscf"}
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer, "_ase_config",
+        staticmethod(lambda: SimpleNamespace(parser=parser)),
+    )
+    config = fresh_config()
+    assert config.profiles.resolve_name() == "ase"
+    assert config.profiles["default"].name == "ase"
+    assert config.profiles["ase"].read_only is False
+    assert "default" not in list(config.profiles)
+    with pytest.raises(ValueError, match="reserved profile"):
+        config.profiles.add("default")
+    with pytest.raises(ValueError, match="read-only"):
+        config.profiles.set({"ase": {"mpi": 4}}, unknown="fail", merge=True)

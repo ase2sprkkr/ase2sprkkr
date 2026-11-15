@@ -12,6 +12,12 @@ from ase.dft.bz import bz_vertices
 
 class Arrow3D(FancyArrowPatch):
     def __init__(self, xs, ys, zs, *args, **kwargs):
+        """Create an arrow connecting two 3-D points.
+
+        ``xs``, ``ys`` and ``zs`` specify the coordinates of the
+        endpoints. Remaining arguments are passed to Matplotlib's
+        ``FancyArrowPatch`` constructor.
+        """
         super().__init__((0, 0), (0, 0), *args, **kwargs)
         self._verts3d = xs, ys, zs
 

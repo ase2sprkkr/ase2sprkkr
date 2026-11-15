@@ -117,7 +117,7 @@ class RawData(GrammarType):
         include_ends_with
           Include the ending delimiter to the data.
 
-        **kwargs
+        ``**kwargs``
           Any other arguments are passed to the :meth:`GrammarType constructor<GrammarType.__init__>`
         """
         self.ends_with = ends_with

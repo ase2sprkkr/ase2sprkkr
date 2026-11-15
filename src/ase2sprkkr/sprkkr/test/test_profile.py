@@ -118,6 +118,32 @@ def test_runtime_profile_splits_endpoint_from_launch_parameters():
     )
 
 
+def test_ssh_defaults_to_supervised_kkrunner_backend():
+    from kkrunner.backends import SupervisedBackend
+
+    profile = SPRKKRProfile(executor="ssh", host="cluster.example")
+    assert isinstance(profile.backend_config.create(), SupervisedBackend)
+    assert profile.backend_config.name == "kkrunner"
+
+
+def test_named_kkrunner_backend_round_trips_through_user_config():
+    from kkrunner.backends import SupervisedBackend
+
+    config = definition.create_object()
+    ssh = config.profiles.add("cluster")
+    ssh.executor.set("ssh")
+    ssh.host.set("cluster.example")
+    ssh.backend.set("kkrunner")
+    profile = resolve_sprkkr_profile("cluster", configuration=config)
+    assert profile.backend == "kkrunner"
+    assert isinstance(profile.backend_config.create(), SupervisedBackend)
+
+
+def test_obsolete_process_backend_name_is_rejected():
+    with pytest.raises(ValueError, match="Unknown KKRunner backend"):
+        SPRKKRProfile(executor="ssh", backend="process").backend_config
+
+
 def test_profiles_with_same_backend_share_endpoint_identity():
     first = SPRKKRProfile(
         executor="ssh",

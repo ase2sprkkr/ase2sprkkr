@@ -1,255 +1,97 @@
-Execution, persistent runs and KKRunner
-=========================================
+Persistent project calculations
+===============================
 
-ASE2SPRKKR prepares SPR-KKR inputs and interprets its outputs. The separate
-`KKRunner library <https://ase2sprkkr.github.io/kkrunner/>`_ owns local/MPI,
-SSH and scheduler execution, file transfers and durable run history.
-It has no dependency on ASE2SPRKKR or on its scientific readers.
+Calculations are untracked by default. A persistent project stores run
+records for tracking progress and loading results later. This is
+independent of the execution backend. Reconnecting to a known running
+job is a separate capability: direct execution supports limited output
+reattachment without guaranteeing the lost exit code, whereas the
+``kkrunner`` supervisor retains completion information. See
+:doc:`quickstart` for ordinary calculations and :doc:`remote`
+for the differences between persistence, reattachment and recovery.
 
-For a normal calculation, continue using ``SPRKKR.calculate()``. Use
-``SPRKKR.create_run()`` when you need to separate preparation/submission from
-waiting, observe progress, or retain a handle for a persistent calculation.
-The returned application result is a ``TaskResult``; KKRunner's raw
-``ExecutionOutcome`` describes process facts before application interpretation.
+Create and track a run
+----------------------
 
-Local calculations
---------------------
+Create a project once and pass its ID to the calculation:
 
 .. code-block:: python
 
    from ase.build import bulk
    from ase2sprkkr import SPRKKR
+   from ase2sprkkr.sprkkr.projects import default_project_repository
 
+   project = default_project_repository().create("Aluminium")
    calculator = SPRKKR(atoms=bulk("Al", "fcc", a=4.05), directory="al-scf")
-   run = calculator.create_run()
+   run = calculator.create_run(project=project.id)
+   print("Project ID:", project.id)
+   print("Run ID:", run.id)
    run.submit()
    result = run.wait()
 
-Preparation is performed when ``create_run()`` is called; submission starts the
-executable. The run owns the resources transferred by preparation. Retain its
-working directory until execution, transfers and result processing are complete.
-These examples require installed SPR-KKR executables.
+``create_run()`` prepares the calculation, ``submit()`` starts execution,
+and ``wait()`` returns the SPR-KKR result. The project ID identifies
+the project; the run ID identifies the calculation. The output files
+must remain available for loading and postprocessing.
 
-Persistent project calculations
----------------------------------
+For a synchronous calculation with project tracking, use
+``calculator.calculate(project=project.id)`` instead of
+``create_run()``, ``submit()`` and ``wait()``.
 
-Persistence is explicit. Create a project and pass a project-bound manager;
-omitting ``project`` does not silently enable global tracking.
+On the command line, select an existing project by UUID and optionally
+an execution profile::
+
+   ase2sprkkr run example.pot --task SCF --project-id PROJECT_UUID --profile cluster
+
+The command prints the run ID after submission and normally waits for the
+result. To submit a project calculation without waiting, use::
+
+   ase2sprkkr run example.pot --task SCF --project-id PROJECT_UUID --profile cluster --submit-only
+
+``--submit-only`` requires ``--project-id`` and a managed ``kkrunner`` or
+``psij`` backend. A tracked direct run must remain under CLI observation
+until completion. The working directory defaults to the project's directory
+when configured, or to the current directory. Use ``--directory PATH`` to
+override it. See :doc:`cli` for all options.
+
+Reconnect or load history
+-------------------------
+
+After restarting the client, reopen the project manager to resume
+observing a known nonterminal run, where backend capabilities permit:
 
 .. code-block:: python
 
-   from pathlib import Path
-   from kkrunner.projects import ProjectRepository
    from ase2sprkkr.sprkkr.projects import project_execution_manager
+   from ase2sprkkr.outputs.project_results import attach_project_run
 
-   projects = ProjectRepository(Path("calculation-state/projects").absolute())
-   project = projects.create("Aluminium", directory=Path("al-scf").absolute())
-   manager = project_execution_manager(projects, project=project)
-   run = calculator.create_run(project=manager)
-   run.submit()
-   run_id = run.id
+   manager = project_execution_manager(project="PROJECT_UUID")
+   run = attach_project_run(manager, "RUN_ID")
    result = run.wait()
 
-The application helper constructs KKRunner's ``ProjectRunManager`` using
-ASE2SPRKKR's storage policy. ``RunManager`` is the distinct project-free KKRunner
-API for clients that supply an explicit ``RunStore``. Use those actual class
-names when extending the application.
-
-Project definitions retain ASE2SPRKKR's existing application-state location.
-New-format run records use KKRunner's state namespace. Passing an explicit
-project repository retains its colocated run store. Old development record
-formats are not migrated or silently ignored as current records.
-
-Reconnect and load history
-----------------------------
-
-Reopen the same project repository and its manager after restarting the client.
-Use the application adapter when reconnecting, so it supplies the correct reader:
+For a completed historical run, load the parsed result rather than
+reattaching the process:
 
 .. code-block:: python
 
-   from ase2sprkkr.outputs.project_results import (
-       attach_project_run, load_project_result, retry_project_postprocessing,
-   )
+   from ase2sprkkr.outputs.task_result import TaskResult
 
-   # For an active, downloading or waiting-for-processing run:
-   run = attach_project_run(manager, run_id)
-   result = run.wait()
+   result = TaskResult.from_run("RUN_ID", manager=manager)
 
-   # For a terminal historical run:
-   result = load_project_result(manager, run_id)
+Replace the placeholder IDs with those printed when the project and run
+were created. History requires access to the same project run store and
+retained output files. Failed or interrupted postprocessing may be
+retried without resubmitting SPR-KKR using
+``retry_project_postprocessing(manager, run_id)``.
 
-These are alternative actions according to the record's state. Do not attach a
-terminal run merely to load its result. ``TaskResult.from_run(run_id,
-manager=manager)`` is another historical-loading entry point.
-
-``attach_project_run`` also reopens a supported failed download before attaching.
-For failed or interrupted result processing, call
-``retry_project_postprocessing(manager, run_id)`` explicitly. It verifies the
-preserved files and parses them again without resubmitting SPR-KKR.
-
-Recovery after interruption during submission depends on the selected backend.
-Managed local execution uses retained service receipts. Slurm can also discover
-jobs by their run marker; discovery of completed jobs needs accounting that
-stores job comments. Other PSI/J backends do not implement discovery without a
-saved backend ID, even when attaching to a known job works. Uncertain acceptance
-leaves the record reserved in ``submitting``; it does not trigger a duplicate
-SPR-KKR calculation. See the
-`backend recovery capabilities <https://ase2sprkkr.github.io/kkrunner/backends.html#backend-recovery>`_
-for target-side requirements and limits.
-
-``stop_observation()`` detaches the observer; ``cancel()`` requests cancellation
-of the backend. ``UNKNOWN`` means observation is uncertain, not that execution
-has finished. Required processing that is unavailable or owned by another client
-raises ``ProcessingPending``; callers must not treat a raw process outcome as a
-replacement for a ``TaskResult``.
-
-Only the application's namespaced metadata selects a task definition and reader.
-Generic or foreign application records in a shared store are not SPR-KKR history.
-Historical loading verifies captured artifacts; overwritten files must be reported
-rather than parsed as the original run's results.
-
-Profiles, remote execution and schedulers
--------------------------------------------
-
-A profile describes the backend connection and per-run launch/staging policy.
-An explicit per-call executor takes precedence. An explicit per-call profile
-selects its backend; otherwise a calculator-level executor takes precedence over
-the calculator's default profile backend.
-
-.. code-block:: python
-
-   from ase2sprkkr.sprkkr.profile import SPRKKRProfile
-
-   profile = SPRKKRProfile(
-       executor="ssh",
-       host="user@cluster",
-       local_root="/absolute/local/work",
-       remote_root="/absolute/remote/work",
-       mpi="auto",
-   )
-   run = calculator.create_run(profile=profile, project=manager)
-
-Install a compatible released KKRunner on the target, including its Python
-interpreter (by default ``python3``) for SSH remote procedure calls. Execution
-uses ``EndpointClient`` with ``SshTransport``, not the old ``kkrunner remote``
-service command. The target needs SPR-KKR and MPI when requested, but not
-ASE2SPRKKR.
-
-The profile field ``executor`` selects the location (``local`` or ``ssh``),
-while ``backend`` independently selects ``direct``, ``process``
-(supervised), or ``psij``. Unspecified backends default to ``direct``
-locally and ``process`` over SSH. Legacy ``executor="psij"`` remains
-a local PSI/J shorthand. For SSH+Slurm, select ``executor="ssh"``,
-``backend="psij"``, ``psij_backend="slurm"`` and install
-``kkrunner[psij]`` on the target.
-
-``remote_python`` supplies the target Python argv (for example
-``["/opt/kkrunner/bin/python3"]``). The old custom ``remote_command``
-must be migrated explicitly to ``remote_python``.
-
-Use a consistent ``filesystem_id`` in profiles that address the same filesystem
-through different host aliases or shared mounts. KKRunner cannot infer that
-relationship from hostnames. Required MPI cannot fall back to serial execution;
-auto-detection may allow fallback according to the selected MPI policy.
-
-Files, manifests and resource lifetime
-----------------------------------------
-
-ASE2SPRKKR resolves task declarations into KKRunner's ``TaskFile`` and manifest
-data. Scientific filename templates, parser registries and format descriptions
-belong to ASE2SPRKKR. ``TaskFile.type`` and ``info`` are opaque to KKRunner.
-
-Declare all input, output and cache paths. Collision checks use that manifest,
-including stdin, local transfer destinations and remote filesystem identity.
-Sharing a calculation directory does not itself reserve the whole directory.
-A missing required output is an artifact error; an absent optional output may
-be skipped. Transfer errors and processing errors have distinct retry paths.
-
-Paths written into generated SPR-KKR input are relative to the run's working
-directory, even if the input file itself is elsewhere. An absolute native
-``TAUDIR`` is mapped relative to the effective ``TAUPATH``. Internal open-file
-paths may remain absolute to preserve ownership and cleanup guarantees.
-
-Tracked calculations require persistent working/output paths. In particular,
-``directory=False`` and temporary stderr requested by ``error_file=False`` are
-rejected for tracked runs. ``error_file=None`` stores stderr beside stdout;
-``error_file=True`` merges it with stdout. Temporary files for untracked runs
-retain their ordinary cleanup behavior.
-
-Do not delete files after merely losing observation. Required application
-processing can resume after reconnect and needs the captured artifacts.
-Processing callbacks should be idempotent or transactional because an explicit
-retry after a crash can repeat side effects; exactly-once side effects are not
-promised.
-
-Command-line project runs
--------------------------
-
-The ``run`` command can use a named execution profile and optionally persist
-a calculation in an existing project. The project is identified by its UUID
-(not its display name). Supplying ``--project-id`` creates a tracked KKRunner
-run; without it, the command retains its ordinary untracked behavior.
-
-.. code-block:: console
-
-   ase2sprkkr run sample.pot --task SCF --profile cluster --project-id PROJECT_UUID
-
-By default, the CLI waits for the result and prints the run ID after
-submission. ``--submit-only`` submits the run and exits without waiting:
-
-.. code-block:: console
-
-   ase2sprkkr run sample.pot --task SCF --profile cluster --project-id PROJECT_UUID --submit-only
-   ase2sprkkr remote status RUN_ID
-   ase2sprkkr remote follow RUN_ID --info
-
-The submit-only mode requires a managed ``process`` or ``psij`` backend.
-A direct backend may still be used for a tracked run that the CLI observes
-until completion. Tracking and surviving client exit are distinct properties.
-The run's working directory defaults to the project's configured directory
-when available, otherwise the current directory; ``--directory PATH``
-overrides it. Projects must already exist, and run IDs can subsequently be
-used by GUI or CLI clients sharing the same project repository.
-
-Remote commands for users
--------------------------
+Inspect and follow a run
+------------------------
 
 .. code-block:: console
 
    ase2sprkkr remote status RUN_ID
-   ase2sprkkr remote follow RUN_ID
+   ase2sprkkr remote follow RUN_ID --info --from-start
    ase2sprkkr remote cancel RUN_ID
 
-These commands accept persisted run IDs and resolve their recorded backend
-identity and file mappings. Use ``--remote-id HANDLE`` instead to operate
-directly on a backend handle without a stored run record.
-Internal submit/recovery/acknowledgement and MPI commands belong to
-``kkrunner``. See the
-`KKRunner command-line guide <https://ase2sprkkr.github.io/kkrunner/command-line.html>`_
-and `recovery guide <https://ase2sprkkr.github.io/kkrunner/persistent-runs.html>`_
-for the generic protocol and lifecycle contract.
-
-Architecture for developers
------------------------------
-
-``sprkkr._preparation`` resolves application state and materializes files.
-``PreparedCalculation`` owns prepared resources and adapts them to an execution
-specification. KKRunner runs the command and persists generic execution state.
-``outputs`` resolves task-owned readers and constructs ``TaskResult`` objects.
-There is no scientific parser registry inside KKRunner.
-
-KKRunner's packages are ``runs``, ``backends``, ``remote``, ``projects``, ``files``
-and ``support``. Its principal classes are importable from ``kkrunner``;
-implementation-level imports use their defining subpackage modules. See the
-`KKRunner architecture <https://ase2sprkkr.github.io/kkrunner/architecture.html>`_
-for those responsibilities and the
-`API reference <https://ase2sprkkr.github.io/kkrunner/api.html>`_ for current names.
-
-KKRunner version compatibility
-------------------------------
-
-Install a released KKRunner distribution that provides the ``EndpointClient``,
-transport, backend configuration and project run management interfaces used
-above. The required version range is declared in ``pyproject.toml``.
-The standard CI installation uses that package dependency.
+These commands use the saved project run ID. See :doc:`cli`
+for other options, or :doc:`remote` for backend requirements.

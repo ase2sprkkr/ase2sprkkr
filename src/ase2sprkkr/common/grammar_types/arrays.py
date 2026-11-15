@@ -539,15 +539,15 @@ class SpecialColumn:
 
 
 class Table(GrammarType):
-    """
-    Table, optionaly with named columns, e.g.
+    """Tabular values, optionally with named columns.
 
-      ::text
+    For example, an SPR-KKR table may look like:
 
-        IQ     IREFQ       IMQ       NOQ  ITOQ  CONC
-         1         1         1         1     1 1.000
-         2         2         2         1     2 1.000
+    .. code-block:: text
 
+       IQ     IREFQ       IMQ       NOQ  ITOQ  CONC
+        1         1         1         1     1 1.000
+        2         2         2         1     2 1.000
     """
 
     array_access = True
@@ -580,68 +580,56 @@ class Table(GrammarType):
         repeat_sparse=None,
         **kwargs,
     ):
-        """
+        """Configure the table grammar and its storage representation.
+
         Parameters
         ----------
-        columns
-          List of GrammarTypes that describes the columns of the table
-        header
-          Whether table will have header. Default None means True, if the names are specified
-        free_header
-          Do not require the exact content of the header, just skip one line during parsing
-        format
-          Pass this argument to the :class:`Sequence` describing the line
-        format_string
-          Pass this argument to the :class:`Sequence` describing the line
-        numbering
-          There will be one extra column on the begining of the table, with numbering starting from one.
-          String argument means the label of the column.
-        numbering_label
-          The label of the numbering column (if not given in numbering).
-        free_numbering
-          If True, the numering is not required to be correct on input.
-        numbering_format
-          Format for the numering column
-        grouping
-          If True, the data are not one table, but a list of tables.
-          Numbering then numbers the tables, not the rows of the tables.
-          There will be one extra column which numbers rows within the table.
-        grouping_label
-          Similiar as `numbering_label`
-        grouping_format
-          Similiard as `numbering_format`
-        prefix
-          Prints the prefix before the table
-        postfix
-          Prints the postfix after the table
-        length
-          The table length (or the number of groups)
-        row_condition
-          The condition, that each row of the table should have satisfied
-        flatten
-          The resulting table will have one dimension. Is meaningful for table without
-          named columns, with a same type of all columns
-        named_result
-          The resulting table will have numpy structured dtype with named columns.
-          Default None means autodetection: it behaves as True if necessary, i.e.:
-          if there are at least two columns with different types.
-        group_size
-          If grouping, there will be another line after the header (SPRKKR format of tables),
-          which contains ``{NAME}     {VALUE}``. The name should be specified in group_size.
-          The value is the number of rows, which all subtables are required to have.
-        group_size_format
-          Format for the group_size line.
-        groups_as_list
-          If True - groups are contained in list
-          If False - groups are contained in np.ndarray
-          If None - False if the group_size is defined (and thus if it is possible to
-                    interpret it as multidimensional array)
-        kwargs
-          Columns and their names can be assigned as kwargs, e.g.
-          ``column1_name = float, column2_name = int, ...``
-        repeat_sparse
-          There can be rows, that have only some columns, given as list.
-          Then the data will be added from the previous row.
+        columns : sequence or mapping, optional
+            Column grammar types. A mapping also supplies column names.
+        header : bool, optional
+            Whether the input has a header; inferred from column names by default.
+        free_header : bool, optional
+            Accept arbitrary text in the header rather than the declared names.
+        format : mapping, optional
+            Value formatting used for the individual columns.
+        format_all : bool, optional
+            Pass formatting options to all column grammar types.
+        numbering : bool, str or GrammarType, optional
+            Add a row-numbering column; a string supplies its heading.
+        numbering_label : str, optional
+            Explicit label for the numbering column.
+        numbering_format : str or bool, optional
+            Formatting of the numbering column.
+        free_numbering : bool, optional
+            Do not require consecutive row numbers in the input.
+        grouping : bool or GrammarType, optional
+            Represent the input as groups of rows, with group numbering.
+        grouping_label : str, optional
+            Label for the grouping column.
+        grouping_format : str or bool, optional
+            Formatting of group numbers.
+        prefix, postfix : str, optional
+            Text written before or after the table.
+        length : int, optional
+            Expected table length or number of groups.
+        row_condition : callable, optional
+            Condition to validate for each row.
+        flatten : bool, optional
+            Return a one-dimensional representation for suitable tables.
+        default_values : bool, optional
+            Permit column grammar defaults.
+        named_result : bool, optional
+            Use a NumPy structured array with named columns; detected if omitted.
+        group_size : str, optional
+            Header option specifying the required number of rows in each group.
+        group_size_format : str, optional
+            Format for the group-size header.
+        groups_as_list : bool, optional
+            Store groups in a list instead of a multidimensional array.
+        repeat_sparse : object, optional
+            Define how incomplete rows repeat values from preceding rows.
+        kwargs : mapping
+            Column names and grammar types, when ``columns`` is omitted.
         """
         if columns is None:
             columns = kwargs

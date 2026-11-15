@@ -148,7 +148,7 @@ def run(args, global_args):
     if args.submit_only and runner.client.backend.execution_mode != "managed":
         runner.close()
         raise CLIUsageError(
-            "--submit-only requires a managed backend (process or psij); "
+            "--submit-only requires a managed backend (kkrunner or psij); "
             "select one using --profile"
         )
 

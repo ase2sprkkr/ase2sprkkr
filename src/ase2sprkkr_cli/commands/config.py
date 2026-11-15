@@ -17,14 +17,23 @@ def parser(parser):
     parser.add_argument("-s", "--show", help="Print the resolved configuration.", action="store_true")
     parser.add_argument("-i", "--info", help="Show the description of the configuration options.", action="store_true")
     parser.add_argument(
+        "--system",
+        action="store_true",
+        help=(
+            "Permit modifications to ASE configuration files under /etc "
+            "when setting or unsetting profiles.ase (or profiles.default "
+            "when it resolves to ASE). Otherwise such files are never edited."
+        ),
+    )
+    parser.add_argument(
         "-S",
         "--set",
         nargs=2,
         help=(
-            "Set a configuration value and persist it to YAML. "
-            "Examples: '-S default_profile local', "
-            "'-S profiles.cluster.mpi 8', or "
-            "'-S profiles.cluster \"{mpi: 8, executable_dir: /opt/sprkkr}\"'."
+            "Set a configuration value in its owning configuration file. "
+            "Examples: '-S profiles.default.executable_dir /opt/sprkkr', "
+            "'-S profiles.ase.executable_suffix _v8', or "
+            "'-S profiles.cluster.mpi 8'."
         ),
         metavar=("NAME", "VALUE"),
     )
@@ -68,6 +77,26 @@ def parser(parser):
             "and remove migrated top-level assignments from the hook."
         ),
     )
+    add_migration_cleanup_arguments(parser)
+    parser.add_argument(
+        "--init-script",
+        action="store_true",
+        help="Print the path to the Python user-configuration hook.",
+    )
+    parser.add_argument(
+        "--print-init-script",
+        action="store_true",
+        help="Print the Python user-configuration hook.",
+    )
+    parser.add_argument(
+        "--edit-init-script",
+        action="store_true",
+        help="Edit the Python user-configuration hook using $EDITOR.",
+    )
+
+
+def add_migration_cleanup_arguments(parser):
+    """Share migration safety options between config --migrate and migrate."""
     cleanup = parser.add_mutually_exclusive_group()
     cleanup.add_argument(
         "--keep-init",
@@ -90,21 +119,6 @@ def parser(parser):
         action="store_true",
         help="After migration, delete the Python configuration hook completely.",
     )
-    parser.add_argument(
-        "--init-script",
-        action="store_true",
-        help="Print the path to the Python user-configuration hook.",
-    )
-    parser.add_argument(
-        "--print-init-script",
-        action="store_true",
-        help="Print the Python user-configuration hook.",
-    )
-    parser.add_argument(
-        "--edit-init-script",
-        action="store_true",
-        help="Edit the Python user-configuration hook using $EDITOR.",
-    )
 
 
 def default_content(file):
@@ -126,9 +140,11 @@ def default_content(file):
 #     # If omitted, mpi defaults to "auto".
 #     mpi: auto
 #     mpi_warning: true
+#     # SSH profiles may choose backend: direct, kkrunner or psij.
 #
-# The reserved profile "ase" is read from ASE configuration and is not stored
-# here. The reserved "legacy" profile exists only for deprecated options;
+# "default" is a virtual alias for the selected profile and is not stored.
+# The editable "ase" view is backed by ASE's own config.ini, not our YAML.
+# The reserved "legacy" profile exists only for deprecated options;
 # --migrate converts those execution settings to a normal named profile.
 
 # running:
@@ -199,56 +215,86 @@ def _parse_set_value(text):
     return YAML(typ="safe").load(text)
 
 
-def _set_configuration_value(config, name, value):
-    """Set one CLI value, creating a named profile when necessary."""
+def _set_configuration_value(config, name, value, *, system=False):
+    """Persist a configuration value to the correct owning configuration."""
     path = name.split(".")
     if path[0] != "profiles":
+        if system:
+            raise ValueError("--system is only valid for ASE profile updates")
         config.find(name).set(value)
         config.save_user_preferences()
         return
 
     if len(path) not in (2, 3) or not path[1]:
         raise KeyError(name)
-
     profile_name = path[1]
-    if profile_name in config.profiles.reserved_names:
-        raise ValueError(f"{profile_name!r} is a reserved profile name")
+    if profile_name == "default":
+        profile_name = config.profiles.default_write_target()
 
     if len(path) == 2:
         if not isinstance(value, Mapping):
-            raise TypeError(
-                f"Profile {profile_name!r} must be set from a mapping"
-            )
+            raise TypeError(f"Profile {profile_name!r} must be set from a mapping")
         profile_values = value
     else:
         profile_values = {path[2]: value}
 
-    # Repeated-container staging validates the complete proposed profile and is
-    # atomic, so a bad field/value does not leave a half-created profile behind.
+    if profile_name == "ase":
+        # ASE is a virtual profile backed by ASE's INI file, not our YAML.
+        profile = config.profiles["ase"]
+        profile.set(profile_values)
+        profile.store_permanent(system=system)
+        return
+    if system:
+        raise ValueError("--system is only valid for ASE profile updates")
+    if profile_name in config.profiles.reserved_names:
+        raise ValueError(f"{profile_name!r} is a reserved profile name")
+
     try:
         config.profiles.set(
-            {profile_name: profile_values},
-            unknown="fail",
-            merge=True,
+            {profile_name: profile_values}, unknown="fail", merge=True,
         )
     except KeyError as error:
         raise ValueError(f"Invalid profile option: {error}") from error
     config.save_user_preferences()
 
 
-def _unset_configuration_value(config, name):
-    """Unset one CLI value, or remove one complete named profile."""
+def _unset_configuration_value(config, name, *, system=False):
+    """Remove a setting from its owning configuration, without copying it."""
     path = name.split(".")
-    if len(path) == 2 and path[0] == "profiles" and path[1]:
-        config.profiles.remove(path[1])
-    else:
+    if path[0] != "profiles":
+        if system:
+            raise ValueError("--system is only valid for ASE profile updates")
         config.find(name).clear()
+        config.save_user_preferences()
+        return
+
+    if len(path) not in (2, 3) or not path[1]:
+        raise KeyError(name)
+    profile_name = path[1]
+    if profile_name == "default":
+        if len(path) != 3:
+            raise ValueError("'default' is an alias; unset a field, not the profile")
+        profile_name = config.profiles.default_write_target()
+
+    if profile_name == "ase":
+        if len(path) != 3:
+            raise ValueError("'ase' is a virtual profile; unset a field instead")
+        profile = config.profiles["ase"]
+        profile.unset(path[2])
+        profile.store_permanent(system=system)
+        return
+    if system:
+        raise ValueError("--system is only valid for ASE profile updates")
+    if len(path) == 2:
+        config.profiles.remove(profile_name)
+    else:
+        config.find(f"profiles.{profile_name}.{path[2]}").clear()
     config.save_user_preferences()
 
 
 def _print_profiles(config):
-    """Print public execution profiles, marking an explicitly selected default."""
-    default = config.default_profile()
+    """Print public execution profiles, marking the resolved default."""
+    default = config.profiles.resolve_name()
     for name in config.profiles:
         suffix = " (default)" if name == default else ""
         print(f"{name}{suffix}")
@@ -268,6 +314,8 @@ def run(args, global_args):
     run = True
 
     cleanup = _requested_cleanup(args)
+    if args.system and not (args.set or args.unset):
+        raise SystemExit("--system requires --set or --unset on an ASE profile")
     if cleanup and not args.migrate:
         raise SystemExit("--keep-init, --clean-init and --delete-init can only be used with --migrate")
 
@@ -302,11 +350,11 @@ def run(args, global_args):
 
         try:
             value = _parse_set_value(args.set[1])
-            _set_configuration_value(config, args.set[0], value)
+            _set_configuration_value(config, args.set[0], value, system=args.system)
             print(f"Configuration '{args.set[0]}' has been set to '{args.set[1]}'.")
         except KeyError:
             print(f"Unknown configuration name '{args.set[0]}'.")
-        except (DataValidityError, TypeError, ValueError) as error:
+        except (DataValidityError, TypeError, ValueError, PermissionError) as error:
             print(
                 f"Invalid configuration value for '{args.set[0]}': "
                 f"{error}"
@@ -322,11 +370,11 @@ def run(args, global_args):
         from ase2sprkkr.common.warnings import DataValidityError
 
         try:
-            _unset_configuration_value(config, unset)
+            _unset_configuration_value(config, unset, system=args.system)
             print(f"Configuration '{unset}' has been unset.")
         except KeyError:
             print(f"Unknown configuration name '{unset}'.")
-        except (DataValidityError, TypeError, ValueError) as error:
+        except (DataValidityError, TypeError, ValueError, PermissionError) as error:
             print(f"Cannot unset configuration '{unset}': {error}")
         run = False
     if getattr(args, "list_profiles", False):

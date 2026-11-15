@@ -95,9 +95,9 @@ class SPRKKRProfile:
         """Backend identity is separate from the client transport and staging."""
         name = self.backend or (
             "psij" if self.executor == "psij" else
-            "process" if self.executor == "ssh" else "direct"
+            "kkrunner" if self.executor == "ssh" else "direct"
         )
-        if name not in ("direct", "process", "psij"):
+        if name not in ("direct", "kkrunner", "psij"):
             raise ValueError(f"Unknown KKRunner backend {name!r}")
         options = (
             {"executor_name": self.psij_backend or "slurm", "url": self.psij_url}

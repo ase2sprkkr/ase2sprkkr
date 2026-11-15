@@ -1,6 +1,5 @@
-.. _Installation:
+More about installation
+=======================
 
-More about installing of the ASE2SPRKKR package
-**************************************************
-
-.. include:: installation.rst
+This page is kept for older links. The maintained installation
+instructions are now in :doc:`installation`.

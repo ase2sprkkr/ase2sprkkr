@@ -237,8 +237,9 @@ def test_ase_profile_uses_common_profile_schema(monkeypatch):
     external.parser["sprkkr"]["mpi"] = "4"
     assert profile.mpi() == 4
 
-    with pytest.raises(TypeError, match="read-only"):
-        profile.mpi.set(2)
+    # ASE's profile is editable through its owning config.ini file; the
+    # generic repeated-section interface still cannot persist it to YAML.
+    assert profile.read_only is False
 
     assert "ase" not in (config.as_dict().get("profiles") or {})
 

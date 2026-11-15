@@ -9,7 +9,7 @@ and that are results of parsing of a configuration file.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from .configuration import Configuration, UnknownMemberPolicy
+from .configuration import Configuration as BaseConfiguration, UnknownMemberPolicy
 from .file_utils import filename_from_file
 import copy
 import itertools
@@ -31,7 +31,7 @@ class DisabledAttributeError(AttributeError):
     """
 
 
-class BaseConfigurationContainer(Configuration, ABC):
+class BaseConfigurationContainer(BaseConfiguration, ABC):
     """Configuration container, that holds members, either in classical way
     (see :class:ConfigurationContainer) or treat them in a special way
     """
@@ -81,8 +81,8 @@ class BaseConfigurationContainer(Configuration, ABC):
         is_option: Optional[bool] = None,
         lower_case: bool = True,
         *,
-        accept: Optional[Callable[[Configuration], bool]] = None,
-    ) -> Iterator[Configuration]:
+        accept: Optional[Callable[[BaseConfiguration], bool]] = None,
+    ) -> Iterator[BaseConfiguration]:
         """Return members selected by a path.
 
         ``None`` and leading parent operators are common to all containers;
@@ -128,8 +128,8 @@ class BaseConfigurationContainer(Configuration, ABC):
         is_option: Optional[bool],
         lower_case: bool,
         *,
-        accept: Optional[Callable[[Configuration], bool]],
-    ) -> Iterator[Configuration]:
+        accept: Optional[Callable[[BaseConfiguration], bool]],
+    ) -> Iterator[BaseConfiguration]:
         """Return members owned directly or indirectly by this container."""
         raise NotImplementedError
 
@@ -140,8 +140,8 @@ class BaseConfigurationContainer(Configuration, ABC):
         unknown: UnknownMemberPolicy = "find",
         is_option: Optional[bool] = None,
         lower_case: bool = True,
-        accept: Optional[Callable[[Configuration], bool]] = None,
-    ) -> Configuration:
+        accept: Optional[Callable[[BaseConfiguration], bool]] = None,
+    ) -> BaseConfiguration:
         """Return the first matching member, raising ``KeyError`` if absent.
 
         ``unknown``, ``is_option``, ``lower_case`` and ``accept`` have the same
@@ -185,7 +185,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         """Attachment of a custom member staged on a container."""
 
         def __init__(
-            self, container: "ConfigurationContainer", member: Configuration
+            self, container: "ConfigurationContainer", member: BaseConfiguration
         ) -> None:
             """Record the custom ``member`` attached to ``container``."""
             self.container = container
@@ -258,7 +258,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         """
         return self._members
 
-    def _get_attribute_member(self, name: str) -> Configuration:
+    def _get_attribute_member(self, name: str) -> BaseConfiguration:
         """
         Return a directly accessible member for attribute access.
 
@@ -399,8 +399,8 @@ class ConfigurationContainer(BaseConfigurationContainer):
         is_option: Optional[bool],
         lower_case: bool,
         *,
-        accept: Optional[Callable[[Configuration], bool]],
-    ) -> Iterator[Configuration]:
+        accept: Optional[Callable[[BaseConfiguration], bool]],
+    ) -> Iterator[BaseConfiguration]:
         """
         Get all the members of given name. According to ``unknown`` parameter,
         either only from self, or from any child containers, too.
@@ -617,7 +617,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
     ) -> bool:
         """Resolve ``name`` and stage ``value`` using the supplied policies."""
 
-        def accepts_value(member: Configuration) -> bool:
+        def accepts_value(member: BaseConfiguration) -> bool:
             """Return whether ``member`` accepts the proposed value."""
             return member._definition.accept_value(value)
 

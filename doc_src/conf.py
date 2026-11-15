@@ -19,7 +19,7 @@ InputParameters.definitions
 # -- Project information -----------------------------------------------------
 
 project = 'ASE2SPRKKR'
-copyright = '2021, Matyáš Novák & Jano Minár'
+copyright = '2021–2026, Matyáš Novák & Jano Minár'
 author = 'Matyáš Novák & Jano Minár'
 
 # -- General configuration ---------------------------------------------------
@@ -40,11 +40,14 @@ extensions = [
     'matplotlib.sphinxext.roles',
 ]
 
+# Do not enable 'inherited-members' here or in the class template:
+# each API class page would then re-document inherited nested classes
+# (Repeated, MemberChange, PyParsing internals), creating hundreds of
+# duplicate Python-domain targets and broken external docstrings.
 autodoc_default_options = {
     'member-order': 'bysource',
     'private-members': True,
     'undoc-members': True,
-    'inherited-members' : False
 }
 
 napoleon_attr_annotations = True
@@ -72,6 +75,10 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 autodoc_typehints = 'description'
+# Avoid ambiguous links between unrelated classes with the same short name.
+autodoc_typehints_format = 'fully-qualified'
+# Do not inherit external Matplotlib/SciPy constructor docstrings.
+autodoc_inherit_docstrings = False
 github_url = 'https://github.com/ase2sprkkr/ase2sprkkr/'
 
 html_css_files = [
@@ -92,6 +99,17 @@ def skip_member(app, what, name, obj, skip, options):
           return True
        if name.endswith('.test'):
           return True
+    # Inherited cached descriptors are not callable methods. Exclude
+    # them regardless of the member kind reported by Sphinx.
+    short_name = name.rsplit('.', 1)[-1]
+    if short_name in ('_validate_grammar', 'CubicSpline'):
+        return True
+    # External implementation members belong to their original libraries'
+    # documentation, whose substitutions/references are unavailable here.
+    if what in ('method', 'attribute'):
+        module = getattr(obj, '__module__', '') or ''
+        if module.startswith(('matplotlib.', 'scipy.')):
+            return True
     if what=='method':
        if getattr(obj, '__objclass__', None) is object:
            return True
@@ -106,7 +124,7 @@ def setup(app):
     app.connect('autodoc-skip-member', skip_member)
 
 
-exclude_patterns = ['*/test/*', '*/test', 'remarks/**']
+exclude_patterns = ['*/test/*', '*/test', 'remarks/**', 'README.rst', 'examples_generated.rst', 'auto/modules.rst']
 
 inheritance_graph_attrs = dict(size='"10.0, 10.0"',
     fontsize=14, ranksep=0.3 )

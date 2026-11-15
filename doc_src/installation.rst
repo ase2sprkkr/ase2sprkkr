@@ -1,210 +1,249 @@
-Installation of the package using package managers
-==================================================
+Installation and upgrading
+==========================
 
-The simplest way how to install and use the package is to install them
-using package managers: either pip
-
-.. code:: bash
-
-   pip install ase2sprkkr
-
-or conda
-
-.. code:: bash
-
-   conda install -c ase2sprkkr ase2sprkkr
-
-I reccomend to install beta version: there can be some bugs, but mostly it has
-more bugs repaired than introduced, moreover, you can enjoy new properties. The
-beta versions are available only through ``pip``:
-
-.. code:: bash
-
-   pip install --pre ase2sprkkr
-
-To use bleading edge sources (the newest features, but you risk to encounter bugs),
-you can install the packages from github:
-
-.. code:: bash
-
-   pip install git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
-
-
-
-KKRunner dependency
---------------------
-
-Pip installs KKRunner as a separate runtime dependency. For source development,
-install it before ASE2SPRKKR. Run the following from the ASE2SPRKKR checkout:
-
-.. code-block:: console
-
-   python -m pip install -e "<path-to-kkrunner>"
-   python -m pip install -e .
-
-Replace ``<path-to-kkrunner>`` with the location of your KKRunner checkout.
-
-For scheduler support install ``ase2sprkkr[psij]``. On an SSH target, install
-``kkrunner`` (or ``kkrunner[psij]`` for a scheduler), SPR-KKR and its required MPI
-runtime. The target does not need ASE2SPRKKR just to run its executables.
-See the `KKRunner documentation <https://ase2sprkkr.github.io/kkrunner/>`_
-for backend requirements and installation details.
-
-Further notes
---------------
-
-In some systems, the ``pip`` utility for ``python3`` is called ``pip3``.
-It may be possible, that ``pip`` is installed, but it is not in ``PATH``.
-In such case, the pip utility can be runned using ``python -m pip`` or ``python3 -m pip3``.
-
-If ``pip`` is not installed, you can install it using the linux distribution package
-manager, e.g. in Debian/Ubuntu
-
-.. code:: bash
-
-   apt install pip3
-
-or
-
-.. code:: bash
-
-   zypper install pip
-
-For the conda installation instructions, see the Anaconda documentation
-https://docs.anaconda.com/anaconda/install/linux/ however, for the users
-unexperienced with conda, the (simpler) pip way is recommended.
-
-Install the packages from GIT (and/or source codes)
-===================================================
-
-If you do not want to use public package managers as pip or conda, or
-you want to contribute to development, you can use GIT to obtain the
-package sources.
+ASE2SPRKKR provides a Python-based interface for preparing, executing and
+analyzing calculations with the **separately installed** SPR-KKR software.
+For the first calculation, continue with :doc:`quickstart` after installing
+the interface and configuring the executables.
 
 Requirements
 ------------
 
--  Python >= 3.9
--  SPR-KKR (not checked by the installer)
--  Python packages: see the the pypoject.toml file
--  Git (to obtain the sources)
+* **Python 3.9 or newer** for ASE2SPRKKR 4.x. Earlier releases have
+  different Python requirements; version 3.6 was the last supporting Python 3.8.
+* Native SPR-KKR executables, libraries and any required MPI runtime for
+  **running** calculations. The interface can be used to inspect task
+  definitions and parse existing results without these executables.
 
-Obtaining the package using GIT
--------------------------------
+Get the native binaries from the
+`SPR-KKR download page <https://sprkkr.org/download/>`_ and follow the
+installation instructions distributed with the program. The
+`SPR-KKR manual <https://sprkkr.org/manual/>`_ covers the native
+build requirements, methodology and numerical settings. ASE2SPRKKR does
+not distribute or compile SPR-KKR.
 
-.. code:: bash
+Check whether native executables are on ``PATH`` (for example,
+``command -v kkrscf`` on Unix-like systems). The command
+``ase2sprkkr info --executables`` lists known SPR-KKR programs,
+not necessarily the binaries installed on your system.
+
+Install or upgrade ASE2SPRKKR
+-----------------------------
+
+Install the latest stable release into the Python environment where
+you intend to run ASE2SPRKKR::
+
+   python -m pip install --upgrade ase2sprkkr
+   ase2sprkkr --version
+
+Pip does not select beta releases by default. To install the newest
+available pre-release (for example in the 4.0 beta series), use::
+
+   python -m pip install --upgrade --pre ase2sprkkr
+
+The version 4 features described in this documentation may not be
+available in earlier stable releases. Check the installed version with
+``ase2sprkkr --version`` and consult :doc:`changelog`.
+
+The Python distribution automatically installs its required packages,
+including KKRunner on the local machine. To reproduce a specific
+version, pin it with
+``python -m pip install 'ase2sprkkr==VERSION'``.
+
+Use ``python -m pip`` with the intended Python interpreter. Do not use
+``sudo pip`` on distribution-managed Python installations. If your
+system restricts installation into the main environment, use the
+:ref:`installation-venv` below.
+
+Configure SPR-KKR executables
+-----------------------------
+
+If SPR-KKR executables are already on ``PATH``, no additional setting is
+needed. Otherwise, specify the directory containing the executables::
+
+   ase2sprkkr config --set profiles.default.executable_dir /opt/sprkkr/bin
+
+Replace the example path with the real directory. The command edits the
+active execution profile; by default this is ASE's ``[sprkkr]``
+configuration. To edit ASE's profile explicitly, use ``profiles.ase``.
+
+If your executables use a suffix (for example ``kkrscf_v8``), configure
+it as well::
+
+   ase2sprkkr config --set profiles.default.executable_suffix _v8
+
+Inspect the current configuration and existing profiles with::
+
+   ase2sprkkr config --show
+   ase2sprkkr config --list-profiles
+
+The default MPI policy is ``auto``. When only serial executables are
+installed and automatic selection cannot use them, explicitly disable
+MPI with ``ase2sprkkr config --set profiles.default.mpi false``.
+Execution profiles, MPI and clusters are covered in :doc:`remote`.
+
+Named profiles use ASE2SPRKKR's YAML configuration; the ASE profile
+uses ASE's own ``config.ini``. CLI ``config --set`` changes are
+saved immediately. Changes made through Python
+``config.profiles.ase.OPTION.set(value)`` stay in memory until saved
+with ``config.save_user_preferences()``.
+
+.. _installation-venv:
+
+Virtual environments
+--------------------
+
+A virtual environment keeps an ASE2SPRKKR installation and its Python
+dependencies separate. This is useful when testing a different version,
+avoiding package conflicts, or working on a system-managed Python
+installation. It is optional if your current environment is suitable.
+
+For example, on Linux/macOS::
+
+   python3 -m venv .venv
+   source .venv/bin/activate
+   python -m pip install --upgrade ase2sprkkr
+   ase2sprkkr --version
+
+On Windows, activate with ``.venv\Scripts\activate``.
+Run ``deactivate`` to leave the environment. Installing the Python
+interface in a venv does not install the native SPR-KKR programs;
+configure or find the same native executables as described above.
+
+.. _installation-upgrade:
+
+Upgrading from 3.x or older versions
+------------------------------------
+
+Upgrade the package in your regular Python environment with::
+
+   python -m pip install --upgrade ase2sprkkr
+
+When upgrading an installation with legacy Python configuration
+(``~/.config/ase2sprkkr/__init__.py`` on typical Linux systems), run::
+
+   ase2sprkkr migrate
+
+This command converts supported declarative configuration settings
+to ``config.yaml``, including legacy execution settings migrated into
+a named execution profile. It leaves unrelated Python statements alone.
+By default it removes the migrated assignments from the old hook;
+use ``ase2sprkkr migrate --keep-init`` to retain that hook unchanged,
+or ``--delete-init`` to remove it. The existing
+``ase2sprkkr config --migrate`` spelling is also supported.
+If the destination YAML file already exists, the migration does not
+overwrite it. Review the settings afterward with
+``ase2sprkkr config --show``.
+
+For an **isolated trial upgrade**, follow :ref:`installation-venv`
+instead of changing the active environment.
+
+Version 4 changes task definitions, execution and result handling.
+When upgrading existing scripts, check the following:
+
+* Task names and options: ``ase2sprkkr info --task`` and :doc:`usage`.
+* Execution profiles and SSH/schedulers: :doc:`remote`.
+* Persistent projects and run history: :doc:`execution`.
+* Result parsing, plotting and NeXus export: :doc:`result-files`.
+
+See :doc:`changelog` for the complete release-specific changes.
+Test important calculations before migrating production workflows.
+
+.. _installation-optional:
+
+Optional dependencies
+---------------------
+
+The core Python installation does not need all optional plotting, data-export
+or integration dependencies. Add only the features you use; extras
+can be combined, for example::
+
+   python -m pip install --upgrade 'ase2sprkkr[plot,nexus]'
+
+The extras are:
+
+``plot``
+   Matplotlib, SciPy and scikit-image for supported scientific plots
+   and Grace ``.agr`` files. The declared extra is currently called
+   ``plot``; use the name listed by your installed version.
+
+``nexus``
+   ``h5py`` and ``nexusformat`` for ARPES SPC to NeXus/HDF5
+   export. See :doc:`result-files`.
+
+``mendeleev``
+   Extended element metadata, accessed lazily through
+   ``AtomicType.mendeleev``. Basic atomic information uses ASE or
+   built-in tables without requiring this extra.
+
+``psij``
+   ``kkrunner[psij]`` for integration with PSI/J job schedulers.
+   Remote scheduler requirements are explained in :doc:`remote`.
+
+``jupyter``
+   JupyterLab, nbformat and nbconvert for notebook workflows.
+
+``es_finder``
+   Integration with the **proprietary, non-public** ``es_finder``
+   empty-sphere finder. This package is not distributed through PyPI:
+   ``ase2sprkkr[es_finder]`` installs only the public
+   ``pymatgen`` prerequisite, **not the proprietary program**.
+   The integration requires separately obtaining and installing
+   the proprietary software.
+
+The `ASE2SPRKKR GUI <https://github.com/ase2sprkkr/ase2sprkkr-gui>`_
+is a separately installed application, not an ``ase2sprkkr[gui]``
+extra. Install optional packages in the Python environment used by
+the corresponding application.
+
+Developer installation
+----------------------
+
+The repository uses separate branches for ongoing work and releases:
+
+* ``develop`` — active development and the normal base for contributions.
+  It may contain code not yet included in a published version.
+* ``master`` — the beta-release line; it may lag behind ``develop``.
+* ``release`` — the stable-release line, when present; it tracks
+  published stable versions rather than ongoing development.
+
+Use a version **tag** for a reproducible release checkout instead of
+depending on the moving branch heads. For development, clone
+``develop`` and install in editable mode::
 
    git clone https://github.com/ase2sprkkr/ase2sprkkr.git
-   git checkout release
+   cd ase2sprkkr
+   git switch develop
+   python -m pip install -e .
 
-The first line fetches the code of the package. The second one checks
-out the stable (production) version of the code.
+Source builds require a native compiler and CMake. Pip's isolated
+build installs the declared Python build dependencies (including
+scikit-build-core and Cython); using ``--no-build-isolation`` means
+installing them yourself. For a smoke test without native executables::
 
-If you want to obtain the current version of the (earlier-downloaded)
-code, run
+   ase2sprkkr test --no-kkr --fast
 
-.. code:: bash
+See :doc:`philosophy` for developer architecture and :doc:`remote`
+for SSH and scheduler requirements.
 
-   git fetch
-   git checkout release
+Building this documentation
+---------------------------
 
-Alternatively, you can checkout ``master`` branch
+The Sphinx sources live in ``doc_src/``; generated HTML lives in
+``docs/``. The authoritative GitHub README is
+``doc_src/README.rst``, synchronized to ``README.md`` by
+``make docs`` or ``make doc-readme``. Verify the synchronization
+using ``make doc-readme-check``.
 
-.. code:: bash
+From an editable source checkout, install the documentation tools::
 
-   git checkout master
+   python -m pip install sphinx sphinx-toolbox sphinx-rtd-theme matplotlib
 
-to obtain a newer (not thorougly tested yet) version or ``develop```
+``make doc-build`` generates the HTML and source-driven example gallery.
+``make docs`` additionally regenerates ``README.md`` from
+``doc_src/README.rst``; this requires the external ``pandoc`` program.
+To verify that the checked-in Markdown matches its source, run
+``make doc-readme-check`` (also requiring Pandoc).
 
-.. code:: bash
-
-   git checkout develop
-
-to obtain the bleeding edge version (feel free to try it, test it
-and report the bugs).
-
-Using the package (without installing the pip/conda packages)
--------------------------------------------------------------
-
-You can install the package from the obtained sources using
-
-.. code:: bash
-
-  pip install .
-
-Or, if you want to develop ase2sprkkr, it is better idea to
-do an `editable` installation, where the package will see
-the changes made.
-
-.. code:: bash
-
-   pip install --no-build-isolation --editable .
-
-You can add ``--no-deps`` switch for a faster rebuild.
-
-
-The known issues of the editable build
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Unfortunatelly, pip is not able to install the build requirements.
-So if they are not installed, the previous command will fail.
-You can either install the dependencies manually,
-copying them out from pyproject.toml:
-
-.. code:: bash
-
-   pip install scikit-build cmake ninja cython
-
-or (which will be usefull if I add a build requirement and forgot
-to update this help) run the following snippet to install all the build-dependencies
-mentioned in pyproject.toml:
-
-.. code:: bash
-
-  pip install tomllib
-  pip install --no-build-isolation $(python -c "import tomllib; print(' '.join(tomllib.load(open('pyproject.toml','rb'))['build-system']['requires']))")
-
-
-2. The limitation of the editable install is, that it won't see
-newly created files automatically: you need run the command above
-again to make it notice it.
-
-3. If the build process fail, try to remove the ``build`` directory created
-by the previous build (if it exists). Mostly, it happens if the
-``--no-build-isolation`` switch is ommited.
-
-Documentation of the package
-============================
-
-The documentation is published online at
-`https://ase2sprkkr.github.io/ase2sprkkr/ <https://ase2sprkkr.github.io/ase2sprkkr/>`__
-
-If you are using Git cloned sources, you can run
-
-::
-
-   open docs/index.html
-
-to see the (offline version of the) documentation. The documentation
-contains parts, that are generated from the docstrings in the source
-code. You can regenerate these by
-
-.. code:: bash
-
-   make docs
-
-Sphinx and sphinx-toolbox python packages (installable e.g. using pip) and pandoc
-(for generating README.md) are needed for the build.
-
-However, the official build of Sphinx miss some attributes when it is used
-to build the documentation. So, till the pullrequest that corrects the Sphinx
-behavior will be merged into Sphinx, please use the following fork for
-building the documentation.
-`https://github.com/lokik/sphinx.git <https://github.com/lokik/sphinx.git>`__
-
-
-How to contribute or to report a bug
-====================================
-
-Please feel free to make a pull-request or post an issue at:
-`https://github.com/ase2sprkkr/ase2sprkkr <https://github.com/ase2sprkkr/ase2sprkkr>`__
+The full HTML build imports ASE2SPRKKR and its dependencies; install
+the package from this checkout before invoking Sphinx.

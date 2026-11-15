@@ -1,110 +1,109 @@
-ASE2SPR-KKR's philosophy for the developers
-============================================
+ASE2SPRKKR architecture for developers
+======================================
 
-The base philosophy of the package
+ASE2SPRKKR separates scientific definitions and result parsing from
+the execution of native SPR-KKR programs. The ``SPRKKR`` calculator
+is the main user-facing interface; scientific file formats and
+execution profiles are also available independently.
+
+Configuration files and definitions
+-----------------------------------
+
+SPR-KKR input and potential files use configuration objects.
+Instances hold sections and option values; definitions specify
+grammar, types, defaults, validation and parsing/writing rules.
+``ase2sprkkr.common`` provides ``ConfigurationContainer``,
+``Option``, ``ContainerDefinition`` and ``ValueDefinition``,
+together with grammar types and
+`pyparsing <https://pyparsing-docs.readthedocs.io/en/latest/>`_.
+
+TaskDefinition: task identity versus input schema
+-------------------------------------------------
+
+``ase2sprkkr.input_parameters.task_definition.TaskDefinition``
+is an **immutable description of one SPR-KKR task**. It declares
+the canonical ``name``, associated ``input_parameters_definition_name``,
+native ``executable``, MPI support, output reader, experimental status
+and ``TaskFile`` input/output/cache manifests. It is not a second
+parser or a holder of the parameter values.
+
+The distinction matters because multiple tasks can share one input
+parameter schema. For example, the DMI task uses JXC input parameters:
+
+.. code-block:: python
+
+   from ase2sprkkr.input_parameters.task_definition import TaskDefinition
+
+   def task_definition():
+       return TaskDefinition(
+           "JXC", name="DMI", executable="kkrgen",
+           mpi=True, experimental=True, output_reader="JXC",
+       )
+
+A task with its own input schema can declare
+``schema._task_definition`` alongside the corresponding
+``input_parameters_definition()`` function, as DOS and SCF do.
+Tasks sharing an existing schema are instead defined separately
+in ``ase2sprkkr.input_parameters.tasks``.
+
+**Resolve task identities through the TaskRegistry**, not by assuming
+that an input schema name identifies exactly one task.
+``InputParametersRegistry`` owns input schema resolution.
+The public API ``InputParameters.for_task(task_name)`` creates
+task-bound input parameters, and ``ase2sprkkr info --task``
+shows the registered tasks.
+
+When adding a task, define its native executable and supported
+``TaskFile`` manifests, select its parameter schema and output
+reader, and add focused tests. Avoid maintaining parallel task
+identities or hard-coding known files in the calculator.
+
+Scientific layers
+-----------------
+
+* ``ase2sprkkr.input_parameters`` — task and schema registries,
+  task definitions and native input parsing.
+* ``ase2sprkkr.potentials`` — potential-file representations.
+* ``ase2sprkkr.sprkkr`` — ASE calculator, atom/site properties,
+  preparation, profiles and symmetry.
+* ``ase2sprkkr.outputs`` — task output readers, ``TaskResult``.
+* ``ase2sprkkr.result_files`` — structured result readers, Grace
+  ``.agr`` and NeXus export.
+* ``ase2sprkkr.bindings`` — optional external integrations.
+* ``ase2sprkkr_cli`` — lightweight command dispatcher and plugins.
+
+Execution boundary
+------------------
+
+Preparation via ``sprkkr._preparation`` materializes native
+inputs and file manifests. ``PreparedCalculation`` adapts those
+to KKRunner specifications.
+
+`KKRunner <https://ase2sprkkr.github.io/kkrunner/>`_ handles
+local and MPI execution, SSH, schedulers, transfers, attachment
+and persistent runs. It does not depend on ASE2SPRKKR's physics
+parsers. ASE2SPRKKR interprets completed calculations through
+its output reader layer. See :doc:`remote` for execution profiles and :doc:`execution`
+for persistent calculations.
+
+Development and documentation
+-----------------------------
+
+Source builds and optional tools are described in :doc:`installation`.
+The authoritative README is ``doc_src/README.rst`` and
+``make docs`` synchronizes the root ``README.md``. API documentation
+and the examples gallery are generated from Python sources; avoid
+editing generated pages. See :doc:`cli-plugins` for CLI extension.
+
+Files and processing (maintainers)
 ----------------------------------
-The whole package is built around configuration objects.
-A configuration object is an object, that can both read and write configuration files.
-Each configuration object has the capabilities to both parse the configuration file 
-(e.g. input file for SPR-KKR task or a potential file) and to write the file.
 
-The configuration object has a tree structure: it is divided by section, while each section
-can contain values. (However, some (mostly custom: i.e. e.g. sections of a potential file, that
-are not currently parsed and their value is given as is) sections are just containers for a single value.
-
-The leaves of the configuration object are options
-(:class:`ase2sprkkr.common.options.Option`)
-- single value containers. They are described by
-configuration definitions
-(see :class:`ase2sprkkr.common.configuration_definitions.ValueDefinition`),
-which hold the required type of the value (see :mod:`ase2sprkkr.common.grammar_types`) and its few other properties, such as the default value or parameters that determine the format of the value in the parsed/writed configuration file.
-
-The non-leaves nodes of a configuration trees are containers (:class:`ase2sprkkr.common.configuration_containers.ConfigurationContainer`). Their content and the way how they are parsed from file and written to file is again determined by the corresponding definitions (:class:`ase2sprkkr.common.configuration_definitions.ContainerDefinition`), thus, the definition form a tree with the same structure as the configuration object (so, there is many to one relationship between configuration (tree) object ad its definition, as for each "definition tree" can be instantiated many containers for various contents of a configuration file).
-
-Structure of the package
---------------------------------------
-There are the following subpackages in the ase2sprkkr package:
-
-:mod:`common <ase2sprkkr.common>`
-"""""""""""""""""""""""""""""""""
-There are the common shared modules: the options, containers, their definitions and grammar types and miscellaneous stuff.
-
-:mod:`input_parameters <ase2sprkkr.input_parameters>`
-""""""""""""""""""""""""""""""""""""""""""""""""""""""
-There are the specializations of the configuration objects and definitions for the input files.
-In the (:mod:`ase2sprkkr.input_parameters.definitions`) subpackage are the definitions of the
-possible tasks, that can be run by SPR-KKR.
-
-:mod:`potentials<ase2sprkkr.potentials>`
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-There are specializations for the potential file definition.
-There is currently just one definition of a potential
-in (:mod:`ase2sprkkr.potentials.definitions.potential`)
-(there is just
-one format of the potential file, there is no support for creating
-different versions of potential in the 1.0 version of the package).
-The definitions of the potential sections are in
-(:mod:`ase2sprkkr.potentials.definitions.sections`).
-
-:mod:`outputs<ase2sprkkr.outputs>`
-""""""""""""""""""""""""""""""""""""
-The outputs layer resolves task-owned readers and constructs scientific
-``TaskResult`` objects from captured execution outputs. Reader and result-file
-registries belong to ASE2SPRKKR. They are separate from generic process
-execution, transfer and durable lifecycle handling in KKRunner.
-
-:mod:`sprkkr<ase2sprkkr.sprkkr>`
-"""""""""""""""""""""""""""""""""""
-ASE calculator for SPR-KKR, and data structures for holding the properties,
-that are special for SPR-KKR.
-
-To allow ASE Atoms object (of the ASE Atoms class) to hold the SPR-KKR specific
-properties, it has to change its (OOP) ancestor to the class
-(:class:`ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms`).
-This is done by :func:`ase2sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms`
-method, which is either called automatically when any Atoms object is passed to
-ase2sprkkr routines, or can be called manually if it is needed.
-
-:mod:`tools<ase2sprkkr.tools>`
-"""""""""""""""""""""""""""""""
-Scripts for postprocessing of the SPRKRR results.
-
-
-Reading the configuration files
--------------------------------------------
-Configuration definition utilizes `pyparsing<https://pyparsing-docs.readthedocs.io/en/latest/>`
-for creating the grammar, that parses the configuration file.
-
-Thus, the reading of a file has two phases. First, the definition parses the content of the file and created the tree of the python values (dictionaries,
-numpy arrays, etc.). In the second step, the tree is transformed, according to the definitions, to the configuration object.
-If a potential file is parsed, then the third phase occurs: the ASE Atoms object is set up accordingly to the values in the configuration object.
-
-The grammar is defined accordingly to the constants and/or class methods of the configuration definitions descendants, that customizes the shared base objects, see e.g.
-:mod:`ase2sprkkr.input_parameters.input_prameters_definitions` or
-:mod:`ase2sprkkr.potentials.potential_definitions`
-
-Writing the configuration files
---------------------------------------------
-The writing to the file is performed by save_to_file :func:`ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file`, which is actually implemented in its descendants. The Options are written accordingly to their definitions and types, see the methods :func:`ase2sprkkr.common.configuration_definitions.ValueDefinition.write` and :func:`ase2sprkkr.common.grammar_types.GrammarType.write`.
-
-Again, the exact way how to write the file - i.e. how to separate name-value pairs, how to separate values each from others etc. is given in the configuration_definition descendants.
-
-
-Running the program
----------------------------------------------
-The calculator resolves application defaults, and ``sprkkr._preparation``
-materializes the input and potential files. ``PreparedCalculation`` owns the
-prepared resources, resolves the task's complete file footprint, and builds a
-KKRunner execution specification. The selected backend executes the command.
-The outputs layer then interprets the outcome using the task's reader and
-constructs the scientific result.
-
-KKRunner owns run records, manifest reservations, transfers, supervision and
-reconnect. ASE2SPRKKR owns task definitions, template resolution, scientific
-metadata and historical result reconstruction. Project-backed execution is
-explicit; preserving project definitions and selecting the new run-store
-namespace are application storage policy.
-
-See :doc:`execution` for the current application API and the
+Task definitions provide KKRunner with input, output and cache file
+declarations. Scientific format descriptions and result readers belong to
+ASE2SPRKKR, not to the execution library. The files needed for
+reconnection must remain available until postprocessing finishes.
+A required output must be present; optional outputs can be absent.
+Application postprocessing may be retried after interruption, so its
+callbacks should be safe to repeat. See the
 `KKRunner architecture <https://ase2sprkkr.github.io/kkrunner/architecture.html>`_
-for its internal package boundaries and lifecycle contracts.
+before changing this execution boundary.
