@@ -17,6 +17,30 @@ grammar, types, defaults, validation and parsing/writing rules.
 together with grammar types and
 `pyparsing <https://pyparsing-docs.readthedocs.io/en/latest/>`_.
 
+Parsing and writing configuration files
+---------------------------------------
+
+A configuration *definition* describes the syntax and allowed values
+of a file; a configuration *instance* holds the parsed or user-supplied
+values. The same definition is used for reading and writing:
+
+#. Task and potential definitions assemble named sections and options,
+   with value types, defaults and validation rules.
+#. Parsing uses the grammar generated from those definitions to
+   recognize the file and build configuration objects. Their option
+   values are converted to the declared Python types and validated.
+#. Python code can inspect or change those values, either through
+   section attributes or the generic configuration interface.
+#. Serialization walks the configuration using the definition's
+   formatting and writing rules, producing native SPR-KKR text.
+
+For example, ``InputParameters.from_file("run.inp")`` reads a file
+using the appropriate input definition, while
+``Potential.from_file("run.pot")`` uses the potential definition.
+These are different schemas, but the parsing and serialization
+infrastructure is shared. See :doc:`usage` for practical examples;
+avoid adding file-specific parsing logic to the calculator.
+
 TaskDefinition: task identity versus input schema
 -------------------------------------------------
 
