@@ -125,6 +125,9 @@ class OutputFileOption(OutputOption):
         # Do not offer file operations before the actual file is accessible.
         if not os.path.isfile(self.path()):
             return ()
+        owner = getattr(self._container, "result", None)
+        if owner is not None and not owner.file_is_current(self.path()):
+            return ()
         out = ["open", "open_directory", "save"]
         if self.file_type == "agr":
             out.append("plot")
@@ -186,7 +189,15 @@ class OutputFileOption(OutputOption):
     def plot(self, parent=None):
         self.parsed_file().plot()
 
+    def _checked_path(self):
+        path = self.path()
+        owner = getattr(self._container, "result", None)
+        if owner is not None:
+            owner.require_current_file(path)
+        return path
+
     def save(self, parent=None):
+        self._checked_path()
         from PyQt6.QtWidgets import QFileDialog
 
         extension = (
@@ -196,15 +207,16 @@ class OutputFileOption(OutputOption):
         )
         filename, _ = QFileDialog.getSaveFileName(parent, "Save File", "", f"(*.{extension});;All Files (*)")
         if filename:
-            shutil.copy(self.path(), filename)
+            shutil.copy(self._checked_path(), filename)
 
     def open(self, parent=None):
+        path = self._checked_path()
         if platform.system() == "Windows":
-            os.startfile(self.path())
+            os.startfile(path)
         elif platform.system() == "Darwin":
-            subprocess.run(["open", self.path()])
+            subprocess.run(["open", path])
         else:
-            subprocess.run(["xdg-open", self.path()])
+            subprocess.run(["xdg-open", path])
 
     def open_directory(self, parent=None):
         directory = os.path.dirname(os.path.abspath(self.path()))

@@ -104,6 +104,7 @@ def _result_processor_for_record(manager, record):
             return_code=(0 if outcome.return_code is None else outcome.return_code),
             input_file=outcome.input_file,
             directory=record.execution.directory.local,
+            run_record=_record(manager, record),
         )
 
     return process_result
@@ -226,6 +227,8 @@ def load_project_result(manager, run):
     reader = _reader_for_record(manager, record)
     return_code = record.return_code
     if return_code is None:
+        # Standalone/recovered OUT files commonly have no OS exit status.
+        # Allow normal parsing, while preserving every explicitly known code.
         return_code = 0 if record.state == RunState.FINISHED else 1
 
     input_file = None
@@ -239,6 +242,7 @@ def load_project_result(manager, run):
         return_code=return_code,
         input_file=input_file,
         directory=record.execution.directory.local,
+        run_record=record,
     )
     result.run_record = record
     return result

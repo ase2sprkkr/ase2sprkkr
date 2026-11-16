@@ -102,6 +102,7 @@ class ScfResult(TaskResult):
     def start_potential(self):
         """Potential used as input for the SCF calculation."""
 
+        self.require_current_file(self.start_potential_filename)
         return Potential.from_file(self.start_potential_filename)
 
     @property

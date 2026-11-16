@@ -163,3 +163,58 @@ def test_load_historical_scf_with_missing_auxiliary_output(tmp_path, monkeypatch
     assert loaded is result
     assert loaded.run_record is record
     assert calls == ["retrieve", ("parse", str(output))]
+
+
+@pytest.mark.parametrize("auxiliary_state", ("current", "overwritten", "missing", "unrecorded"))
+def test_historical_auxiliary_actions_require_original_file(tmp_path, auxiliary_state):
+    """Use the real OUT reader and Grace parser across the persistence boundary."""
+    from dataclasses import replace
+    from pathlib import Path
+
+    from kkrunner import RunManager, RunStore
+    from kkrunner.files import FileVersion
+    from kkrunner.runs import HistoricalFileMismatchError
+
+    from ase2sprkkr.outputs import capture_result_file_versions
+    from ase2sprkkr.outputs.project_results import load_project_result
+
+    output = tmp_path / "scf.out"
+    text = (Path(__file__).parents[1] / "examples" / "Al_SCF.out").read_text()
+    output.write_text(text.replace("Al.pot_new\n", "Al.pot_new\n          curve : (9) curve.agr\n", 1))
+    auxiliary = tmp_path / "curve.agr"
+    auxiliary.write_text("@type xy\n0 1\n&\n")
+    output_version = FileVersion.capture(output, require_digest=True)
+    auxiliary_version = FileVersion.capture(auxiliary, require_digest=True)
+    versions = (output_version,) if auxiliary_state == "unrecorded" else (output_version, auxiliary_version)
+    files = FileManifest(
+        stdout=FileEntry(str(output)), outputs=(FileEntry(str(auxiliary), optional=True),),
+        output_versions=versions, captured_at="2026-11-16T00:00:00+00:00",
+    )
+    manager = RunManager(RunStore(tmp_path / "runs"))
+    record = replace(manager.new_record(directory=tmp_path, files=files,
+                     metadata={"ase2sprkkr": {"task": "SCF"}}), state=RunState.FINISHED)
+    manager.store.save(record)
+    if auxiliary_state == "overwritten":
+        auxiliary.write_text("@type xy\n0 999\n&\n")
+    elif auxiliary_state == "missing":
+        auxiliary.unlink()
+
+    result = load_project_result(manager, record.id)
+    assert result.run_record.return_code is None  # Unknown OS status still permits OUT parsing.
+    option = result.files["curve"]
+    captured = capture_result_file_versions(result)
+    if auxiliary_state == "unrecorded":
+        assert "curve" not in captured
+    else:
+        assert captured["curve"] == auxiliary_version
+    if auxiliary_state == "current":
+        assert "plot" in option.actions()
+        assert option.parsed_file() is not None
+    else:
+        assert option.actions() == ()
+        with pytest.raises(HistoricalFileMismatchError):
+            option.parsed_file()
+        with pytest.raises(HistoricalFileMismatchError):
+            option.open()
+        with pytest.raises(HistoricalFileMismatchError):
+            option.save()

@@ -12,6 +12,23 @@ import os
 from kkrunner.files import FileEntry, FileManifest, FileVersion
 
 
+def result_file_version(result: Any, path, *, require_digest=False) -> FileVersion | None:
+    """Use persisted provenance for tracked results; capture only new imports.
+
+    An absent version in a historical manifest is not permission to adopt the
+    bytes currently at that pathname as an output of the old calculation.
+    """
+    record = getattr(result, "run_record", None)
+    if record is None:
+        return FileVersion.capture(path, require_digest=require_digest)
+    files = record.files
+    if files is None or files.captured_at is None:
+        return None
+    path = os.path.abspath(os.fspath(path))
+    return next((version for version in files.all_versions
+                 if os.path.abspath(os.fspath(version.path)) == path), None)
+
+
 def capture_result_file_versions(result: Any) -> Mapping[str, FileVersion]:
     """Capture path-backed output values exposed by *result*.
 
@@ -37,7 +54,9 @@ def capture_result_file_versions(result: Any) -> Mapping[str, FileVersion]:
         if not path:
             continue
         try:
-            versions[str(key)] = FileVersion.capture(path, require_digest=True)
+            version = result_file_version(result, path, require_digest=True)
+            if version is not None:
+                versions[str(key)] = version
         except Exception:  # noqa: BLE001 - provenance enrichment is best effort
             continue
     return MappingProxyType(versions)
@@ -144,6 +163,9 @@ def register_declared_result_files(result, *, warn_missing=True):
             else [declared]
         )
         found = [path for path in paths if path.is_file()]
+        if getattr(result, "run_record", None) is not None:
+            # Wildcards must not discover additional outputs of a newer run.
+            found = [path for path in found if result_file_version(result, path) is not None]
         if not found and not getattr(declaration, "optional", False):
             missing_required.add(pattern)
 
@@ -337,4 +359,4 @@ def capture_result_file_manifest(
     )
 
 
-__all__ = ["capture_result_file_versions", "capture_result_file_manifest"]
+__all__ = ["capture_result_file_versions", "capture_result_file_manifest", "result_file_version"]

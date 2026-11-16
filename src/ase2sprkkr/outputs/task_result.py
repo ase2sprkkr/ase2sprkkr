@@ -115,10 +115,12 @@ class TaskResult:
     def input_parameters_file(self):
         if "input" in self.files:
             filename = self.path_to("input")
-            if os.path.isfile(filename):
+            if self.file_is_current(filename):
                 return filename
             return None
         for filename in self._candidate_input_files():
+            if not self.file_is_current(filename):
+                continue
             try:
                 parameters = input_parameters.InputParameters.from_file(filename)
             except (OSError, UnicodeError, ValueError, pp.ParseBaseException, DataValidityError):
@@ -146,6 +148,7 @@ class TaskResult:
     @cached_property
     def potential(self):
         """The new (output) potential - that contains the converged charge density etc."""
+        self.require_current_file(self.potential_filename)
         return Potential.from_file(self.potential_filename)
 
     @property
@@ -156,11 +159,26 @@ class TaskResult:
         except (AttributeError, KeyError, OSError, ValueError):
             return None
 
+    def file_is_current(self, path):
+        """Whether a path still belongs to this result's captured file version."""
+        if getattr(self, "run_record", None) is None:
+            return os.path.isfile(path)
+        from .file_provenance import result_file_version
+        version = result_file_version(self, path)
+        return version is not None and version.is_current()
+
+    def require_current_file(self, path):
+        """Refuse to use missing, overwritten or unrecorded historical files."""
+        if getattr(self, "run_record", None) is not None and not self.file_is_current(path):
+            from kkrunner.runs import HistoricalFileMismatchError
+            raise HistoricalFileMismatchError(f"Result file is unavailable or changed: {path}")
+
     def parse_result_file(self, file, potential=None):
         """Parse a registered structured result file in this calculation context."""
 
         from ..result_files import read_plottable_file
 
+        self.require_current_file(file.path())
         # Grace plots do not depend on the calculation potential.
         if potential is None and file.file_type != "agr":
             potential = self.any_potential
@@ -315,6 +333,7 @@ class TaskResult:
                 record.return_code if return_code is None else return_code
             ) or 0,
             input_file=available_input,
+            run_record=record,
         )
         result.run_record = record
         return result
@@ -404,11 +423,13 @@ class KkrOutputReader:
         return result
 
     @maybeclassmethod
-    def read_from_file(self, cls, output, error=None, return_code=0, input_file=None, directory=None):
+    def read_from_file(self, cls, output, error=None, return_code=0, input_file=None, directory=None, *, run_record=None):
         """Parse output of an already finished SPR-KKR calculation."""
         if self is None:
             self = cls(None, None, directory)
         result = self.create_result(output, input_file)
+        if run_record is not None:
+            result.run_record = run_record
         output_source = output if hasattr(output, "read") else result.path_to("output")
 
         _parsed_output, parsed_error, parsed_return_code = self.parser.read_from_file(
