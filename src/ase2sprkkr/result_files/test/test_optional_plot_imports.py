@@ -6,6 +6,7 @@ import sys
 def test_discovery_does_not_import_matplotlib_or_scipy_interpolate():
     script = """
 import builtins
+import sys
 real_import = builtins.__import__
 
 def deny_optional(name, *args, **kwargs):
