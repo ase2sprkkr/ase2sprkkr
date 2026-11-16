@@ -397,7 +397,7 @@ definition = ConfigFileDefinition(
                         (Bool.I, Array(AlwaysQString.I, as_list=tuple), AlwaysQString.I),
                         string_type=AlwaysQString.I,
                     ),
-                    default_value="info",
+                    default_value=("info","ERROR"),
                     info="Print all (True), no output (False), short SCF summary ('info'), regex-matching lines, or combine modes in a tuple.",
                 ),
                 G(
