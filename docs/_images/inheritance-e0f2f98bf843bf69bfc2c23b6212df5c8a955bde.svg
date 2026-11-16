@@ -1,0 +1,245 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="169pt" viewBox="0.00 0.00 576.00 169.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.914649 0.914649) rotate(0) translate(4 180.75)">
+<ns0:title>inheritancebba6488c15</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseDefinition</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" ns1:title="This class is a member of definition of configuration, that can be both" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="101.88,-20.75 14.62,-20.75 14.62,0 101.88,0 101.88,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node11" class="node">
+<ns0:title>RealItemDefinition</ns0:title>
+<ns0:g id="a_node11"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" ns1:title="A base class for a configuration definition, either of an option, or of a container." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="249,-20.75 141.5,-20.75 141.5,0 249,0 249,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="195.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RealItemDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>BaseDefinition-&gt;RealItemDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M102.34,-10.38C112.08,-10.38 122.6,-10.38 132.94,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="133.4,-12.83 140.4,-10.38 133.4,-7.93 133.4,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>GrammarType</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" ns1:title="Base class for definition of configuration option types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="100.75,-59.75 15.75,-59.75 15.75,-39 100.75,-39 100.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">GrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>TypedGrammarType</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" ns1:title="TypedGrammarType" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="252,-59.75 138.5,-59.75 138.5,-39 252,-39 252,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="195.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TypedGrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge12" class="edge">
+<ns0:title>GrammarType-&gt;TypedGrammarType</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M101.22,-49.38C110.42,-49.38 120.35,-49.38 130.18,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="130.65,-51.83 137.65,-49.38 130.65,-46.93 130.65,-51.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>KkrOutputReader</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" ns1:title="Parse SPR-KKR output streams into a TaskResult." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="108.25,-98.75 8.25,-98.75 8.25,-78 108.25,-78 108.25,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">KkrOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node15" class="node">
+<ns0:title>ScfOutputReader</ns0:title>
+<ns0:g id="a_node15"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader" ns1:title="ScfOutputReader" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="244.5,-98.75 146,-98.75 146,-78 244.5,-78 244.5,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="195.25" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ScfOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge8" class="edge">
+<ns0:title>KkrOutputReader-&gt;ScfOutputReader</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M108.37,-88.38C117.82,-88.38 127.78,-88.38 137.45,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="138.09,-90.83 145.09,-88.38 138.09,-85.93 138.09,-90.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>Number</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" ns1:title="Base class for a number - descendants of this class can have minimal and/or maximal possible value." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="348.5,-59.75 293.5,-59.75 293.5,-39 348.5,-39 348.5,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="321" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Number</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node10" class="node">
+<ns0:title>Real</ns0:title>
+<ns0:g id="a_node10"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real" ns1:title="A real value" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="478.62,-59.75 424.62,-59.75 424.62,-39 478.62,-39 478.62,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="451.62" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Real</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>Number-&gt;Real</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M348.96,-49.38C368.39,-49.38 394.77,-49.38 415.79,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="416.38,-51.83 423.38,-49.38 416.38,-46.93 416.38,-51.83" />
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>TypedGrammarType-&gt;Number</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M252.33,-49.38C263.42,-49.38 274.77,-49.38 284.92,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="285.37,-51.83 292.37,-49.38 285.37,-46.93 285.37,-51.83" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>OutputValueDefinition</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" ns1:title="Value in an output file, of a form 'NAME &#160;&#160;VALUE'" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="513.25,-20.75 390,-20.75 390,0 513.25,0 513.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="451.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">OutputValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>PlottableValue</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.scf.PlottableValue.html#ase2sprkkr.outputs.readers.scf.PlottableValue" ns1:title="PlottableValue" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="621.75,-20.75 535.25,-20.75 535.25,0 621.75,0 621.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="578.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">PlottableValue</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>OutputValueDefinition-&gt;PlottableValue</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M513.6,-10.38C517.86,-10.38 522.14,-10.38 526.34,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="527.08,-12.83 534.08,-10.38 527.08,-7.93 527.08,-12.83" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>ValueDefinition</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" ns1:title="ValueDefinition" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="366.12,-20.75 275.88,-20.75 275.88,0 366.12,0 366.12,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="321" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>ValueDefinition-&gt;OutputValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M366.27,-10.38C371.23,-10.38 376.36,-10.38 381.54,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="381.93,-12.83 388.93,-10.38 381.93,-7.93 381.93,-12.83" />
+</ns0:g>
+
+<ns0:g id="node9" class="node">
+<ns0:title>ProcessOutputParser</ns0:title>
+<ns0:g id="a_node9"><ns0:a ns1:href="../auto/ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" ns1:title="Parse asynchronous stdout/stderr streams." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="116.5,-137.75 0,-137.75 0,-117 116.5,-117 116.5,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ProcessOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node14" class="node">
+<ns0:title>SprKkrOutputParser</ns0:title>
+<ns0:g id="a_node14"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" ns1:title="SprKkrOutputParser" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="250.88,-137.75 139.62,-137.75 139.62,-117 250.88,-117 250.88,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="195.25" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SprKkrOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge11" class="edge">
+<ns0:title>ProcessOutputParser-&gt;SprKkrOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M116.89,-127.38C121.55,-127.38 126.27,-127.38 130.97,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="131.61,-129.83 138.61,-127.38 131.61,-124.93 131.61,-129.83" />
+</ns0:g>
+
+<ns0:g id="node12" class="node">
+<ns0:title>RealOrStars</ns0:title>
+<ns0:g id="a_node12"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars" ns1:title="A real value, where ``****`` means ``NaN``" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="615.38,-59.75 541.62,-59.75 541.62,-39 615.38,-39 615.38,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="578.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RealOrStars</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>Real-&gt;RealOrStars</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M479.11,-49.38C494.88,-49.38 515.29,-49.38 533.43,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="533.82,-51.83 540.82,-49.38 533.82,-46.93 533.82,-51.83" />
+</ns0:g>
+
+<ns0:g id="edge13" class="edge">
+<ns0:title>RealItemDefinition-&gt;ValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M249.45,-10.38C255.26,-10.38 261.17,-10.38 266.98,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="267.63,-12.83 274.63,-10.38 267.63,-7.93 267.63,-12.83" />
+</ns0:g>
+
+<ns0:g id="node13" class="node">
+<ns0:title>ScfOutputParser</ns0:title>
+<ns0:g id="a_node13"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.scf.ScfOutputParser.html#ase2sprkkr.outputs.readers.scf.ScfOutputParser" ns1:title="This class reads and parses the output of the SCF task of the SPR-KKR." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="368,-137.75 274,-137.75 274,-117 368,-117 368,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="321" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ScfOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node16" class="node">
+<ns0:title>ScfProgressParser</ns0:title>
+<ns0:g id="a_node16"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.scf.ScfProgressParser.html#ase2sprkkr.outputs.readers.scf.ScfProgressParser" ns1:title="Incrementally read *completed* iterations from a growing SCF output." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="503.12,-137.75 400.12,-137.75 400.12,-117 503.12,-117 503.12,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="451.62" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ScfProgressParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge9" class="edge">
+<ns0:title>ScfOutputParser-&gt;ScfProgressParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M368.44,-127.38C375.94,-127.38 383.8,-127.38 391.55,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="392.15,-129.83 399.15,-127.38 392.15,-124.93 392.15,-129.83" />
+</ns0:g>
+
+<ns0:g id="edge7" class="edge">
+<ns0:title>SprKkrOutputParser-&gt;ScfOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M251.25,-127.38C255.93,-127.38 260.66,-127.38 265.34,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="265.92,-129.83 272.92,-127.38 265.92,-124.93 265.92,-129.83" />
+</ns0:g>
+
+<ns0:g id="node17" class="node">
+<ns0:title>ScfResult</ns0:title>
+<ns0:g id="a_node17"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult" ns1:title="Objects of this class holds the results of a self-consistent cycle and its iterations." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="226.12,-176.75 164.38,-176.75 164.38,-156 226.12,-156 226.12,-176.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="195.25" y="-163.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ScfResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node18" class="node">
+<ns0:title>TaskResult</ns0:title>
+<ns0:g id="a_node18"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" ns1:title="A base class for a result of a runned task (kkrscf executable)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="92.5,-176.75 24,-176.75 24,-156 92.5,-156 92.5,-176.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-163.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TaskResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge10" class="edge">
+<ns0:title>TaskResult-&gt;ScfResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M92.97,-166.38C112.02,-166.38 135.9,-166.38 155.69,-166.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="156.42,-168.83 163.42,-166.38 156.42,-163.93 156.42,-168.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

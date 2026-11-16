@@ -1,0 +1,92 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="373pt" height="107pt" viewBox="0.00 0.00 373.00 107.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 102.75)">
+<ns0:title>inheritancec8c1b3bb01</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>JxcOutputParser</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.jxc.JxcOutputParser.html#ase2sprkkr.outputs.readers.jxc.JxcOutputParser" ns1:title="JxcOutputParser" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="365,-20.75 271.75,-20.75 271.75,0 365,0 365,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="318.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">JxcOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>SprKkrOutputParser</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" ns1:title="SprKkrOutputParser" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="249.75,-20.75 138.5,-20.75 138.5,0 249.75,0 249.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="194.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SprKkrOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>SprKkrOutputParser-&gt;JxcOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M250.17,-10.38C254.5,-10.38 258.86,-10.38 263.18,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="263.65,-12.83 270.65,-10.38 263.65,-7.93 263.65,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>JxcOutputReader</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.jxc.JxcOutputReader.html#ase2sprkkr.outputs.readers.jxc.JxcOutputReader" ns1:title="JxcOutputReader" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="243,-59.75 145.25,-59.75 145.25,-39 243,-39 243,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="194.12" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">JxcOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>KkrOutputReader</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" ns1:title="Parse SPR-KKR output streams into a TaskResult." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="108.25,-59.75 8.25,-59.75 8.25,-39 108.25,-39 108.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">KkrOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>KkrOutputReader-&gt;JxcOutputReader</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M108.72,-49.38C117.73,-49.38 127.19,-49.38 136.4,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="136.99,-51.83 143.99,-49.38 136.99,-46.93 136.99,-51.83" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>JxcResult</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult" ns1:title="JXC task provides access to the generated JXC output file." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="224.62,-98.75 163.62,-98.75 163.62,-78 224.62,-78 224.62,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="194.12" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">JxcResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>TaskResult</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" ns1:title="A base class for a result of a runned task (kkrscf executable)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="92.5,-98.75 24,-98.75 24,-78 92.5,-78 92.5,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TaskResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>TaskResult-&gt;JxcResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M92.69,-88.38C111.58,-88.38 135.26,-88.38 154.89,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="155.55,-90.83 162.55,-88.38 155.55,-85.93 155.55,-90.83" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>ProcessOutputParser</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" ns1:title="Parse asynchronous stdout/stderr streams." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="116.5,-20.75 0,-20.75 0,0 116.5,0 116.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ProcessOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>ProcessOutputParser-&gt;SprKkrOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M116.8,-10.38C121.12,-10.38 125.49,-10.38 129.84,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="130.41,-12.83 137.41,-10.38 130.41,-7.93 130.41,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

@@ -1,0 +1,113 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="314pt" height="146pt" viewBox="0.00 0.00 314.00 146.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 141.75)">
+<ns0:title>inheritancec3cd60ce42</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>Array</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.arrays.Array.html#ase2sprkkr.common.grammar_types.arrays.Array" ns1:title="A (numpy) array of values of one type" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="194.5,-137.75 140.5,-137.75 140.5,-117 194.5,-117 194.5,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="167.5" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Array</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>SetOf</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.arrays.SetOf.html#ase2sprkkr.common.grammar_types.arrays.SetOf" ns1:title="Set of values of the same type. E.g. {1,2,3}" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="303,-137.75 249,-137.75 249,-117 303,-117 303,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="276" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SetOf</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>Array-&gt;SetOf</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M194.83,-127.38C208.52,-127.38 225.44,-127.38 240.21,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="240.85,-129.83 247.85,-127.38 240.85,-124.93 240.85,-129.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>GrammarType</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" ns1:title="Base class for definition of configuration option types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="86.88,-78.75 1.88,-78.75 1.88,-58 86.88,-58 86.88,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="44.38" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">GrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>GrammarType-&gt;Array</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M71.69,-79.07C77.48,-81.81 83.45,-84.96 88.75,-88.38 99.61,-95.37 99.59,-100.86 110.75,-107.38 117.4,-111.26 124.93,-114.58 132.26,-117.34" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="131.95,-119.83 139.37,-119.86 133.59,-115.21 131.95,-119.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>TypedGrammarType</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" ns1:title="TypedGrammarType" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="224.25,-98.75 110.75,-98.75 110.75,-78 224.25,-78 224.25,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="167.5" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TypedGrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>GrammarType-&gt;TypedGrammarType</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M87.06,-75.26C92,-76.07 97.13,-76.92 102.29,-77.77" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="102.35,-80.27 109.66,-78.99 103.15,-75.43 102.35,-80.27" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>Sequence</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.arrays.Sequence.html#ase2sprkkr.common.grammar_types.arrays.Sequence" ns1:title="A sequence of values of given types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="199.12,-59.75 135.88,-59.75 135.88,-39 199.12,-39 199.12,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="167.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Sequence</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>GrammarType-&gt;Sequence</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M87.06,-61.84C100.08,-59.79 114.4,-57.55 127.25,-55.53" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="128.17,-57.87 134.71,-54.36 127.41,-53.03 128.17,-57.87" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>Table</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.arrays.Table.html#ase2sprkkr.common.grammar_types.arrays.Table" ns1:title="Tabular values, optionally with named columns." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="194.5,-20.75 140.5,-20.75 140.5,0 194.5,0 194.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="167.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Table</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>GrammarType-&gt;Table</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M61.85,-57.67C74.81,-49.53 93.49,-38.41 110.75,-30.38 117.6,-27.19 125.1,-24.19 132.33,-21.52" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="133.53,-23.69 139.3,-19.03 131.88,-19.08 133.53,-23.69" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>Complex</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.arrays.Complex.html#ase2sprkkr.common.grammar_types.arrays.Complex" ns1:title="Complex" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="305.75,-98.75 246.25,-98.75 246.25,-78 305.75,-78 305.75,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="276" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Complex</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>TypedGrammarType-&gt;Complex</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M224.56,-88.38C228.96,-88.38 233.34,-88.38 237.57,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="238.25,-90.83 245.25,-88.38 238.25,-85.93 238.25,-90.83" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>SpecialColumn</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.arrays.SpecialColumn.html#ase2sprkkr.common.grammar_types.arrays.SpecialColumn" ns1:title="A special column for :class:`Table`" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="88.75,-117.75 0,-117.75 0,-97 88.75,-97 88.75,-117.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="44.38" y="-104.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SpecialColumn</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

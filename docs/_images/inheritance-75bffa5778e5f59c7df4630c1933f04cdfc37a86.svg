@@ -1,0 +1,161 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="349pt" height="204pt" viewBox="0.00 0.00 349.00 204.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 199.75)">
+<ns0:title>inheritancee662f51714</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>ArrayKey</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey" ns1:title="ArrayKey" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="241.25,-156.75 181,-156.75 181,-136 241.25,-136 241.25,-156.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="211.12" y="-143.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ArrayKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>DefArrayKey</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.DefArrayKey.html#ase2sprkkr.common.parsing_results.DefArrayKey" ns1:title="Dense-array key accepting both ``NAME`` and ``NAME&lt;number&gt;``." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="340.75,-156.75 263.25,-156.75 263.25,-136 340.75,-136 340.75,-156.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="302" y="-143.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">DefArrayKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>ArrayKey-&gt;DefArrayKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M241.72,-146.38C245.84,-146.38 250.16,-146.38 254.5,-146.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="255.08,-148.83 262.08,-146.38 255.08,-143.93 255.08,-148.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>SubKey</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.SubKey.html#ase2sprkkr.common.parsing_results.SubKey" ns1:title="A base class for items that have subkeys" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="145.75,-137.75 91.75,-137.75 91.75,-117 145.75,-117 145.75,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="118.75" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SubKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>SubKey-&gt;ArrayKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M145.89,-132.87C154.19,-134.62 163.54,-136.58 172.49,-138.46" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="172.45,-140.96 179.81,-140 173.46,-136.16 172.45,-140.96" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>DictKey</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.DictKey.html#ase2sprkkr.common.parsing_results.DictKey" ns1:title="DictKey" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="238.12,-117.75 184.12,-117.75 184.12,-97 238.12,-97 238.12,-117.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="211.12" y="-104.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">DictKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>SubKey-&gt;DictKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M145.89,-121.59C155.18,-119.54 165.78,-117.19 175.65,-115" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="176.69,-117.28 182.99,-113.38 175.63,-112.5 176.69,-117.28" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>DefDictKey</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.DefDictKey.html#ase2sprkkr.common.parsing_results.DefDictKey" ns1:title="DefDictKey" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="337.38,-117.75 266.62,-117.75 266.62,-97 337.38,-97 337.38,-117.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="302" y="-104.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">DefDictKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>DictKey-&gt;DefDictKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M238.31,-107.38C244.5,-107.38 251.27,-107.38 257.99,-107.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="258.68,-109.83 265.68,-107.38 258.68,-104.93 258.68,-109.83" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>IgnoredKey</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.IgnoredKey.html#ase2sprkkr.common.parsing_results.IgnoredKey" ns1:title="This key is totaly and silently ignored. Use it" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="154.12,-98.75 83.38,-98.75 83.38,-78 154.12,-78 154.12,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="118.75" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">IgnoredKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>Key</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key" ns1:title="A base class for items, that have to be treated in a special way" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="55.25,-78.75 1.25,-78.75 1.25,-58 55.25,-58 55.25,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="28.25" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Key</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge7" class="edge">
+<ns0:title>Key-&gt;SubKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M44.4,-79.17C48.39,-82.09 52.64,-85.3 56.5,-88.38 66.6,-96.43 67.78,-100.17 78.5,-107.38 81.21,-109.19 84.1,-110.96 87.05,-112.65" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="86.41,-115.09 93.73,-116.28 88.75,-110.78 86.41,-115.09" />
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>Key-&gt;IgnoredKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M55.32,-74.27C61.55,-75.68 68.37,-77.21 75.13,-78.74" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="74.9,-81.2 82.26,-80.36 75.98,-76.42 74.9,-81.2" />
+</ns0:g>
+
+<ns0:g id="node9" class="node">
+<ns0:title>RepeatedKey</ns0:title>
+<ns0:g id="a_node9"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.RepeatedKey.html#ase2sprkkr.common.parsing_results.RepeatedKey" ns1:title="RepeatedKey" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="159,-59.75 78.5,-59.75 78.5,-39 159,-39 159,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="118.75" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RepeatedKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>Key-&gt;RepeatedKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M55.32,-62.78C60.01,-61.77 65.02,-60.7 70.1,-59.61" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="71.01,-61.92 77.34,-58.05 69.98,-57.12 71.01,-61.92" />
+</ns0:g>
+
+<ns0:g id="node11" class="node">
+<ns0:title>ValidateKey</ns0:title>
+<ns0:g id="a_node11"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.ValidateKey.html#ase2sprkkr.common.parsing_results.ValidateKey" ns1:title="Keep a named deferred validation without storing the parsed value." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="155.62,-20.75 81.88,-20.75 81.88,0 155.62,0 155.62,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="118.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ValidateKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge8" class="edge">
+<ns0:title>Key-&gt;ValidateKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M41.74,-57.69C51.42,-49.68 65.36,-38.69 78.5,-30.38 81.41,-28.53 84.51,-26.72 87.64,-24.99" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="89.24,-26.91 94.27,-21.45 86.94,-22.59 89.24,-26.91" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>KeyType</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.KeyType.html#ase2sprkkr.common.parsing_results.KeyType" ns1:title="KeyType" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="56.5,-117.75 0,-117.75 0,-97 56.5,-97 56.5,-117.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="28.25" y="-104.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">KeyType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node10" class="node">
+<ns0:title>Result</ns0:title>
+<ns0:g id="a_node10"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.Result.html#ase2sprkkr.common.parsing_results.Result" ns1:title="When data are parsed, some (repeated) options can yield" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="55.25,-156.75 1.25,-156.75 1.25,-136 55.25,-136 55.25,-156.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="28.25" y="-143.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Result</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node12" class="node">
+<ns0:title>Values</ns0:title>
+<ns0:g id="a_node12"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.Values.html#ase2sprkkr.common.parsing_results.Values" ns1:title="Parsed values with named deferred checks and their presence policy." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="55.25,-195.75 1.25,-195.75 1.25,-175 55.25,-175 55.25,-195.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="28.25" y="-182.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Values</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

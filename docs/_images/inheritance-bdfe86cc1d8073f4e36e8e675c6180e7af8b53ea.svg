@@ -1,0 +1,44 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="194pt" height="68pt" viewBox="0.00 0.00 194.00 68.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 63.75)">
+<ns0:title>inheritance12be305aa8</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>RadialCharge</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.radial.RadialCharge.html#ase2sprkkr.sprkkr.radial.RadialCharge" ns1:title="RadialCharge" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="181.5,-59.75 100.25,-59.75 100.25,-39 181.5,-39 181.5,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="140.88" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RadialCharge</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>RadialValue</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue" ns1:title="RadialValue" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="73.75,-39.75 0,-39.75 0,-19 73.75,-19 73.75,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="36.88" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RadialValue</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>RadialValue-&gt;RadialCharge</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M74.12,-36.48C79.87,-37.61 85.89,-38.79 91.86,-39.96" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="91.85,-42.45 99.19,-41.4 92.79,-37.65 91.85,-42.45" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>RadialPotential</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential" ns1:title="RadialPotential" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="186,-20.75 95.75,-20.75 95.75,0 186,0 186,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="140.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RadialPotential</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>RadialValue-&gt;RadialPotential</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M74.12,-22.62C78.31,-21.84 82.64,-21.04 86.99,-20.23" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="88.17,-22.5 94.61,-18.81 87.28,-17.68 88.17,-22.5" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

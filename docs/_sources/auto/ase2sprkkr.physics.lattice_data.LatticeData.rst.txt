@@ -6,11 +6,15 @@ LatticeData
 
 .. autoclass:: LatticeData
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.physics.lattice_data.LatticeData
       :parts: 2
+
 
    |
 

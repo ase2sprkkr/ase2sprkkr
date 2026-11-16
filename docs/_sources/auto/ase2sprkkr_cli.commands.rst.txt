@@ -1,0 +1,85 @@
+commands
+========
+
+Full name: **ase2sprkkr\_cli.commands**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr_cli.commands
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     config
+  
+  
+     example
+  
+  
+     info
+  
+  
+     k_path
+  
+  
+     migrate
+  
+  
+     nexus
+  
+  
+     nomad
+  
+  
+     plot
+  
+  
+     remote
+  
+  
+     run
+  
+  
+     shell
+  
+  
+     show_structure
+  
+  
+     symmetry
+  
+  
+  
+     uppasd
+  
+  
+  

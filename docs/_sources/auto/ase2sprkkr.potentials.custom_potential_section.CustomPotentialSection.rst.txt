@@ -6,11 +6,15 @@ CustomPotentialSection
 
 .. autoclass:: CustomPotentialSection
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection
       :parts: 2
+
 
    |
 

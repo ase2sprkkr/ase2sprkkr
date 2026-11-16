@@ -1,5 +1,0 @@
-<map id="inheritance64549376f9" name="inheritance64549376f9">
-<area shape="rect" id="node1" href="ase2sprkkr.common.output_printing.OutputListener.html#ase2sprkkr.common.output_printing.OutputListener" target="_top" title="Callable receiving (text, stream kind) from a running calculation." alt="" coords="5,32,123,60"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.output_printing.PrintAll.html#ase2sprkkr.common.output_printing.PrintAll" target="_top" title="Print all received output chunks." alt="" coords="172,5,244,33"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.output_printing.PrintMatching.html#ase2sprkkr.common.output_printing.PrintMatching" target="_top" title="Print complete lines matching one of the provided regexes." alt="" coords="152,57,263,85"/>
-</map>

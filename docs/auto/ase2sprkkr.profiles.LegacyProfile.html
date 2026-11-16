@@ -11,7 +11,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=adf6db29" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="ProfilesConfigurationContainer" href="ase2sprkkr.profiles.ProfilesConfigurationContainer.html" />
-    <link rel="prev" title="ASEProfile" href="ase2sprkkr.profiles.ASEProfile.html" /> 
+    <link rel="prev" title="ASEProfileValue" href="ase2sprkkr.profiles.ASEProfileValue.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,64 +45,84 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">Command-line reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../execution.html">Execution, persistence and remote runs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Architecture for developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.ase_profile_storage.html">ase_profile_storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles._external_warning_stacklevel.html">_external_warning_stacklevel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.ase_command_profile_values.html">ase_command_profile_values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.ASEProfile.html">ASEProfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.ASEProfileValue.html">ASEProfileValue</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">LegacyProfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.ProfilesConfigurationContainer.html">ProfilesConfigurationContainer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.ReadOnlyProfileValue.html">ReadOnlyProfileValue</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr_cli.html">ase2sprkkr_cli</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles._external_warning_stacklevel.html">_external_warning_stacklevel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles.ase_command_profile_values.html">ase_command_profile_values</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles.ASEProfile.html">ASEProfile</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">LegacyProfile</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ase2sprkkr.profiles.LegacyProfile"><code class="docutils literal notranslate"><span class="pre">LegacyProfile</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles.ProfilesConfigurationContainer.html">ProfilesConfigurationContainer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles.ReadOnlyProfileValue.html">ReadOnlyProfileValue</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-</ul>
-</li>
 </ul>
 
         </div>
@@ -119,6 +139,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">Python API reference</a></li>
           <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
           <li class="breadcrumb-item"><a href="ase2sprkkr.profiles.html">profiles</a></li>
       <li class="breadcrumb-item active">LegacyProfile</li>
@@ -138,10 +159,9 @@
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.profiles.</span></span><span class="sig-name descname"><span class="pre">LegacyProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profiles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/profiles.html#LegacyProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.profiles.LegacyProfile" title="Link to this definition"></a></dt>
 <dd><p>Read-only public view of the deprecated execution configuration.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-da6ff7a3b3105a8ea051bed4c2758ba0be4c52ad.png" alt="Inheritance diagram of ase2sprkkr.profiles.LegacyProfile" usemap="#inheritanceda143091c0" class="inheritance graphviz" /></div>
-<map id="inheritanceda143091c0" name="inheritanceda143091c0">
-<area shape="rect" id="node1" href="#ase2sprkkr.profiles.LegacyProfile" target="_top" title="Read&#45;only public view of the deprecated execution configuration." alt="" coords="5,5,166,33"/>
-</map><div class="line-block">
+<div class="graphviz"><object data="../_images/inheritance-a950f25b89b3e28dccf445c80ce34e4555c1eeb6.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of ase2sprkkr.profiles.LegacyProfile</p></object></div>
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -188,14 +208,14 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.profiles.ASEProfile.html" class="btn btn-neutral float-left" title="ASEProfile" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.profiles.ASEProfileValue.html" class="btn btn-neutral float-left" title="ASEProfileValue" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.profiles.ProfilesConfigurationContainer.html" class="btn btn-neutral float-right" title="ProfilesConfigurationContainer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

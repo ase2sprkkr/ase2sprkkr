@@ -1,0 +1,8 @@
+add\_migration\_cleanup\_arguments
+==================================
+
+Full name: **ase2sprkkr\_cli.commands.config.add\_migration\_cleanup\_arguments**
+
+.. currentmodule:: ase2sprkkr_cli.commands.config
+
+.. autofunction:: add_migration_cleanup_arguments

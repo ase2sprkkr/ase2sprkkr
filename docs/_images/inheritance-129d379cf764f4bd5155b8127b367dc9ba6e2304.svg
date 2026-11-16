@@ -1,0 +1,236 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="96pt" viewBox="0.00 0.00 576.00 96.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.66074 0.66074) rotate(0) translate(4 141.75)">
+<ns0:title>inheritance03fdc56e32</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>ABC</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Helper class that provides a standard way to create an ABC using">
+<ns0:polygon fill="lightgray" stroke="black" points="70.62,-20.75 16.62,-20.75 16.62,0 70.62,0 70.62,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ABC</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node15" class="node">
+<ns0:title>ParserElement</ns0:title>
+<ns0:g id="a_node15"><ns0:a ns1:title="Abstract base level parser element class.">
+<ns0:polygon fill="lightgray" stroke="black" points="206.25,-20.75 119.75,-20.75 119.75,0 206.25,0 206.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ParserElement</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge9" class="edge">
+<ns0:title>ABC-&gt;ParserElement</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M70.97,-10.38C82.94,-10.38 97.54,-10.38 111.5,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="111.87,-12.83 118.87,-10.38 111.87,-7.93 111.87,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>BaseDefinition</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" ns1:title="This class is a member of definition of configuration, that can be both" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="87.25,-59.75 0,-59.75 0,-39 87.25,-39 87.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node16" class="node">
+<ns0:title>RealItemDefinition</ns0:title>
+<ns0:g id="a_node16"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" ns1:title="A base class for a configuration definition, either of an option, or of a container." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="216.75,-59.75 109.25,-59.75 109.25,-39 216.75,-39 216.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RealItemDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge10" class="edge">
+<ns0:title>BaseDefinition-&gt;RealItemDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M87.66,-49.38C91.89,-49.38 96.23,-49.38 100.6,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="101.23,-51.83 108.23,-49.38 101.23,-46.93 101.23,-51.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>BaseOption</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" ns1:title="A base placeholder for a leaf element of a grammar file," target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="199.12,-98.75 126.88,-98.75 126.88,-78 199.12,-78 199.12,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseOption</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node9" class="node">
+<ns0:title>Option</ns0:title>
+<ns0:g id="a_node9"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" ns1:title="Class for one option (a configuration value) of SPRKKR - either to" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="310.88,-98.75 256.88,-98.75 256.88,-78 310.88,-78 310.88,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="283.88" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Option</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge8" class="edge">
+<ns0:title>BaseOption-&gt;Option</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M199.34,-88.38C214.82,-88.38 232.92,-88.38 248.31,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="248.78,-90.83 255.78,-88.38 248.78,-85.93 248.78,-90.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>Configuration</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" ns1:title="The common base class for all configurations values and containers. I.e." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="84.25,-98.75 3,-98.75 3,-78 84.25,-78 84.25,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Configuration</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>Configuration-&gt;BaseOption</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M84.69,-88.38C95.49,-88.38 107.22,-88.38 118.21,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="118.68,-90.83 125.68,-88.38 118.68,-85.93 118.68,-90.83" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>ConfigurationValueDefinition</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition" ns1:title="Definition o a configuration value, used in SPRKKR configuration file." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="506.5,-59.75 351,-59.75 351,-39 506.5,-39 506.5,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="428.75" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ConfigurationValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node11" class="node">
+<ns0:title>CustomPotentialSectionDefinition</ns0:title>
+<ns0:g id="a_node11"><ns0:a ns1:href="../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition" ns1:title="The custom sections are in fact values - their content can be" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="708.75,-59.75 528.5,-59.75 528.5,-39 708.75,-39 708.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="618.62" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">CustomPotentialSectionDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>ConfigurationValueDefinition-&gt;CustomPotentialSectionDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M506.98,-49.38C511.23,-49.38 515.54,-49.38 519.85,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="520.39,-51.83 527.39,-49.38 520.39,-46.93 520.39,-51.83" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>ValueDefinition</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" ns1:title="ValueDefinition" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="329,-59.75 238.75,-59.75 238.75,-39 329,-39 329,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="283.88" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>ValueDefinition-&gt;ConfigurationValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M329.3,-49.38C333.44,-49.38 337.73,-49.38 342.09,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="342.78,-51.83 349.78,-49.38 342.78,-46.93 342.78,-51.83" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>CustomConfigurationValue</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.configuration.CustomConfigurationValue.html#ase2sprkkr.sprkkr.configuration.CustomConfigurationValue" ns1:title="Custom value (option) in a SPRKKR configuration file." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="691.5,-98.75 545.75,-98.75 545.75,-78 691.5,-78 691.5,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="618.62" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">CustomConfigurationValue</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node10" class="node">
+<ns0:title>CustomPotentialSection</ns0:title>
+<ns0:g id="a_node10"><ns0:a ns1:href="../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection" ns1:title="Unknown sections of the potential file are mapped to a &quot;section&quot;" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="863.75,-98.75 730.75,-98.75 730.75,-78 863.75,-78 863.75,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="797.25" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">CustomPotentialSection</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>CustomConfigurationValue-&gt;CustomPotentialSection</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M691.97,-88.38C701.87,-88.38 712.05,-88.38 721.98,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="722.5,-90.83 729.5,-88.38 722.5,-85.93 722.5,-90.83" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>CustomOption</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" ns1:title="An user-added option (configuration value). It can be removed from the section." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="471.62,-98.75 385.88,-98.75 385.88,-78 471.62,-78 471.62,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="428.75" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">CustomOption</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>CustomOption-&gt;CustomConfigurationValue</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M471.91,-88.38C491.1,-88.38 514.48,-88.38 536.84,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="537.59,-90.83 544.59,-88.38 537.59,-85.93 537.59,-90.83" />
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>Option-&gt;CustomOption</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M311.08,-88.38C329.51,-88.38 354.76,-88.38 377.06,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="377.69,-90.83 384.69,-88.38 377.69,-85.93 377.69,-90.83" />
+</ns0:g>
+
+<ns0:g id="node12" class="node">
+<ns0:title>CustomSectionToken</ns0:title>
+<ns0:g id="a_node12"><ns0:a ns1:href="../auto/ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.html#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken" ns1:title="The grammar for a custom section - i.e. for unknown section, whose" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="487.38,-20.75 370.12,-20.75 370.12,0 487.38,0 487.38,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="428.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">CustomSectionToken</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node13" class="node">
+<ns0:title>Token</ns0:title>
+<ns0:g id="a_node13"><ns0:a ns1:title="Abstract :class:`ParserElement` subclass, for defining atomic">
+<ns0:polygon fill="lightgray" stroke="black" points="310.88,-20.75 256.88,-20.75 256.88,0 310.88,0 310.88,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="283.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Token</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge7" class="edge">
+<ns0:title>Token-&gt;CustomSectionToken</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M311.08,-10.38C325.33,-10.38 343.66,-10.38 361.55,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="361.97,-12.83 368.97,-10.38 361.97,-7.93 361.97,-12.83" />
+</ns0:g>
+
+<ns0:g id="node14" class="node">
+<ns0:title>GrammarType</ns0:title>
+<ns0:g id="a_node14"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" ns1:title="Base class for definition of configuration option types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="86.12,-137.75 1.12,-137.75 1.12,-117 86.12,-117 86.12,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">GrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node17" class="node">
+<ns0:title>SectionString</ns0:title>
+<ns0:g id="a_node17"><ns0:a ns1:href="../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.custom_potential_section.SectionString" ns1:title="The grammar_type of a custom section - i.e. string, that" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="203.25,-137.75 122.75,-137.75 122.75,-117 203.25,-117 203.25,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SectionString</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge11" class="edge">
+<ns0:title>GrammarType-&gt;SectionString</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M86.34,-127.38C95.32,-127.38 104.88,-127.38 114.07,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="114.63,-129.83 121.63,-127.38 114.63,-124.93 114.63,-129.83" />
+</ns0:g>
+
+<ns0:g id="edge12" class="edge">
+<ns0:title>ParserElement-&gt;Token</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M206.58,-10.38C220.24,-10.38 235.2,-10.38 248.22,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="248.71,-12.83 255.71,-10.38 248.71,-7.93 248.71,-12.83" />
+</ns0:g>
+
+<ns0:g id="edge13" class="edge">
+<ns0:title>RealItemDefinition-&gt;ValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M217.18,-49.38C221.36,-49.38 225.59,-49.38 229.77,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="230.52,-51.83 237.52,-49.38 230.52,-46.93 230.52,-51.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

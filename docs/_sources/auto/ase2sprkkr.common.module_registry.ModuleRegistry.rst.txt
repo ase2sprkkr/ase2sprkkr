@@ -6,11 +6,15 @@ ModuleRegistry
 
 .. autoclass:: ModuleRegistry
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.module_registry.ModuleRegistry
       :parts: 2
+
 
    |
 

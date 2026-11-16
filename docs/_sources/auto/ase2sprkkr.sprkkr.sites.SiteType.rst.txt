@@ -6,11 +6,15 @@ SiteType
 
 .. autoclass:: SiteType
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.sprkkr.sites.SiteType
       :parts: 2
+
 
    |
 

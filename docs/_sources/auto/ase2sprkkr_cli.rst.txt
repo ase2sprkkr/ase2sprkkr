@@ -1,0 +1,52 @@
+﻿ase2sprkkr\_cli
+===============
+
+Full name: **ase2sprkkr\_cli**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr_cli
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     commands
+  
+  
+     errors
+  
+  
+     main
+  
+  
+  
+  

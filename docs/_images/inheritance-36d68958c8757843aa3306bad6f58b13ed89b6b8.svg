@@ -1,0 +1,47 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="259pt" height="107pt" viewBox="0.00 0.00 259.00 107.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 102.75)">
+<ns0:title>inheritance0255d7acfc</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>InputParametersRegistry</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html#ase2sprkkr.input_parameters.task_definition.InputParametersRegistry" ns1:title="Registry and factory service for input-parameter schemas and values." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="251.25,-20.75 114.5,-20.75 114.5,0 251.25,0 251.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="182.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">InputParametersRegistry</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>ModuleRegistry</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.module_registry.ModuleRegistry.html#ase2sprkkr.common.module_registry.ModuleRegistry" ns1:title="Lazily discover and load one named value from package modules." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="92.5,-20.75 0,-20.75 0,0 92.5,0 92.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="46.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ModuleRegistry</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>ModuleRegistry-&gt;InputParametersRegistry</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M92.83,-10.38C97.01,-10.38 101.32,-10.38 105.68,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="106.35,-12.83 113.35,-10.38 106.35,-7.93 106.35,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>TaskDefinition</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.task_definition.TaskDefinition" ns1:title="Immutable declarative metadata identifying one SPR-KKR task." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="88.75,-59.75 3.75,-59.75 3.75,-39 88.75,-39 88.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="46.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TaskDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>TaskRegistry</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.task_definition.TaskRegistry" ns1:title="Authoritative namespace and resolver for SPR-KKR task identities." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="85.38,-98.75 7.12,-98.75 7.12,-78 85.38,-78 85.38,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="46.25" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TaskRegistry</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

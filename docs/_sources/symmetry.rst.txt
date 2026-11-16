@@ -1,7 +1,7 @@
 Crystal symmetry and cell transformations
 ==========================================
 
-New crystal symmetry workflows use spglib to distinguish three operations:
+The ``symmetry`` command uses spglib to provide three distinct operations:
 
 * Analysis identifies the space group and leaves the structure unchanged.
 * Cell conversion finds a primitive or standardized conventional cell.
@@ -21,43 +21,38 @@ Examples
    ase2sprkkr symmetry input.cif --idealize -o idealized.cif
    ase2sprkkr symmetry input.cif --primitive --idealize -o primitive_ideal.cif
 
+Use ``--equivalence occupation`` when chemically equivalent sites
+should be compared by occupation rather than their current site types.
 
 CIF-declared symmetry
 ---------------------
 
-When the input is a CIF file, the command reports both the space group
-declared by the CIF tags (if present) and the symmetry computed from the
-structure by spglib. This distinction matters because the two can differ.
-The original CIF Hermann–Mauguin symbol, International Tables number,
-Hall symbol, and number of declared symmetry operations are shown when
-available. With ``--operations``, the listed CIF operations are also shown
-verbatim alongside those calculated by spglib.
+For CIF input, the command reports both the declared space group
+(if present) and the symmetry calculated from the atomic positions.
+Different space-group numbers are highlighted. Use ``--operations``
+to list symmetry operations, or save a JSON report::
 
-The ``--report report.json`` option includes the original CIF values under
-``cif_declared_symmetry`` without inventing a declaration for absent tags.
-Differences are flagged when the CIF supplies a space-group number and that
-number differs from the calculated one; symbolic spellings are not compared
-because different settings can have distinct Hermann–Mauguin symbols.
-Non-CIF inputs continue to report calculated symmetry only.
+   ase2sprkkr symmetry input.cif --report report.json
 
-Python API (analysis retains no reference to the input Atoms):
+Python API:
 
 .. code-block:: python
 
+   from ase.io import read
    from ase2sprkkr.sprkkr.symmetry import analyze_symmetry
 
+   atoms = read("input.cif")
    analysis = analyze_symmetry(atoms)
    primitive = analysis.find_primitive(atoms)
    conventional = analysis.standardize(atoms)
    idealized_in_original_cell = analysis.idealize(atoms)
    idealized_primitive = analysis.find_primitive(atoms, idealize=True)
 
-By default, site-types are distinguished by SPR-KKR SiteType identity,
-existing site magnetisation, and ASE initial magnetic moments.
-Region membership is part of the site identity for SpacegroupInfo:
-atoms in different regions are not merged even when otherwise equivalent.
-Occupation equivalence explicitly permits merging different SiteTypes that
-have the same chemical composition; unselected electronic data may be lost.
+The default ``site-types`` equivalence distinguishes SPR-KKR site types
+and magnetic information. Region identity is preserved when finding
+equivalent sites. The ``occupation`` mode can merge sites with identical
+chemical occupations even when their electronic site-type data differ;
+recheck the resulting electronic data before further calculations.
 
 Extra ASE arrays use one of three transfer policies when converting cells:
 
@@ -66,12 +61,7 @@ Extra ASE arrays use one of three transfer policies when converting cells:
 * choose-first: Select the first source representative of each primitive site, and warn
   when values differ.
 
-Different primitive sites remain distinct even when they have the same
-species tag or SiteType. Tensor and vector frame transformations are not
-handled by this first version.
-
-Idealization alone preserves additional arrays and site order. Radial
-potentials, charges, and moments are also preserved. If idealization changes
-geometry with electronic data present, a warning recommends a new SCF run.
-Cell conversion retains unrelated ASE info metadata while rebuilding
-spacegroup information and occupancy records for the new geometry.
+Extra arrays are checked when a cell is converted, and tensor/vector
+frame transformations are not performed automatically. Idealization by
+itself retains atom ordering and electronic data. If the geometry changes,
+a new SCF calculation is recommended before relying on an old potential.

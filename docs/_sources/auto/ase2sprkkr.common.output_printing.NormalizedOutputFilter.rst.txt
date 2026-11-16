@@ -1,0 +1,40 @@
+NormalizedOutputFilter
+======================
+
+
+.. currentmodule:: ase2sprkkr.common.output_printing
+
+.. autoclass:: NormalizedOutputFilter
+   :members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.output_printing.NormalizedOutputFilter
+      :parts: 2
+
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

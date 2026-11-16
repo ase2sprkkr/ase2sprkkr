@@ -1,0 +1,36 @@
+\_TextSink
+==========
+
+
+.. currentmodule:: ase2sprkkr_cli.commands.remote
+
+.. autoclass:: _TextSink
+   :members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
+
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

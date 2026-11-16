@@ -6,11 +6,15 @@ Arrow3D
 
 .. autoclass:: Arrow3D
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline, set
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.gui.k_path.Arrow3D
       :parts: 2
+
 
    |
 

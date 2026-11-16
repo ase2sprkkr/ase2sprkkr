@@ -1,0 +1,53 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="241pt" height="68pt" viewBox="0.00 0.00 241.00 68.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 63.75)">
+<ns0:title>inheritance2c693d2732</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>ArpesOutputReader</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html#ase2sprkkr.outputs.readers.arpes.ArpesOutputReader" ns1:title="ARPES task has no special parser, it just has a special" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="233.25,-20.75 122,-20.75 122,0 233.25,0 233.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="177.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ArpesOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>KkrOutputReader</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" ns1:title="Parse SPR-KKR output streams into a TaskResult." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="100,-20.75 0,-20.75 0,0 100,0 100,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="50" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">KkrOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>KkrOutputReader-&gt;ArpesOutputReader</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M100.29,-10.38C104.56,-10.38 108.92,-10.38 113.29,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="113.9,-12.83 120.9,-10.38 113.9,-7.93 113.9,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>ArpesResult</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" ns1:title="ARPES result provides acces to the generated SPC output file" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="214.88,-59.75 140.38,-59.75 140.38,-39 214.88,-39 214.88,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="177.62" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ArpesResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>TaskResult</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" ns1:title="A base class for a result of a runned task (kkrscf executable)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="84.25,-59.75 15.75,-59.75 15.75,-39 84.25,-39 84.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="50" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TaskResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>TaskResult-&gt;ArpesResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M84.67,-49.38C99.14,-49.38 116.26,-49.38 131.79,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="132.46,-51.83 139.46,-49.38 132.46,-46.93 132.46,-51.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

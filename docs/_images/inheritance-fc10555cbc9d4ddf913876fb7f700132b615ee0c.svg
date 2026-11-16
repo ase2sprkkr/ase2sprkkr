@@ -1,0 +1,38 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="205pt" height="68pt" viewBox="0.00 0.00 205.00 68.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 63.75)">
+<ns0:title>inheritance71c644d40b</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>ExponentialMesh</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh" ns1:title="Radial mesh definition for an atomic site." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="197.25,-20.75 97.25,-20.75 97.25,0 197.25,0 197.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="147.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ExponentialMesh</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>Mesh</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh" ns1:title="A base class for SPR-KKR radial meshes." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="64.62,-20.75 10.62,-20.75 10.62,0 64.62,0 64.62,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="37.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Mesh</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>Mesh-&gt;ExponentialMesh</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M64.95,-10.38C72.23,-10.38 80.43,-10.38 88.75,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="89.32,-12.83 96.32,-10.38 89.32,-7.93 89.32,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>FullpotMesh</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.html#ase2sprkkr.sprkkr.radial_meshes.FullpotMesh" ns1:title="Data describing mesh for a full potential" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="75.25,-59.75 0,-59.75 0,-39 75.25,-39 75.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="37.62" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">FullpotMesh</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

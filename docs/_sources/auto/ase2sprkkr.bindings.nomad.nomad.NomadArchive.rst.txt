@@ -6,11 +6,15 @@ NomadArchive
 
 .. autoclass:: NomadArchive
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.bindings.nomad.nomad.NomadArchive
       :parts: 2
+
 
    |
 

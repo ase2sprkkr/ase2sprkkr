@@ -1,0 +1,113 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="84pt" viewBox="0.00 0.00 576.00 84.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.964824 0.964824) rotate(0) translate(4 82.75)">
+<ns0:title>inheritance04b6e29d02</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseDefinition</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" ns1:title="This class is a member of definition of configuration, that can be both" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="87.25,-39.75 0,-39.75 0,-19 87.25,-19 87.25,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>RealItemDefinition</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" ns1:title="A base class for a configuration definition, either of an option, or of a container." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="227.62,-39.75 120.12,-39.75 120.12,-19 227.62,-19 227.62,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="173.88" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RealItemDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>BaseDefinition-&gt;RealItemDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M87.69,-29.38C95.36,-29.38 103.48,-29.38 111.54,-29.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="112.14,-31.83 119.14,-29.38 112.14,-26.93 112.14,-31.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>BaseGeneratedValueDefinition</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition" ns1:title="Base class for all generated values. It just set" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="425.75,-39.75 260.5,-39.75 260.5,-19 425.75,-19 425.75,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="343.12" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseGeneratedValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>GeneratedValueDefinition</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition" ns1:title="Definition of a value computed from its runtime section." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="589,-59.75 447.75,-59.75 447.75,-39 589,-39 589,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="518.38" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">GeneratedValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>BaseGeneratedValueDefinition-&gt;GeneratedValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M426.18,-38.85C430.5,-39.35 434.83,-39.85 439.14,-40.34" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="439.38,-42.84 446.62,-41.21 439.94,-37.97 439.38,-42.84" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>NumpyViewDefinition</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition" ns1:title="Values described by this description are possibly reshaped views into a large" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="579.62,-20.75 457.12,-20.75 457.12,0 579.62,0 579.62,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="518.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">NumpyViewDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>BaseGeneratedValueDefinition-&gt;NumpyViewDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M426.18,-20.38C433.76,-19.54 441.39,-18.71 448.83,-17.89" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="449.37,-20.3 456.06,-17.1 448.84,-15.43 449.37,-20.3" />
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>RealItemDefinition-&gt;BaseGeneratedValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M227.79,-29.38C235.55,-29.38 243.71,-29.38 251.95,-29.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="252.46,-31.83 259.46,-29.38 252.46,-26.93 252.46,-31.83" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>InheritingValueModifier</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.value_definitions.InheritingValueModifier.html#ase2sprkkr.common.value_definitions.InheritingValueModifier" ns1:title="The definition of the value will be inherited from this class as well." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="238.5,-78.75 109.25,-78.75 109.25,-58 238.5,-58 238.5,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="173.88" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">InheritingValueModifier</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>Length</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length" ns1:title="Sometimes, the length of some array should appear in the config file" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="370.12,-78.75 316.12,-78.75 316.12,-58 370.12,-58 370.12,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="343.12" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Length</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>InheritingValueModifier-&gt;Length</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M238.58,-68.38C261.9,-68.38 287.42,-68.38 307.28,-68.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="307.95,-70.83 314.95,-68.38 307.95,-65.93 307.95,-70.83" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>ValueModifier</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.value_definitions.ValueModifier.html#ase2sprkkr.common.value_definitions.ValueModifier" ns1:title="If this class is given as a type of a Value, it will modify the definition" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="85,-78.75 2.25,-78.75 2.25,-58 85,-58 85,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ValueModifier</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>ValueModifier-&gt;InheritingValueModifier</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M85.2,-68.38C90.21,-68.38 95.44,-68.38 100.75,-68.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="101.37,-70.83 108.37,-68.38 101.37,-65.93 101.37,-70.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

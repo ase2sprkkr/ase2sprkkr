@@ -1,0 +1,59 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="462pt" height="29pt" viewBox="0.00 0.00 462.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance82609b462a</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>artist.Artist</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Abstract base class for objects that render into a FigureCanvas.">
+<ns0:polygon fill="lightgray" stroke="black" points="70.75,-20.75 0,-20.75 0,0 70.75,0 70.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="35.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">artist.Artist</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>patches.Patch</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:title="A patch is a 2D artist with a face color and an edge color.">
+<ns0:polygon fill="lightgray" stroke="black" points="176.25,-20.75 92.75,-20.75 92.75,0 176.25,0 176.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="134.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">patches.Patch</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>artist.Artist-&gt;patches.Patch</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M71.17,-10.38C75.34,-10.38 79.67,-10.38 84.01,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="84.57,-12.83 91.57,-10.38 84.57,-7.93 84.57,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>k_path.Arrow3D</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.gui.k_path.Arrow3D.html#ase2sprkkr.gui.k_path.Arrow3D" ns1:title="k_path.Arrow3D" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="454,-20.75 360,-20.75 360,0 454,0 454,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="407" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">k_path.Arrow3D</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>patches.FancyArrowPatch</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:title="A fancy arrow patch.">
+<ns0:polygon fill="lightgray" stroke="black" points="338,-20.75 198.25,-20.75 198.25,0 338,0 338,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="268.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">patches.FancyArrowPatch</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>patches.FancyArrowPatch-&gt;k_path.Arrow3D</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M338.36,-10.38C342.81,-10.38 347.25,-10.38 351.61,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="352.12,-12.83 359.12,-10.38 352.12,-7.93 352.12,-12.83" />
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>patches.Patch-&gt;patches.FancyArrowPatch</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M176.43,-10.38C180.76,-10.38 185.27,-10.38 189.86,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="190.42,-12.83 197.42,-10.38 190.42,-7.93 190.42,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

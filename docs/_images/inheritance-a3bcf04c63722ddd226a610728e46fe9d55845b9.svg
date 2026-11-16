@@ -1,0 +1,74 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="268pt" height="87pt" viewBox="0.00 0.00 268.00 87.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 82.75)">
+<ns0:title>inheritance5c6a45dff8</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>CommandlineShell</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.gui.shell.CommandlineShell.html#ase2sprkkr.gui.shell.CommandlineShell" ns1:title="Run the given code in a commandline shell" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="184.25,-59.75 76,-59.75 76,-39 184.25,-39 184.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="130.12" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">CommandlineShell</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>Pdb</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.gui.shell.Pdb.html#ase2sprkkr.gui.shell.Pdb" ns1:title="Run the given code in a Python shell" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="260.25,-78.75 206.25,-78.75 206.25,-58 260.25,-58 260.25,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="233.25" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Pdb</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>CommandlineShell-&gt;Pdb</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M184.65,-59.43C189.04,-60.26 193.4,-61.07 197.59,-61.86" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="197.86,-64.41 205.19,-63.29 198.76,-59.59 197.86,-64.41" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>Python</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.gui.shell.Python.html#ase2sprkkr.gui.shell.Python" ns1:title="Run the given code in a Python shell" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="260.25,-39.75 206.25,-39.75 206.25,-19 260.25,-19 260.25,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="233.25" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Python</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>CommandlineShell-&gt;Python</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M184.65,-38.79C189.04,-37.92 193.4,-37.06 197.59,-36.23" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="198.8,-38.49 205.19,-34.73 197.85,-33.68 198.8,-38.49" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>Shell</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell" ns1:title="A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="54,-39.75 0,-39.75 0,-19 54,-19 54,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="27" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Shell</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>Shell-&gt;CommandlineShell</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M54.31,-34.58C58.58,-35.42 63.16,-36.33 67.86,-37.26" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="67.79,-39.74 75.13,-38.7 68.74,-34.94 67.79,-39.74" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>JupyterLab</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab" ns1:title="Run the given code in a JupyterLab notebook." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="164,-20.75 96.25,-20.75 96.25,0 164,0 164,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="130.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">JupyterLab</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>Shell-&gt;JupyterLab</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M54.31,-24.43C64.57,-22.5 76.59,-20.25 87.95,-18.11" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="88.9,-20.43 95.32,-16.73 87.99,-15.61 88.9,-20.43" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

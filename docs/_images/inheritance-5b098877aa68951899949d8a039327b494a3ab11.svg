@@ -1,0 +1,29 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="80pt" height="86pt" viewBox="0.00 0.00 80.00 86.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 81.75)">
+<ns0:title>inheritanced874d6442a</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>LatticeData</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.physics.lattice_data.LatticeData.html#ase2sprkkr.physics.lattice_data.LatticeData" ns1:title="LatticeData" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="72.25,-20.75 0,-20.75 0,0 72.25,0 72.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="36.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">LatticeData</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>Pearson</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson" ns1:title="This class holds informations about translation symmetry of a lattice with a given" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="63.62,-59.75 8.62,-59.75 8.62,-39 63.62,-39 63.62,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="36.12" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Pearson</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>Pearson-&gt;Pearson</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M27.26,-60.15C23.72,-68.81 26.67,-77.75 36.12,-77.75 42.48,-77.75 45.89,-73.71 46.38,-68.44" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="48.69,-67.39 45.11,-60.89 43.85,-68.2 48.69,-67.39" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

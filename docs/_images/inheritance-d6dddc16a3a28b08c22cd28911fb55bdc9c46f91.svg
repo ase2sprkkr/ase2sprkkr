@@ -1,0 +1,44 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="26pt" viewBox="0.00 0.00 576.00 26.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.897896 0.897896) rotate(0) translate(4 24.75)">
+<ns0:title>inheritancebcbb726820</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>configuration_definitions.BaseDefinition</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" ns1:title="This class is a member of definition of configuration, that can be both" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="210.25,-20.75 0,-20.75 0,0 210.25,0 210.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="105.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_definitions.BaseDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>configuration_definitions.VirtualDefinition</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" ns1:title="Base class for a definition, that do not have value, just control" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="450.75,-20.75 232.25,-20.75 232.25,0 450.75,0 450.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="341.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_definitions.VirtualDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>configuration_definitions.BaseDefinition-&gt;configuration_definitions.VirtualDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M210.63,-10.38C214.95,-10.38 219.28,-10.38 223.62,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="224.2,-12.83 231.2,-10.38 224.2,-7.93 224.2,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>configuration_definitions.Stub</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.common.configuration_definitions.Stub" ns1:title="Item that allows to reuse existing item on the other place" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="633.5,-20.75 472.75,-20.75 472.75,0 633.5,0 633.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="553.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_definitions.Stub</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>configuration_definitions.VirtualDefinition-&gt;configuration_definitions.Stub</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M451,-10.38C455.38,-10.38 459.75,-10.38 464.09,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="464.61,-12.83 471.61,-10.38 464.61,-7.93 464.61,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

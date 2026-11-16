@@ -1,0 +1,74 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="14pt" viewBox="0.00 0.00 576.00 14.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.503386 0.503386) rotate(0) translate(4 24.75)">
+<ns0:title>inheritancea7b675580f</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>configuration.ConfigurationValueDefinition</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition" ns1:title="Definition o a configuration value, used in SPRKKR configuration file." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="905.5,-20.75 683.25,-20.75 683.25,0 905.5,0 905.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="794.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration.ConfigurationValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>potential_definitions.PotValueDefinition</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.potential_definitions.PotValueDefinition" ns1:title="Definition of a configuration option in a potential" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="1136.25,-20.75 927.5,-20.75 927.5,0 1136.25,0 1136.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="1031.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">potential_definitions.PotValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>configuration.ConfigurationValueDefinition-&gt;potential_definitions.PotValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M905.88,-10.38C910.18,-10.38 914.49,-10.38 918.79,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="919.28,-12.83 926.28,-10.38 919.28,-7.93 919.28,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>value_definitions.ValueDefinition</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" ns1:title="value_definitions.ValueDefinition" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="661.25,-20.75 484.75,-20.75 484.75,0 661.25,0 661.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="573" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">value_definitions.ValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>value_definitions.ValueDefinition-&gt;configuration.ConfigurationValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M661.65,-10.38C665.94,-10.38 670.28,-10.38 674.63,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="675.27,-12.83 682.27,-10.38 675.27,-7.93 675.27,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>configuration_definitions.BaseDefinition</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" ns1:title="This class is a member of definition of configuration, that can be both" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="210.25,-20.75 0,-20.75 0,0 210.25,0 210.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="105.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_definitions.BaseDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>configuration_definitions.RealItemDefinition</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" ns1:title="A base class for a configuration definition, either of an option, or of a container." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="462.75,-20.75 232.25,-20.75 232.25,0 462.75,0 462.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="347.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_definitions.RealItemDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>configuration_definitions.BaseDefinition-&gt;configuration_definitions.RealItemDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M210.51,-10.38C214.83,-10.38 219.18,-10.38 223.54,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="224.16,-12.83 231.16,-10.38 224.16,-7.93 224.16,-12.83" />
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>configuration_definitions.RealItemDefinition-&gt;value_definitions.ValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M463.2,-10.38C467.4,-10.38 471.59,-10.38 475.76,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="476.5,-12.83 483.5,-10.38 476.5,-7.93 476.5,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

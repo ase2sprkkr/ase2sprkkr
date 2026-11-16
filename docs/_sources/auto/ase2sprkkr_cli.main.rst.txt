@@ -1,0 +1,67 @@
+main
+====
+
+Full name: **ase2sprkkr\_cli.main**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr_cli.main.Parser 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr_cli.main
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _plugin_packages
+      _plugin_warning
+      run
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Parser
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      ArgparseError
+   
+   
+
+
+  
+  
+  

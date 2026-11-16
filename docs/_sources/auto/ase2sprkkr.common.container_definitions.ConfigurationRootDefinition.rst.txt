@@ -6,11 +6,15 @@ ConfigurationRootDefinition
 
 .. autoclass:: ConfigurationRootDefinition
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.container_definitions.ConfigurationRootDefinition
       :parts: 2
+
 
    |
 

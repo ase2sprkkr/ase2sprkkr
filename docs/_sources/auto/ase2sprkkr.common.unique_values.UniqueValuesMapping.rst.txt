@@ -6,11 +6,15 @@ UniqueValuesMapping
 
 .. autoclass:: UniqueValuesMapping
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.unique_values.UniqueValuesMapping
       :parts: 2
+
 
    |
 

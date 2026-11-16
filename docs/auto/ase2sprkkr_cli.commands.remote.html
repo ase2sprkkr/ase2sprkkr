@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>remote &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=adf6db29" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="_cancel" href="ase2sprkkr_cli.commands.remote._cancel.html" />
+    <link rel="prev" title="run" href="ase2sprkkr_cli.commands.plot.run.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr_cli.html">ase2sprkkr_cli</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr_cli.commands.html">commands</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.config.html">config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.example.html">example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.info.html">info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.k_path.html">k_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.migrate.html">migrate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.nexus.html">nexus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.nomad.html">nomad</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.plot.html">plot</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">remote</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.shell.html">shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.show_structure.html">show_structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.symmetry.html">symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr_cli.commands.uppasd.html">uppasd</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr_cli.errors.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr_cli.main.html">main</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">Python API reference</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr_cli.html">ase2sprkkr_cli</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr_cli.commands.html">commands</a></li>
+      <li class="breadcrumb-item active">remote</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr_cli.commands.remote.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="remote">
+<h1>remote<a class="headerlink" href="#remote" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr_cli.commands.remote</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
+<p id="module-ase2sprkkr_cli.commands.remote">Human-facing run observation, deliberately independent of KKRunner’s CLI.</p>
+<p>KKRunner owns execution identity, persistence, and byte transport. This CLI
+owns argparse, run selection, SCF interpretation, and text filtering.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._cancel.html#ase2sprkkr_cli.commands.remote._cancel" title="ase2sprkkr_cli.commands.remote._cancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_cancel</span></code></a>(args)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._follow.html#ase2sprkkr_cli.commands.remote._follow" title="ase2sprkkr_cli.commands.remote._follow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_follow</span></code></a>(args)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._identity.html#ase2sprkkr_cli.commands.remote._identity" title="ase2sprkkr_cli.commands.remote._identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_identity</span></code></a>(args)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._manager_and_record.html#ase2sprkkr_cli.commands.remote._manager_and_record" title="ase2sprkkr_cli.commands.remote._manager_and_record"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_manager_and_record</span></code></a>(run_id)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._observe.html#ase2sprkkr_cli.commands.remote._observe" title="ase2sprkkr_cli.commands.remote._observe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_observe</span></code></a>(args, observer)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._persisted_status.html#ase2sprkkr_cli.commands.remote._persisted_status" title="ase2sprkkr_cli.commands.remote._persisted_status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_persisted_status</span></code></a>(manager, record)</p></td>
+<td><p>Query backend facts without mutating the client-owned lifecycle record.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._scf_summary.html#ase2sprkkr_cli.commands.remote._scf_summary" title="ase2sprkkr_cli.commands.remote._scf_summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_scf_summary</span></code></a>(progress)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._snapshot_progress.html#ase2sprkkr_cli.commands.remote._snapshot_progress" title="ase2sprkkr_cli.commands.remote._snapshot_progress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_snapshot_progress</span></code></a>(manager, record)</p></td>
+<td><p>Read SCF progress from this run's declared stdout, including remote jobs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._status.html#ase2sprkkr_cli.commands.remote._status" title="ase2sprkkr_cli.commands.remote._status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_status</span></code></a>(args)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._task_is_scf.html#ase2sprkkr_cli.commands.remote._task_is_scf" title="ase2sprkkr_cli.commands.remote._task_is_scf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_task_is_scf</span></code></a>(record)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote.parser.html#ase2sprkkr_cli.commands.remote.parser" title="ase2sprkkr_cli.commands.remote.parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parser</span></code></a>(argument_parser)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote.run.html#ase2sprkkr_cli.commands.remote.run" title="ase2sprkkr_cli.commands.remote.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(args, global_args)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._FollowSourceAction.html#ase2sprkkr_cli.commands.remote._FollowSourceAction" title="ase2sprkkr_cli.commands.remote._FollowSourceAction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_FollowSourceAction</span></code></a>(option_strings, dest[, ...])</p></td>
+<td><p>Reject persisted IDs with direct stream paths in either argument order.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._FramedSink.html#ase2sprkkr_cli.commands.remote._FramedSink" title="ase2sprkkr_cli.commands.remote._FramedSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_FramedSink</span></code></a>(kind, destination)</p></td>
+<td><p>Preserve the runner's binary stream protocol without parsing it.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr_cli.commands.remote._TextSink.html#ase2sprkkr_cli.commands.remote._TextSink" title="ase2sprkkr_cli.commands.remote._TextSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_TextSink</span></code></a>(callback, kind)</p></td>
+<td><p>Decode independent UTF-8 chunks without confusing flush with EOF.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr_cli.commands.plot.run.html" class="btn btn-neutral float-left" title="run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr_cli.commands.remote._cancel.html" class="btn btn-neutral float-right" title="_cancel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

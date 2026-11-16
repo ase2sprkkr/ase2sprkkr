@@ -1,0 +1,8 @@
+retrieve\_token
+===============
+
+Full name: **ase2sprkkr\_cli.commands.nomad.retrieve\_token**
+
+.. currentmodule:: ase2sprkkr_cli.commands.nomad
+
+.. autofunction:: retrieve_token

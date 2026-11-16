@@ -11,7 +11,7 @@
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=adf6db29" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -22,8 +22,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Execution, persistent runs and KKRunner" href="execution.html" />
-    <link rel="prev" title="CLI command plugins" href="cli-plugins.html" /> 
+    <link rel="next" title="Remote running, MPI and execution profiles" href="remote.html" />
+    <link rel="prev" title="Command-line reference" href="cli.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,35 +45,52 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line reference</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Crystal symmetry and cell transformations</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cif-declared-symmetry">CIF-declared symmetry</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Architecture for developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
         </div>
@@ -102,7 +119,7 @@
              
   <section id="crystal-symmetry-and-cell-transformations">
 <h1>Crystal symmetry and cell transformations<a class="headerlink" href="#crystal-symmetry-and-cell-transformations" title="Link to this heading"></a></h1>
-<p>New crystal symmetry workflows use spglib to distinguish three operations:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">symmetry</span></code> command uses spglib to provide three distinct operations:</p>
 <ul class="simple">
 <li><p>Analysis identifies the space group and leaves the structure unchanged.</p></li>
 <li><p>Cell conversion finds a primitive or standardized conventional cell.</p></li>
@@ -119,25 +136,23 @@ symmetry, preserving the original basis and atom ordering.</p></li>
 <span class="go">ase2sprkkr symmetry input.cif --primitive --idealize -o primitive_ideal.cif</span>
 </pre></div>
 </div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--equivalence</span> <span class="pre">occupation</span></code> when chemically equivalent sites
+should be compared by occupation rather than their current site types.</p>
 </section>
 <section id="cif-declared-symmetry">
 <h2>CIF-declared symmetry<a class="headerlink" href="#cif-declared-symmetry" title="Link to this heading"></a></h2>
-<p>When the input is a CIF file, the command reports both the space group
-declared by the CIF tags (if present) and the symmetry computed from the
-structure by spglib. This distinction matters because the two can differ.
-The original CIF Hermann–Mauguin symbol, International Tables number,
-Hall symbol, and number of declared symmetry operations are shown when
-available. With <code class="docutils literal notranslate"><span class="pre">--operations</span></code>, the listed CIF operations are also shown
-verbatim alongside those calculated by spglib.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">report.json</span></code> option includes the original CIF values under
-<code class="docutils literal notranslate"><span class="pre">cif_declared_symmetry</span></code> without inventing a declaration for absent tags.
-Differences are flagged when the CIF supplies a space-group number and that
-number differs from the calculated one; symbolic spellings are not compared
-because different settings can have distinct Hermann–Mauguin symbols.
-Non-CIF inputs continue to report calculated symmetry only.</p>
-<p>Python API (analysis retains no reference to the input Atoms):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.symmetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">analyze_symmetry</span>
+<p>For CIF input, the command reports both the declared space group
+(if present) and the symmetry calculated from the atomic positions.
+Different space-group numbers are highlighted. Use <code class="docutils literal notranslate"><span class="pre">--operations</span></code>
+to list symmetry operations, or save a JSON report:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">symmetry</span> <span class="nb">input</span><span class="o">.</span><span class="n">cif</span> <span class="o">--</span><span class="n">report</span> <span class="n">report</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+<p>Python API:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.symmetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">analyze_symmetry</span>
 
+<span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">"input.cif"</span><span class="p">)</span>
 <span class="n">analysis</span> <span class="o">=</span> <span class="n">analyze_symmetry</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
 <span class="n">primitive</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">find_primitive</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
 <span class="n">conventional</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">standardize</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
@@ -145,12 +160,11 @@ Non-CIF inputs continue to report calculated symmetry only.</p>
 <span class="n">idealized_primitive</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">find_primitive</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">idealize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>By default, site-types are distinguished by SPR-KKR SiteType identity,
-existing site magnetisation, and ASE initial magnetic moments.
-Region membership is part of the site identity for SpacegroupInfo:
-atoms in different regions are not merged even when otherwise equivalent.
-Occupation equivalence explicitly permits merging different SiteTypes that
-have the same chemical composition; unselected electronic data may be lost.</p>
+<p>The default <code class="docutils literal notranslate"><span class="pre">site-types</span></code> equivalence distinguishes SPR-KKR site types
+and magnetic information. Region identity is preserved when finding
+equivalent sites. The <code class="docutils literal notranslate"><span class="pre">occupation</span></code> mode can merge sites with identical
+chemical occupations even when their electronic site-type data differ;
+recheck the resulting electronic data before further calculations.</p>
 <p>Extra ASE arrays use one of three transfer policies when converting cells:</p>
 <ul class="simple">
 <li><p>require-equal (default): Values of atoms in the same primitive translation class must agree.</p></li>
@@ -158,14 +172,10 @@ have the same chemical composition; unselected electronic data may be lost.</p>
 <li><p>choose-first: Select the first source representative of each primitive site, and warn
 when values differ.</p></li>
 </ul>
-<p>Different primitive sites remain distinct even when they have the same
-species tag or SiteType. Tensor and vector frame transformations are not
-handled by this first version.</p>
-<p>Idealization alone preserves additional arrays and site order. Radial
-potentials, charges, and moments are also preserved. If idealization changes
-geometry with electronic data present, a warning recommends a new SCF run.
-Cell conversion retains unrelated ASE info metadata while rebuilding
-spacegroup information and occupancy records for the new geometry.</p>
+<p>Extra arrays are checked when a cell is converted, and tensor/vector
+frame transformations are not performed automatically. Idealization by
+itself retains atom ordering and electronic data. If the geometry changes,
+a new SCF calculation is recommended before relying on an old potential.</p>
 </section>
 </section>
 
@@ -173,14 +183,14 @@ spacegroup information and occupancy records for the new geometry.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cli-plugins.html" class="btn btn-neutral float-left" title="CLI command plugins" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="execution.html" class="btn btn-neutral float-right" title="Execution, persistent runs and KKRunner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cli.html" class="btn btn-neutral float-left" title="Command-line reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="remote.html" class="btn btn-neutral float-right" title="Remote running, MPI and execution profiles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

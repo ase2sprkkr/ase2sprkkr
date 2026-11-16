@@ -1,0 +1,119 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="54pt" viewBox="0.00 0.00 576.00 54.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.8 0.8) rotate(0) translate(4 63.75)">
+<ns0:title>inheritance8955ae8cae</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>AtomicType</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType" ns1:title="AtomicType" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="712,-59.75 639,-59.75 639,-39 712,-39 712,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="675.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">AtomicType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>ObjectNumber</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber" ns1:title="An abstract class, that describe an unsigned integer, that reffers to an object." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="617,-39.75 530.5,-39.75 530.5,-19 617,-19 617,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="573.75" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ObjectNumber</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>ObjectNumber-&gt;AtomicType</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M617.34,-37.91C621.67,-38.78 626.06,-39.66 630.4,-40.53" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="630.55,-43.06 637.9,-42.04 631.52,-38.26 630.55,-43.06" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>Site</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site" ns1:title="Site" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="702.5,-20.75 648.5,-20.75 648.5,0 702.5,0 702.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="675.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Site</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>ObjectNumber-&gt;Site</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M617.34,-21.26C624.88,-19.83 632.64,-18.35 639.92,-16.96" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="641.04,-19.24 647.46,-15.53 640.13,-14.43 641.04,-19.24" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>FixedPointNumber</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.common.grammar_types.basic.FixedPointNumber" ns1:title="FixedPointNumber" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="424.75,-39.75 319.5,-39.75 319.5,-19 424.75,-19 424.75,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="372.12" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">FixedPointNumber</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>Unsigned</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned" ns1:title="Unsigned integer (zero is possible)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="508.5,-39.75 446.75,-39.75 446.75,-19 508.5,-19 508.5,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="477.62" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Unsigned</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge7" class="edge">
+<ns0:title>FixedPointNumber-&gt;Unsigned</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M425.18,-29.38C429.48,-29.38 433.78,-29.38 437.96,-29.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="438.58,-31.83 445.58,-29.38 438.58,-26.93 438.58,-31.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>Number</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" ns1:title="Base class for a number - descendants of this class can have minimal and/or maximal possible value." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="297.5,-39.75 242.5,-39.75 242.5,-19 297.5,-19 297.5,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="270" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Number</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>Number-&gt;FixedPointNumber</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M297.83,-29.38C301.96,-29.38 306.36,-29.38 310.87,-29.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="311.33,-31.83 318.33,-29.38 311.33,-26.93 311.33,-31.83" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>GrammarType</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" ns1:title="Base class for definition of configuration option types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="85,-39.75 0,-39.75 0,-19 85,-19 85,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="42.5" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">GrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>TypedGrammarType</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" ns1:title="TypedGrammarType" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="220.5,-39.75 107,-39.75 107,-19 220.5,-19 220.5,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163.75" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TypedGrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>GrammarType-&gt;TypedGrammarType</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M85.21,-29.38C89.57,-29.38 94.08,-29.38 98.62,-29.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="99.06,-31.83 106.06,-29.38 99.06,-26.93 99.06,-31.83" />
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>TypedGrammarType-&gt;Number</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M220.84,-29.38C225.25,-29.38 229.62,-29.38 233.82,-29.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="234.42,-31.83 241.42,-29.38 234.42,-26.93 234.42,-31.83" />
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>Unsigned-&gt;ObjectNumber</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M508.92,-29.38C513.05,-29.38 517.38,-29.38 521.75,-29.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="522.41,-31.83 529.41,-29.38 522.41,-26.93 522.41,-31.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

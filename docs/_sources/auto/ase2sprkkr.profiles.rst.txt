@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.profiles**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.profiles.ASEProfile  ase2sprkkr.profiles.LegacyProfile  ase2sprkkr.profiles.ProfilesConfigurationContainer  ase2sprkkr.profiles.ReadOnlyProfileValue 
+.. inheritance-diagram::  ase2sprkkr.profiles.ASEProfile  ase2sprkkr.profiles.ASEProfileValue  ase2sprkkr.profiles.LegacyProfile  ase2sprkkr.profiles.ProfilesConfigurationContainer  ase2sprkkr.profiles.ReadOnlyProfileValue 
       :parts: 1
 
 |
@@ -45,6 +45,7 @@ Full name: **ase2sprkkr.profiles**
       :template: custom-class-template.rst
    
       ASEProfile
+      ASEProfileValue
       LegacyProfile
       ProfilesConfigurationContainer
       ReadOnlyProfileValue

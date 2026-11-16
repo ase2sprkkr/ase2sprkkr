@@ -6,11 +6,15 @@ MecheckInputParametersDefinition
 
 .. autoclass:: MecheckInputParametersDefinition
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.mecheck.MecheckInputParametersDefinition
       :parts: 2
+
 
    |
 

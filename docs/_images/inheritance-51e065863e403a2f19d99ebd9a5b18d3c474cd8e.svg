@@ -1,0 +1,131 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="433pt" height="165pt" viewBox="0.00 0.00 433.00 165.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 160.75)">
+<ns0:title>inheritanced80a370897</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseDefinition</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" ns1:title="This class is a member of definition of configuration, that can be both" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="87.25,-39.75 0,-39.75 0,-19 87.25,-19 87.25,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>VirtualDefinition</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" ns1:title="Base class for a definition, that do not have value, just control" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="210.75,-59.75 115.25,-59.75 115.25,-39 210.75,-39 210.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">VirtualDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>BaseDefinition-&gt;VirtualDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M87.66,-36.71C93.92,-37.77 100.43,-38.88 106.89,-39.98" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="106.95,-42.48 114.26,-41.24 107.77,-37.65 106.95,-42.48" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>RealItemDefinition</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" ns1:title="A base class for a configuration definition, either of an option, or of a container." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="216.75,-20.75 109.25,-20.75 109.25,0 216.75,0 216.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RealItemDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>BaseDefinition-&gt;RealItemDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M87.66,-22.41C91.89,-21.72 96.23,-21.02 100.6,-20.31" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="101.72,-22.61 108.24,-19.08 100.94,-17.78 101.72,-22.61" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>ControlDefinition</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.common.configuration_definitions.ControlDefinition" ns1:title="Control definitions has no grammar, they just modify the other items of the container" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="343.25,-98.75 244.75,-98.75 244.75,-78 343.25,-78 343.25,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="294" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ControlDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node10" class="node">
+<ns0:title>Switch</ns0:title>
+<ns0:g id="a_node10"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.common.configuration_definitions.Switch" ns1:title="Items of this class can control, which elements of grammar will be active and which not" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="425.25,-98.75 371.25,-98.75 371.25,-78 425.25,-78 425.25,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="398.25" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Switch</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>ControlDefinition-&gt;Switch</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M343.73,-88.38C350.17,-88.38 356.65,-88.38 362.78,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="363.12,-90.83 370.12,-88.38 363.12,-85.93 363.12,-90.83" />
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>VirtualDefinition-&gt;ControlDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M199.93,-60.24C215.31,-64.89 233.4,-70.36 249.52,-75.23" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="249.13,-77.67 256.53,-77.35 250.54,-72.98 249.13,-77.67" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>SeparatorDefinition</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.common.configuration_definitions.SeparatorDefinition" ns1:title="Basic class for separators" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="349.25,-59.75 238.75,-59.75 238.75,-39 349.25,-39 349.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="294" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SeparatorDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>VirtualDefinition-&gt;SeparatorDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M210.94,-49.38C217.22,-49.38 223.74,-49.38 230.24,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="230.68,-51.83 237.68,-49.38 230.68,-46.93 230.68,-51.83" />
+</ns0:g>
+
+<ns0:g id="node9" class="node">
+<ns0:title>Stub</ns0:title>
+<ns0:g id="a_node9"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.common.configuration_definitions.Stub" ns1:title="Item that allows to reuse existing item on the other place" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="321,-20.75 267,-20.75 267,0 321,0 321,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="294" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Stub</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>VirtualDefinition-&gt;Stub</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M199.93,-38.51C218.29,-32.96 240.52,-26.24 258.65,-20.76" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="259.95,-22.93 265.94,-18.56 258.53,-18.24 259.95,-22.93" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>Gather</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.common.configuration_definitions.Gather" ns1:title="Output definition for the element of grammar, that reads besides himself" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="70.62,-78.75 16.62,-78.75 16.62,-58 70.62,-58 70.62,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Gather</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>Ignored</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.common.configuration_definitions.Ignored" ns1:title="Output definition for an ignored option." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="70.62,-117.75 16.62,-117.75 16.62,-97 70.62,-97 70.62,-117.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-104.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Ignored</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>NotAllowed</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.NotAllowed.html#ase2sprkkr.common.configuration_definitions.NotAllowed" ns1:title="Object of this class can be returned as a result of a :func:ConfigurationDefinition.condition" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="79.75,-156.75 7.5,-156.75 7.5,-136 79.75,-136 79.75,-156.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-143.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">NotAllowed</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

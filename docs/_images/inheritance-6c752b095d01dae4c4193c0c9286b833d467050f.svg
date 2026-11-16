@@ -1,0 +1,14 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="227pt" height="29pt" viewBox="0.00 0.00 227.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritancecbd7cf7b29</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>process_output_reader.AsyncioFileReader</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader" ns1:title="File reader that mimics asyncio StreamReader." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="219.25,-20.75 0,-20.75 0,0 219.25,0 219.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="109.63" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">process_output_reader.AsyncioFileReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

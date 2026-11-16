@@ -1,0 +1,71 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="438pt" height="86pt" viewBox="0.00 0.00 438.00 86.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 81.75)">
+<ns0:title>inheritancee5a6d15eb2</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>ABC</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Helper class that provides a standard way to create an ABC using">
+<ns0:polygon fill="lightgray" stroke="black" points="81.88,-20.75 27.88,-20.75 27.88,0 81.88,0 81.88,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="54.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ABC</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>GetPropertiesMixin</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:title="Mixin class which provides get_forces(), get_stress() and so on.">
+<ns0:polygon fill="lightgray" stroke="black" points="241.5,-20.75 131.75,-20.75 131.75,0 241.5,0 241.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="186.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">GetPropertiesMixin</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>ABC-&gt;GetPropertiesMixin</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M82.13,-10.38C93.95,-10.38 108.47,-10.38 122.84,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="123.52,-12.83 130.52,-10.38 123.52,-7.93 123.52,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>BaseCalculator</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="353,-20.75 263.5,-20.75 263.5,0 353,0 353,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="308.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseCalculator</ns0:text>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>SPRKKR</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR" ns1:title="ASE-facing calculator for SPR-KKR." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="430,-20.75 375,-20.75 375,0 430,0 430,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="402.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SPRKKR</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>BaseCalculator-&gt;SPRKKR</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M353.48,-10.38C357.77,-10.38 362.07,-10.38 366.25,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="366.85,-12.83 373.85,-10.38 366.85,-7.93 366.85,-12.83" />
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>GetPropertiesMixin-&gt;BaseCalculator</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M241.84,-10.38C246.21,-10.38 250.62,-10.38 254.97,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="255.5,-12.83 262.5,-10.38 255.5,-7.93 255.5,-12.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>FilenameTemplator</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.calculator.FilenameTemplator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator" ns1:title="Backward-compatible facade for the historical calculator-based API." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="109.75,-59.75 0,-59.75 0,-39 109.75,-39 109.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="54.88" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">FilenameTemplator</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>FilenameTemplator-&gt;FilenameTemplator</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M33.65,-60.15C25.15,-68.81 32.23,-77.75 54.88,-77.75 70.8,-77.75 79.02,-73.33 79.55,-67.69" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="81.56,-66.19 76.42,-60.84 77.1,-68.22 81.56,-66.19" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

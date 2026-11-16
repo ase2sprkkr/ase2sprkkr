@@ -1,0 +1,29 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="311pt" height="29pt" viewBox="0.00 0.00 311.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance71a01b6bbc</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>occupations.SiteOccupation</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.occupations.SiteOccupation.html#ase2sprkkr.sprkkr.occupations.SiteOccupation" ns1:title="Proxy for the Occupation of a Site that raises a RuntimeError before any" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="303,-20.75 152,-20.75 152,0 303,0 303,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="227.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">occupations.SiteOccupation</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>sites.SitePropertyProxy</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.sites.SitePropertyProxy.html#ase2sprkkr.sprkkr.sites.SitePropertyProxy" ns1:title="Generic proxy for a SiteType-delegated property (mesh, potential, charge," target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="130,-20.75 0,-20.75 0,0 130,0 130,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="65" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">sites.SitePropertyProxy</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>sites.SitePropertyProxy-&gt;occupations.SiteOccupation</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M130.36,-10.38C134.61,-10.38 138.92,-10.38 143.25,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="143.81,-12.83 150.81,-10.38 143.81,-7.93 143.81,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.output\_printing**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.output_printing.OutputListener  ase2sprkkr.common.output_printing.PrintAll  ase2sprkkr.common.output_printing.PrintMatching 
+.. inheritance-diagram::  ase2sprkkr.common.output_printing.NormalizedOutputFilter  ase2sprkkr.common.output_printing.OutputListener  ase2sprkkr.common.output_printing.PrintAll  ase2sprkkr.common.output_printing.PrintMatching 
       :parts: 1
 
 |
@@ -30,7 +30,12 @@ Full name: **ase2sprkkr.common.output\_printing**
       :toctree:
       :template: custom-base-template.rst
    
+      _pattern_source
+      normalize_output_filter
+      output_filter_from_gui
       output_listeners
+      parse_output_regexes
+      serialize_output_regexes
    
    
 
@@ -43,6 +48,7 @@ Full name: **ase2sprkkr.common.output\_printing**
       :toctree:
       :template: custom-class-template.rst
    
+      NormalizedOutputFilter
       OutputListener
       PrintAll
       PrintMatching

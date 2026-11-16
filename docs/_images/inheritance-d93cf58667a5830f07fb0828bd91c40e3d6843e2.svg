@@ -1,0 +1,119 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="13pt" viewBox="0.00 0.00 576.00 13.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.448424 0.448424) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance206ef195ea</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseDefinition</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" ns1:title="This class is a member of definition of configuration, that can be both" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="87.25,-20.75 0,-20.75 0,0 87.25,0 87.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="43.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>RealItemDefinition</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" ns1:title="A base class for a configuration definition, either of an option, or of a container." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="216.75,-20.75 109.25,-20.75 109.25,0 216.75,0 216.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RealItemDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>BaseDefinition-&gt;RealItemDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M87.66,-10.38C91.89,-10.38 96.23,-10.38 100.6,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="101.23,-12.83 108.23,-10.38 101.23,-7.93 101.23,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>ConfigurationFileDefinition</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" ns1:title="The class for the configuration files (the root nodes of the configuration)." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="690,-20.75 544.25,-20.75 544.25,0 690,0 690,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="617.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ConfigurationFileDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>InputParametersDefinition</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" ns1:title="Syntax and parameter semantics of one SPR-KKR input-file schema." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="855.5,-20.75 712,-20.75 712,0 855.5,0 855.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="783.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">InputParametersDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>ConfigurationFileDefinition-&gt;InputParametersDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M690.33,-10.38C694.65,-10.38 699,-10.38 703.35,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="703.92,-12.83 710.92,-10.38 703.92,-7.93 703.92,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>ConfigurationRootDefinition</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" ns1:title="From this class, the definition of the format of a whole configuration file should be derived." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="522.25,-20.75 371.25,-20.75 371.25,0 522.25,0 522.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="446.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ConfigurationRootDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>ConfigurationRootDefinition-&gt;ConfigurationFileDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M522.58,-10.38C526.92,-10.38 531.29,-10.38 535.64,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="536.23,-12.83 543.23,-10.38 536.23,-7.93 536.23,-12.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>ContainerDefinition</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" ns1:title="Base class for a definition (of contained data, format, etc)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="349.25,-20.75 238.75,-20.75 238.75,0 349.25,0 349.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="294" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ContainerDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>ContainerDefinition-&gt;ConfigurationRootDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M349.42,-10.38C353.69,-10.38 358.05,-10.38 362.45,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="363.18,-12.83 370.18,-10.38 363.18,-7.93 363.18,-12.83" />
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>RealItemDefinition-&gt;ContainerDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M217.21,-10.38C221.53,-10.38 225.91,-10.38 230.28,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="230.9,-12.83 237.9,-10.38 230.9,-7.93 230.9,-12.83" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>RequiredTauInputParametersDefinition</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:title="Task definition requiring an existing TAU-directory file.">
+<ns0:polygon fill="lightgray" stroke="black" points="1081,-20.75 877.5,-20.75 877.5,0 1081,0 1081,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="979.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RequiredTauInputParametersDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>InputParametersDefinition-&gt;RequiredTauInputParametersDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M855.98,-10.38C860.18,-10.38 864.45,-10.38 868.76,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="869.32,-12.83 876.32,-10.38 869.32,-7.93 869.32,-12.83" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>VbpesInputParametersDefinition</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.input_parameters.definitions.vbpes.VbpesInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.vbpes.VbpesInputParametersDefinition" ns1:title="VBPES definition with optional reusable final-state TAU data." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="1276.5,-20.75 1103,-20.75 1103,0 1276.5,0 1276.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="1189.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">VbpesInputParametersDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge7" class="edge">
+<ns0:title>RequiredTauInputParametersDefinition-&gt;VbpesInputParametersDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M1081.45,-10.38C1085.75,-10.38 1090.05,-10.38 1094.34,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="1094.78,-12.83 1101.78,-10.38 1094.78,-7.93 1094.78,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

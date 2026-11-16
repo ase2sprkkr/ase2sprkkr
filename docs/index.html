@@ -6,12 +6,12 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ASE2SPRKKR software package &mdash; ASE2SPRKKR  documentation</title>
+  <title>ASE2SPRKKR: SPR-KKR from Python and ASE &mdash; ASE2SPRKKR  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=adf6db29" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -22,7 +22,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="How to use ASE2SPRKKR" href="usage.html" /> 
+    <link rel="next" title="First calculation: aluminium SCF and DOS" href="quickstart.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,31 +44,48 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Architecture for developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
         </div>
@@ -85,7 +102,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">ASE2SPRKKR software package</li>
+      <li class="breadcrumb-item active">ASE2SPRKKR: SPR-KKR from Python and ASE</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -95,192 +112,226 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ase2sprkkr-software-package">
-<h1>ASE2SPRKKR software package<a class="headerlink" href="#ase2sprkkr-software-package" title="Link to this heading"></a></h1>
-<p>ASE2SPRKKR package provide an interface that allow use of the <a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR
-package</a>
-to electronic structure calculation within <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">Atomic Simulation
-Environment</a> (abbreviated as ASE) —
-Python tool that integrates the various tools for electronic structure
-calculation.</p>
+  <section id="ase2sprkkr-spr-kkr-from-python-and-ase">
+<h1>ASE2SPRKKR: SPR-KKR from Python and ASE<a class="headerlink" href="#ase2sprkkr-spr-kkr-from-python-and-ase" title="Link to this heading"></a></h1>
+<p>Ase2sprkkr is a modern, comprehensive replacement for
+<a class="reference external" href="https://sprkkr.org/xband/">XBAND</a>, providing a unified framework for
+<a class="reference external" href="https://sprkkr.org/">SPR-KKR</a> calculations, ranging from easy
+interactive use to efficient, highly automated workflows on HPC systems.
+It integrates with the
+<a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">Atomic Simulation Environment (ASE)</a>
+and supports preparing, running, and analyzing calculations through Python.</p>
+<section id="why-use-it">
+<h2>Why use it?<a class="headerlink" href="#why-use-it" title="Link to this heading"></a></h2>
+<p>The underlying SPR-KKR package uses the Korringa-Kohn-Rostoker (KKR)
+multiple-scattering, Green’s-function approach. Its applications include
+density of states, Bloch spectral functions, magnetism, chemically
+disordered alloys (CPA), relativistic calculations and spectroscopy.
+The physics, approximations and numerical choices belong to
+<a class="reference external" href="https://sprkkr.org/manual/">the SPR-KKR manual</a>;
+this documentation focuses on working with the software.</p>
+<p><strong>ASE2SPRKKR</strong> creates native SPR-KKR inputs and potentials from ASE
+structures, selects and configures tasks, starts calculations, and parses
+and visualizes supported results. The independent
+<a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner</a> package provides
+local, MPI, SSH and scheduler execution and optional persistent history.
+A separate <a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr-gui">ASE2SPRKKR GUI</a>
+provides a graphical interface for preparing and managing calculations.</p>
+<p>SPR-KKR executables are <strong>installed separately</strong>; ASE2SPRKKR does not
+include those binaries. Calculations are task-oriented (SCF, DOS,
+BSF, ARPES and others), and not every standard ASE calculator property
+is available.</p>
+<p>Begin with <a class="reference internal" href="quickstart.html"><span class="doc">First calculation: aluminium SCF and DOS</span></a> to run an SCF-to-DOS example, then
+<a class="reference internal" href="installation.html"><span class="doc">Installation and upgrading</span></a> for configuration and upgrades, or
+<a class="reference internal" href="usage.html"><span class="doc">Using ASE2SPRKKR</span></a> for the Python API.</p>
 </section>
-<section id="usefull-links">
-<h1>Usefull links<a class="headerlink" href="#usefull-links" title="Link to this heading"></a></h1>
+<section id="useful-links">
+<h2>Useful links<a class="headerlink" href="#useful-links" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://www.sprkkr.org/">SPR-KKR</a></p></li>
-<li><p><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">Online version of this
-documentation</a></p></li>
-<li><p><a class="reference external" href="https://groups.google.com/g/ase2sprkkr/">E-mail group for news and
-discussion</a></p></li>
-<li><p><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr/">GitHub repository of the ASE2SPRKKR
-package</a></p></li>
-<li><p><a class="reference external" href="https://www.sprkkr.org/manual/">SPR-KKR
-manual</a></p></li>
-<li><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation
-Environment</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></p></li>
+<li><p><a class="reference external" href="https://sprkkr.org/download/">SPR-KKR download/access</a></p></li>
+<li><p><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">Source code and issue tracker</a></p></li>
+<li><p><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub repository</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr-gui">ASE2SPRKKR GUI</a></p></li>
+<li><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE documentation</a></p></li>
+<li><p><a class="reference external" href="https://groups.google.com/g/ase2sprkkr/">ASE2SPRKKR discussion group</a></p></li>
 </ul>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#usage">Usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#computing-a-bulk-material">Computing a bulk material</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#defining-the-material-properties">Defining the material properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#reading-the-results">Reading the results</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#structured-result-files">Structured result files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#setting-the-task-type-and-input-parameters">Setting the task type and input parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#working-with-potential-files">Working with potential files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#generating-the-input-files">Generating the input files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#a-note-about-potentials-and-atoms-and-input-parameters">A note about potentials and atoms and input_parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#mpi-calculations">MPI calculations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#bundled-tools">Bundled tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">First calculation: SCF to DOS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#install-the-python-interface-and-spr-kkr">Install the Python interface and SPR-KKR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#run-an-scf-calculation">Run an SCF calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#run-a-dos-calculation">Run a DOS calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#contributing-and-error-reporting">Contributing and error reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and native executables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-or-upgrade-ase2sprkkr">Install or upgrade ASE2SPRKKR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#conda">Conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#configure-spr-kkr-executables">Configure SPR-KKR executables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#virtual-environments">Virtual environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#upgrading-from-3-x-or-older-versions">Upgrading from 3.x or older versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#developer-installation">Developer installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#building-this-documentation">Building this documentation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Python usage and core concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#tasks-and-input-parameters">Tasks and input parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#interactive-parameter-editing">Interactive parameter editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#site-occupations-and-symmetry">Site occupations and symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#potentials-and-consecutive-tasks">Potentials and consecutive tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#filename-templates">Filename templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#inspecting-scf-results">Inspecting SCF results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#results-and-further-workflows">Results and further workflows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples by application</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a01-fe-scf-simple">A01_Fe_scf_simple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a02-fe-scf-input-modifications">A02_Fe_scf_input_modifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a03-fe-dos">A03_Fe_dos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a04-cpa-example">A04_CPA_Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a05-al-eos">A05_Al_EOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a06-cu-msspec">A06_Cu_MSSPEC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a07-srtio3-msspec">A07_SrTiO3_MSSPEC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a08-arpes-and-plotting">A08_ARPES_and_plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a09-emptyspheres">A09_EmptySpheres</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a10-dlm">A10_DLM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a11-torque">A11_Torque</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a12-jxc">A12_JXC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a13-xas">A13_XAS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a14-semiinfinite">A14_Semiinfinite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a15-ni2fega-cpa-scan">A15_Ni2FeGa_CPA_scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a16-gpaw-to-sprkkr-arpes">A16_GPAW_to_SPRKKR_ARPES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a17-au-arpes">A17_Au_ARPES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#a18-ni2fega-jxc">A18_Ni2FeGa_JXC</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="result-files.html">Result files, plotting and NeXus</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="result-files.html#structured-spr-kkr-result-files">Structured SPR-KKR result files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="result-files.html#grace-agr-projects">Grace .agr projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="result-files.html#arpes-spc-to-nexus-hdf5">ARPES SPC to NeXus/HDF5</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#discover-tasks-formats-and-executables">Discover tasks, formats and executables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#configuration-and-examples">Configuration and examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#run-and-inspect-files">Run and inspect files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#plotting-grace-and-nexus">Plotting, Grace and NeXus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#remote-status-output-and-cancellation">Remote status, output and cancellation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#other-tools">Other tools</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="symmetry.html#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="symmetry.html#cif-declared-symmetry">CIF-declared symmetry</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#local-calculations">Local calculations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#persistent-project-calculations">Persistent project calculations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#reconnect-and-load-history">Reconnect and load history</a></li>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#profiles-remote-execution-and-schedulers">Profiles, remote execution and schedulers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#files-manifests-and-resource-lifetime">Files, manifests and resource lifetime</a></li>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#remote-commands-for-users">Remote commands for users</a></li>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#architecture-for-developers">Architecture for developers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="execution.html#kkrunner-version-compatibility">KKRunner version compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote.html">Remote running and execution profiles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="remote.html#choosing-an-execution-profile">Choosing an execution profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote.html#execution-backends-and-remote-requirements">Execution backends and remote requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote.html#persistence-reattachment-and-recovery">Persistence, reattachment and recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote.html#mpi-and-executable-selection">MPI and executable selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote.html#monitoring-recorded-runs">Monitoring recorded runs</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="how-to-install.html#installation-of-the-package-using-package-managers">Installation of the package using package managers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="how-to-install.html#kkrunner-dependency">KKRunner dependency</a></li>
-<li class="toctree-l3"><a class="reference internal" href="how-to-install.html#further-notes">Further notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Persistent project calculations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#create-and-track-a-run">Create and track a run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#reconnect-or-load-history">Reconnect or load history</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execution.html#inspect-and-follow-a-run">Inspect and follow a run</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="how-to-install.html#install-the-packages-from-git-and-or-source-codes">Install the packages from GIT (and/or source codes)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="how-to-install.html#requirements">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="how-to-install.html#obtaining-the-package-using-git">Obtaining the package using GIT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="how-to-install.html#using-the-package-without-installing-the-pip-conda-packages">Using the package (without installing the pip/conda packages)</a></li>
 </ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="how-to-install.html#documentation-of-the-package">Documentation of the package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how-to-install.html#how-to-contribute-or-to-report-a-bug">How to contribute or to report a bug</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="philosophy.html#the-base-philosophy-of-the-package">The base philosophy of the package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="philosophy.html#structure-of-the-package">Structure of the package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="philosophy.html#common"><code class="xref py py-mod docutils literal notranslate"><span class="pre">common</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="philosophy.html#input-parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">input_parameters</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="philosophy.html#potentials"><code class="xref py py-mod docutils literal notranslate"><span class="pre">potentials</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="philosophy.html#outputs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">outputs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="philosophy.html#sprkkr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sprkkr</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="philosophy.html#tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="philosophy.html#reading-the-configuration-files">Reading the configuration files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="philosophy.html#writing-the-configuration-files">Writing the configuration files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="philosophy.html#running-the-program">Running the program</a></li>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Architecture for developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="philosophy.html#configuration-files-and-definitions">Configuration files and definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="philosophy.html#parsing-and-writing-configuration-files">Parsing and writing configuration files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="philosophy.html#taskdefinition-task-identity-versus-input-schema">TaskDefinition: task identity versus input schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="philosophy.html#scientific-layers">Scientific layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="philosophy.html#execution-boundary">Execution boundary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="philosophy.html#development-and-documentation">Development and documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="philosophy.html#files-and-processing-maintainers">Files and processing (maintainers)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta-series">Version 4.0.0 (beta series)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#spr-kkr-tasks-and-input-parameters">SPR-KKR tasks and input parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#completely-redesigned-execution">Completely redesigned execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#symmetry-plotting-and-gui-support">Symmetry, plotting and GUI support</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#compatibility">Compatibility</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta4">Version 4.0.0-beta4</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#arpes-nexus-export">ARPES NeXus export</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta3">Version 4.0.0-beta3</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#results-and-plotting">Results and plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#execution-and-fixes">Execution and fixes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta2">Version 4.0.0-beta2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#execution-and-remote-monitoring">Execution and remote monitoring</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#command-line-and-compatibility">Command line and compatibility</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta1">Version 4.0.0-beta1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#execution-remote-calculations-and-projects">Execution, remote calculations and projects</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#configuration-and-profiles">Configuration and profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#new-and-extended-spr-kkr-tasks">New and extended SPR-KKR tasks</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#symmetry-and-structure-tools">Symmetry and structure tools</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Results and plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#calculator-and-command-line-interface">Calculator and command-line interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Compatibility</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#internals">Internals</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-6-0">Version 3.6.0</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Internals</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#unreleased-develop">Unreleased (develop)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta-series">Version 4.0.0 (beta series)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta4">Version 4.0.0-beta4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta3">Version 4.0.0-beta3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta2">Version 4.0.0-beta2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-4-0-0-beta1">Version 4.0.0-beta1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-6-0">Version 3.6.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-4">Version 3.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-3-4">Version 3.3.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-3-3">Version 3.3.3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-3-2">Version 3.3.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-2-5-beta">Version 3.2.5-beta</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#user-interface">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#for-developers">For developers</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-2-5-beta">Version 3.2.5-beta</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-1-0-beta">Version 3.1.0-beta</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-0-2-beta">Version 3.0.2-beta</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-0-0-beta">Version 3.0.0-beta</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#tools">Tools</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Internals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#refactoring">Refactoring</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-3-0-0-beta">Version 3.0.0-beta</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-2-1">Version 2.2.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-2-0-beta">Version 2.2.0-beta</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Internals</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-1-1">Version 2.1.1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Internals</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-2-0-beta">Version 2.2.0-beta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-1-1">Version 2.1.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-0-4">Version 2.0.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-0-1">Version 2.0.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-0-0-beta2">Version 2.0.0-beta2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Internals</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-0-0-beta1">Version 2.0.0-beta1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id11">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#architecture-changes">Architecture changes</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-0-0-beta2">Version 2.0.0-beta2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-2-0-0-beta1">Version 2.0.0-beta1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-7">Version 1.0.7</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-6">Version 1.0.6</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#a1-fe-scf-simple"><code class="xref py py-mod docutils literal notranslate"><span class="pre">A1_Fe_scf_simple</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#a2-fe-scf-input-modifications"><code class="xref py py-mod docutils literal notranslate"><span class="pre">A2_Fe_scf_input_modifications</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#a3-fe-dos"><code class="xref py py-mod docutils literal notranslate"><span class="pre">A3_Fe_dos</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#a4-cpa-example"><code class="xref py py-mod docutils literal notranslate"><span class="pre">A4_CPA_Example</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#a5-al-eos"><code class="xref py py-mod docutils literal notranslate"><span class="pre">A5_Al_EOS</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#a6-cu-msspec"><code class="xref py py-mod docutils literal notranslate"><span class="pre">A6_Cu_MSSPEC</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#a7-srtio3-msspec"><code class="xref py py-mod docutils literal notranslate"><span class="pre">A7_SrTiO3_MSSPEC</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#a8-arpes-and-plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">A8_ARPES_and_plotting</span></code></a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.__getattr__.html">__getattr__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.ase_profile_storage.html">ase_profile_storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.conftest.html">conftest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.gui.html">gui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.result_files.html">result_files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="auto/ase2sprkkr_cli.html">ase2sprkkr_cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr_cli.commands.html">commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr_cli.errors.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto/ase2sprkkr_cli.main.html">main</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -288,17 +339,9 @@ Environment</a></p></li>
 <p><div class="toctree-wrapper compound">
 </div>
 </p>
-<section id="class-documentation">
-<h2>Class documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="auto/ase2sprkkr.html#module-ase2sprkkr" title="ase2sprkkr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr</span></code></a></p></td>
-<td><p>ase2sprkkr - ASE interface to SPR-KKR electron structure calculation.</p></td>
-</tr>
-</tbody>
-</table>
-<section id="indices-and-tables">
-<h3>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h3>
+</section>
+<section id="indices">
+<h2>Indices<a class="headerlink" href="#indices" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
@@ -306,19 +349,18 @@ Environment</a></p></li>
 </ul>
 </section>
 </section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="usage.html" class="btn btn-neutral float-right" title="How to use ASE2SPRKKR" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="First calculation: aluminium SCF and DOS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

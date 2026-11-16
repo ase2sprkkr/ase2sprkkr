@@ -1,0 +1,38 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="223pt" height="68pt" viewBox="0.00 0.00 223.00 68.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 63.75)">
+<ns0:title>inheritancead2fcca6fc</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>Occupation</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation" ns1:title="Occupation of an atomic site, mapping" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="87.25,-20.75 16.5,-20.75 16.5,0 87.25,0 87.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="51.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Occupation</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>SiteOccupation</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.occupations.SiteOccupation.html#ase2sprkkr.sprkkr.occupations.SiteOccupation" ns1:title="Proxy for the Occupation of a Site that raises a RuntimeError before any" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="215.25,-59.75 125.75,-59.75 125.75,-39 215.25,-39 215.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="170.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SiteOccupation</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>SitePropertyProxy</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.sites.SitePropertyProxy.html#ase2sprkkr.sprkkr.sites.SitePropertyProxy" ns1:title="Generic proxy for a SiteType-delegated property (mesh, potential, charge," target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="103.75,-59.75 0,-59.75 0,-39 103.75,-39 103.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="51.88" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SitePropertyProxy</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>SitePropertyProxy-&gt;SiteOccupation</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M104.03,-49.38C108.35,-49.38 112.73,-49.38 117.07,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="117.57,-51.83 124.57,-49.38 117.57,-46.93 117.57,-51.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

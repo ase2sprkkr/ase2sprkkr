@@ -6,11 +6,15 @@ LaunchParameters
 
 .. autoclass:: LaunchParameters
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.sprkkr.profile.LaunchParameters
       :parts: 2
+
 
    |
 

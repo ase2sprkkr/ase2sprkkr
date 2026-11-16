@@ -1,0 +1,428 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr_cli.commands.plot &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=adf6db29" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr_cli.commands.plot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr_cli.commands.plot</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="sd">"""</span>
+<span class="sd">Plotting values from structured SPR-KKR result files.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr_cli.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CLIUsageError</span>
+
+
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"Plot structured SPR-KKR result files and Grace .agr projects."</span>
+
+
+<div class="viewcode-block" id="extra_help">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.plot.extra_help.html#ase2sprkkr_cli.commands.plot.extra_help">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">extra_help</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.result_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResultFile</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="s2">"Supported structured result file formats:</span><span class="se">\n</span><span class="s2">"</span>
+    <span class="n">defs</span> <span class="o">=</span> <span class="n">ResultFile</span><span class="o">.</span><span class="n">definitions</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="n">out</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"    </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">defs</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">    AGR: Grace project with one or more graphs/datasets"</span></div>
+
+
+
+<span class="n">help</span> <span class="o">=</span> <span class="s2">"Plot SPR-KKR result files."</span>
+
+<span class="n">SFN_PLOT_MODES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"mesh"</span><span class="p">,</span> <span class="s2">"cell"</span><span class="p">,</span> <span class="s2">"periodic"</span><span class="p">,</span> <span class="s2">"shape"</span><span class="p">,</span> <span class="s2">"slice"</span><span class="p">,</span> <span class="s2">"radial"</span><span class="p">)</span>
+<span class="n">SFN_PLOT_MODE_HELP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"mesh"</span><span class="p">:</span> <span class="s2">"Show the distinct Voronoi meshes (the SFN default)."</span><span class="p">,</span>
+    <span class="s2">"cell"</span><span class="p">:</span> <span class="s2">"Place each distinct mesh in the crystallographic cell."</span><span class="p">,</span>
+    <span class="s2">"periodic"</span><span class="p">:</span> <span class="s2">"Show the periodic tessellation clipped to one cell."</span><span class="p">,</span>
+    <span class="s2">"shape"</span><span class="p">:</span> <span class="s2">"Reconstruct the S=0.5 shape-function isosurface."</span><span class="p">,</span>
+    <span class="s2">"slice"</span><span class="p">:</span> <span class="s2">"Show a planar section of the reconstructed shape function."</span><span class="p">,</span>
+    <span class="s2">"radial"</span><span class="p">:</span> <span class="s2">"Show the radial spherical-harmonic coefficients."</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.plot.parser.html#ase2sprkkr_cli.commands.plot.parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"output"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"SPR-KKR result file or Grace .agr project."</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-o"</span><span class="p">,</span>
+        <span class="s2">"--output_filename"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"filename"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"The plot will be saved to a file with given name, instead of showing it on the screen. If more values are given (see -v), their name will be added to the filename."</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-v"</span><span class="p">,</span>
+        <span class="s2">"--value"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Only the value of the given name will be plotted (option can be repeated)"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"append"</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-V"</span><span class="p">,</span>
+        <span class="s2">"--show-values"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"show_values"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Show, which values can be plotted."</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-s"</span><span class="p">,</span>
+        <span class="s2">"--plot_size"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"figsize"</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">'The plot size. Example: "5cm,5cm", "6,4". The default units are inches.'</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--colormap"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"colormap"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Matplotlib colormap"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-d"</span><span class="p">,</span> <span class="s2">"--dpi"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"dpi"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"DPI of the resulting image (default 600)"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-n"</span><span class="p">,</span>
+        <span class="s2">"--norm"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"norm"</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">"lin"</span><span class="p">,</span> <span class="s2">"log"</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Matplotlib colormap will use linear or logarithmic scale (the default behavior depends on the plotted data)"</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-l"</span><span class="p">,</span>
+        <span class="s2">"--use_latex"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"latex"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Force use LaTex for generating captions. Default is to use the default matplotlib settings (can be configured per user)."</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-L"</span><span class="p">,</span>
+        <span class="s2">"--do_not_use_latex"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"latex"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_false"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Do not use LaTex for generating captions"</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-S"</span><span class="p">,</span>
+        <span class="s2">"--set"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"args"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Given a value of the format name=value, pass the value to the plotting function. You can so override various options that matplotlib plotting functions accept (e.g. vmin or vmax for pcolormesh), or the values that can be set using set_&lt;something&gt; functions (e.g. title or (x|y)label). This option can be repeated."</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"append"</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">latex</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># or True/False if you want a default</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--separate_plots"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Plot each value from file in a separate window or/and file."</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">"BSF specific options"</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--sites"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Select a site to plot (for BSF). Either number or two comma delimited numbers from,to. Numbering starts from 1. "</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--fermi"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Draw a line at Fermi energy. Optional float specifies line width."</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"?"</span><span class="p">,</span>
+        <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">"SFN specific options"</span><span class="p">)</span>
+    <span class="n">modes</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">SFN_PLOT_MODES</span><span class="p">:</span>
+        <span class="n">modes</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"--</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">dest</span><span class="o">=</span><span class="s2">"what"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store_const"</span><span class="p">,</span>
+            <span class="n">const</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="n">SFN_PLOT_MODE_HELP</span><span class="p">[</span><span class="n">mode</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.plot.run.html#ase2sprkkr_cli.commands.plot.run">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.common.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_named_option</span><span class="p">,</span> <span class="n">parse_inches</span><span class="p">,</span> <span class="n">parse_tuple_function</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">unyt.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnytError</span>
+
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"output"</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"filename"</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"figsize"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">"figsize"</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_tuple_function</span><span class="p">(</span><span class="n">parse_inches</span><span class="p">,</span> <span class="mi">2</span><span class="p">)(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"figsize"</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">"sites"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">selected_sites</span> <span class="o">=</span> <span class="n">parse_tuple_function</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"sites"</span><span class="p">])</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">"sites"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">selected_sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_sites</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="n">selected_sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">selected_sites</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="n">generic_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">parse_named_option</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"args"</span><span class="p">))</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">pyparsing</span><span class="o">.</span><span class="n">ParseBaseException</span><span class="p">,</span> <span class="n">UnytError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CLIUsageError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid plotting option: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+    <span class="k">if</span> <span class="s2">"what"</span> <span class="ow">in</span> <span class="n">generic_options</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"SFN plot mode cannot be set using '-S what=...'; use one of: "</span>
+            <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"--</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">SFN_PLOT_MODES</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">generic_options</span><span class="p">)</span>
+    <span class="n">show_values</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"show_values"</span><span class="p">)</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.result_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">GraceFile</span><span class="p">,</span> <span class="n">read_plottable_file</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.result_files.definitions.sfn</span><span class="w"> </span><span class="kn">import</span> <span class="n">SFNResultFile</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.gui.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">Multiplot</span>
+
+    <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">of</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fn</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">value_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">" value '</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">'"</span> <span class="k">if</span> <span class="n">value</span> <span class="k">else</span> <span class="s2">""</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"File '</span><span class="si">{</span><span class="n">of</span><span class="si">}</span><span class="s2">'</span><span class="si">{</span><span class="n">value_label</span><span class="si">}</span><span class="s2"> can not be plotted: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+        <span class="n">of</span> <span class="o">=</span> <span class="n">read_plottable_file</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">"what"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">what</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"what"</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">what</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SFN_PLOT_MODES</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Unknown SFN plot mode '</span><span class="si">{</span><span class="n">what</span><span class="si">}</span><span class="s2">'; choose one of: "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SFN_PLOT_MODES</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="n">SFNResultFile</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"SFN plot mode options are only valid for SFN files; "</span>
+                    <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">' was read as </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">of</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">."</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"An SFN plot mode selects a whole-file plot and "</span>
+                    <span class="s2">"cannot be combined with '--value'."</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show_values</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In file </span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">, there are values to plot:"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="n">GraceFile</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">of</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">legend</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">dataset</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">of</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">"plot"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">plot</span><span class="p">):</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"layer"</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="s2">"plot_parameters"</span><span class="p">,</span> <span class="p">{}):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Argument '--</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">' is not valid for </span><span class="si">{</span><span class="n">of</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">""</span><span class="p">))</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"_</span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="si">}{</span><span class="n">fn</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fn</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="n">GraceFile</span><span class="p">):</span>
+            <span class="n">plot</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">of</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">datasets</span><span class="o">=</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">value</span><span class="p">],</span> <span class="n">filename</span><span class="o">=</span><span class="n">fn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">),</span> <span class="n">output</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">value</span><span class="p">:</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">vals</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">of</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+                    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"There is no value named '</span><span class="si">{</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">' "</span>
+                            <span class="sa">f</span><span class="s2">"in the result file '</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">'."</span>
+                        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s2">"plot"</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"Value '</span><span class="si">{</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">' does not know how it should be plotted."</span>
+                        <span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">val</span>
+
+            <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">()</span> <span class="p">]</span>
+            <span class="n">ln</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">i</span><span class="o">.</span><span class="n">number_of_plots</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vals</span> <span class="p">)</span>
+            <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">number_of_plots</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">filename</span><span class="o">=</span><span class="n">fn</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="k">as</span> <span class="n">mp</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">:</span>
+                    <span class="n">plot</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">output</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="s2">"plot"</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File '</span><span class="si">{</span><span class="n">of</span><span class="si">}</span><span class="s2">' does not know, how it should be plotted."</span><span class="p">)</span>
+            <span class="n">plot</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">of</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">fn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">output</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

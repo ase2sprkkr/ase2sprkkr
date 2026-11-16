@@ -1,0 +1,14 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="182pt" height="29pt" viewBox="0.00 0.00 182.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance9bae4b3548</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>module_registry.ModuleRegistry</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.module_registry.ModuleRegistry.html#ase2sprkkr.common.module_registry.ModuleRegistry" ns1:title="Lazily discover and load one named value from package modules." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="173.5,-20.75 0,-20.75 0,0 173.5,0 173.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="86.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">module_registry.ModuleRegistry</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

@@ -1,0 +1,89 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="20pt" viewBox="0.00 0.00 576.00 20.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.691684 0.691684) rotate(0) translate(4 24.75)">
+<ns0:title>inheritancee145cfbe16</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>basic.BaseRealWithUnits</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits" ns1:title="The base class for float value, which can have units append." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="724.5,-20.75 586.25,-20.75 586.25,0 724.5,0 724.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="655.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">basic.BaseRealWithUnits</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>basic.Energy</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Energy.html#ase2sprkkr.common.grammar_types.basic.Energy" ns1:title="The grammar type for energy. The default units are Rydberg, one can specify eV." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="824.75,-20.75 746.5,-20.75 746.5,0 824.75,0 824.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="785.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">basic.Energy</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>basic.BaseRealWithUnits-&gt;basic.Energy</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M724.63,-10.38C729.15,-10.38 733.64,-10.38 738.02,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="738.51,-12.83 745.51,-10.38 738.51,-7.93 738.51,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>basic.Real</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real" ns1:title="A real value" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="564.25,-20.75 498,-20.75 498,0 564.25,0 564.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="531.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">basic.Real</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>basic.Real-&gt;basic.BaseRealWithUnits</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M564.56,-10.38C568.72,-10.38 573.11,-10.38 577.61,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="578.07,-12.83 585.07,-10.38 578.07,-7.93 578.07,-12.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>basic.Number</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" ns1:title="Base class for a number - descendants of this class can have minimal and/or maximal possible value." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="476,-20.75 392.5,-20.75 392.5,0 476,0 476,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="434.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">basic.Number</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>basic.Number-&gt;basic.Real</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M476.31,-10.38C480.65,-10.38 485.05,-10.38 489.38,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="489.82,-12.83 496.82,-10.38 489.82,-7.93 489.82,-12.83" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>grammar_type.TypedGrammarType</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" ns1:title="grammar_type.TypedGrammarType" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="370.5,-20.75 182,-20.75 182,0 370.5,0 370.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="276.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">grammar_type.TypedGrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>grammar_type.TypedGrammarType-&gt;basic.Number</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M370.7,-10.38C375.09,-10.38 379.41,-10.38 383.61,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="384.27,-12.83 391.27,-10.38 384.27,-7.93 384.27,-12.83" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>grammar_type.GrammarType</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" ns1:title="Base class for definition of configuration option types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="160,-20.75 0,-20.75 0,0 160,0 160,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="80" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">grammar_type.GrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>grammar_type.GrammarType-&gt;grammar_type.TypedGrammarType</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M160.29,-10.38C164.57,-10.38 168.9,-10.38 173.25,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="173.85,-12.83 180.85,-10.38 173.85,-7.93 173.85,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

@@ -6,11 +6,15 @@ MeshInformationSection
 
 .. autoclass:: MeshInformationSection
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection
       :parts: 2
+
 
    |
 

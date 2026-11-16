@@ -1,0 +1,92 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="403pt" height="107pt" viewBox="0.00 0.00 403.00 107.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 102.75)">
+<ns0:title>inheritancefac5dd3613</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>DefaultOutputParser</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.default.DefaultOutputParser" ns1:title="DefaultOutputParser" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="395,-20.75 280,-20.75 280,0 395,0 395,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="337.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">DefaultOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>SprKkrOutputParser</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" ns1:title="SprKkrOutputParser" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="253.88,-20.75 142.62,-20.75 142.62,0 253.88,0 253.88,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="198.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SprKkrOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>SprKkrOutputParser-&gt;DefaultOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M254.28,-10.38C259.9,-10.38 265.63,-10.38 271.34,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="271.9,-12.83 278.9,-10.38 271.9,-7.93 271.9,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>DefaultOutputReader</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" ns1:title="DefaultOutputReader" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="258,-59.75 138.5,-59.75 138.5,-39 258,-39 258,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="198.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">DefaultOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>KkrOutputReader</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" ns1:title="Parse SPR-KKR output streams into a TaskResult." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="108.25,-59.75 8.25,-59.75 8.25,-39 108.25,-39 108.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">KkrOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>KkrOutputReader-&gt;DefaultOutputReader</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M108.68,-49.38C115.57,-49.38 122.75,-49.38 129.9,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="130.52,-51.83 137.52,-49.38 130.52,-46.93 130.52,-51.83" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>DefaultResult</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.default.DefaultResult" ns1:title="DefaultResult" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="239.62,-98.75 156.88,-98.75 156.88,-78 239.62,-78 239.62,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="198.25" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">DefaultResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>TaskResult</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" ns1:title="A base class for a result of a runned task (kkrscf executable)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="92.5,-98.75 24,-98.75 24,-78 92.5,-78 92.5,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TaskResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>TaskResult-&gt;DefaultResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M92.66,-88.38C109.33,-88.38 129.82,-88.38 148.23,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="148.76,-90.83 155.76,-88.38 148.76,-85.93 148.76,-90.83" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>ProcessOutputParser</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" ns1:title="Parse asynchronous stdout/stderr streams." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="116.5,-20.75 0,-20.75 0,0 116.5,0 116.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ProcessOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>ProcessOutputParser-&gt;SprKkrOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M116.97,-10.38C122.63,-10.38 128.39,-10.38 134.1,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="134.65,-12.83 141.65,-10.38 134.65,-7.93 134.65,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

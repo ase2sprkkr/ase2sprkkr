@@ -1,0 +1,38 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="135pt" height="125pt" viewBox="0.00 0.00 135.00 125.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 120.75)">
+<ns0:title>inheritance9c4474c1b7</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>cached_class_property</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.common.decorators.cached_class_property" ns1:title="Decorator that converts a method with a single cls argument into a property" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="127,-20.75 0,-20.75 0,0 127,0 127,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="63.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">cached_class_property</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>cached_property</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.common.decorators.cached_property" ns1:title="Cached property that allows a setter and deleter." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="112,-59.75 15,-59.75 15,-39 112,-39 112,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="63.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">cached_property</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>cached_property-&gt;cached_property</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M47.87,-60.15C41.62,-68.81 46.83,-77.75 63.5,-77.75 74.96,-77.75 81.01,-73.52 81.63,-68.07" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="83.8,-66.81 79.36,-60.87 79.13,-68.28 83.8,-66.81" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>maybeclassmethod</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.decorators.maybeclassmethod.html#ase2sprkkr.common.decorators.maybeclassmethod" ns1:title="This decorator creates a method, that can behawes both as" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="119.5,-116.75 7.5,-116.75 7.5,-96 119.5,-96 119.5,-116.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="63.5" y="-103.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">maybeclassmethod</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

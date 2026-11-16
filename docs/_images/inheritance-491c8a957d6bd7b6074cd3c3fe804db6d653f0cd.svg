@@ -1,0 +1,56 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="506pt" height="29pt" viewBox="0.00 0.00 506.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritanceb67f132932</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>abc.ABC</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Helper class that provides a standard way to create an ABC using">
+<ns0:polygon fill="lightgray" stroke="black" points="56.5,-20.75 0,-20.75 0,0 56.5,0 56.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="28.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">abc.ABC</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>abc.GetPropertiesMixin</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:title="Mixin class which provides get_forces(), get_stress() and so on.">
+<ns0:polygon fill="lightgray" stroke="black" points="208.5,-20.75 78.5,-20.75 78.5,0 208.5,0 208.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="143.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">abc.GetPropertiesMixin</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>abc.ABC-&gt;abc.GetPropertiesMixin</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M56.95,-10.38C61.05,-10.38 65.42,-10.38 69.93,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="70.43,-12.83 77.43,-10.38 70.43,-7.93 70.43,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>calculator.BaseCalculator</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="370.25,-20.75 230.5,-20.75 230.5,0 370.25,0 370.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="300.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">calculator.BaseCalculator</ns0:text>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>abc.GetPropertiesMixin-&gt;calculator.BaseCalculator</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M208.84,-10.38C213.14,-10.38 217.5,-10.38 221.86,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="222.48,-12.83 229.48,-10.38 222.48,-7.93 222.48,-12.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>calculator.SPRKKR</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR" ns1:title="ASE-facing calculator for SPR-KKR." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="497.5,-20.75 392.25,-20.75 392.25,0 497.5,0 497.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="444.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">calculator.SPRKKR</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>calculator.BaseCalculator-&gt;calculator.SPRKKR</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M370.54,-10.38C374.95,-10.38 379.36,-10.38 383.73,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="384.27,-12.83 391.27,-10.38 384.27,-7.93 384.27,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

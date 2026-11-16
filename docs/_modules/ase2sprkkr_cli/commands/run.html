@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr_cli.commands.run &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=adf6db29" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr_cli.commands.run</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr_cli.commands.run</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="sd">"""</span>
+<span class="sd">This is a script to run calculation from commandline. Run it to see the doc.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr_cli.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CLIUsageError</span>
+
+
+
+
+<span class="n">help</span> <span class="o">=</span> <span class="s2">"Run SPRKKR calculation."</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"Run a calculation with optional NAME=VALUE input parameters."</span>
+<span class="n">unknowns</span> <span class="o">=</span> <span class="s2">"options"</span>  <span class="c1"># Allow positional overrides after CLI flags across Python versions.</span>
+
+
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.run.parser.html#ase2sprkkr_cli.commands.run.parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">bool_arg</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">argparse</span><span class="p">,</span> <span class="s2">"BooleanOptionalAction"</span><span class="p">,</span> <span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"pot"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"SPR-KKR potential file or input file. The type is determined by its content."</span><span class="p">)</span>
+
+    <span class="n">grp</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+    <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-t"</span><span class="p">,</span>
+        <span class="s2">"--task"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"task"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Task to compute (see 'ase2sprkkr info --task')."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--input-file"</span><span class="p">,</span>
+        <span class="s2">"-i"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Run ase2sprkkr -i inputfile potfile, if you want to run task determined by the give input file with a given potential."</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--print-output"</span><span class="p">,</span> <span class="s2">"-O"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print the output of SPRKKR."</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"None"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">bool_arg</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--output-file"</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Output file"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--empty-spheres"</span><span class="p">,</span>
+        <span class="s2">"-e"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Try to add empty spheres (by default, they are added if the potential is not converged and no vacuum atom is present."</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">bool_arg</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--profile"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"NAME"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Use the named SPR-KKR execution profile (default: configured default)."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--project-id"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"UUID"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Create a persistent run associated with this existing project ID."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--submit-only"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Submit a project run without waiting; requires a managed backend."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--directory"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Calculation working directory (default: project directory or current directory)."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"options"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"*"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Input parameters in the form &lt;name&gt;=&lt;value&gt;."</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_project_manager">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.run._project_manager.html#ase2sprkkr_cli.commands.run._project_manager">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_project_manager</span><span class="p">(</span><span class="n">identifier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Resolve an existing project UUID through ASE2SPRKKR's storage policy."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.projects</span><span class="w"> </span><span class="kn">import</span> <span class="n">project_execution_manager</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">project_id</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">CLIUsageError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid project ID </span><span class="si">{</span><span class="n">identifier</span><span class="si">!r}</span><span class="s2">; expected a UUID"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="n">project_execution_manager</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">project_id</span><span class="p">)</span>
+        <span class="n">project</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">projects</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">project_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">CLIUsageError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Project ID </span><span class="si">{</span><span class="n">identifier</span><span class="si">!r}</span><span class="s2"> does not exist"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="p">,</span> <span class="n">project</span></div>
+
+
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.run.run.html#ase2sprkkr_cli.commands.run.run">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">submit_only</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">project_id</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CLIUsageError</span><span class="p">(</span><span class="s2">"--submit-only requires --project-id"</span><span class="p">)</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.common.module_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegistryEntryNotFound</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.common.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_named_option</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">task_registry</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">task</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">RegistryEntryNotFound</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CLIUsageError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown task </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">task</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">parse_named_option</span><span class="p">(</span><span class="n">option</span><span class="p">)</span> <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">pyparsing</span><span class="o">.</span><span class="n">ParseBaseException</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CLIUsageError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid input parameter: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span><span class="p">,</span> <span class="n">Potential</span>  <span class="c1"># NOQA</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">SPRKKR</span><span class="p">()</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">pot</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">pyparsing</span><span class="o">.</span><span class="n">ParseException</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">ip</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">pot</span><span class="p">)</span>
+            <span class="n">potential</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">pyparsing</span><span class="o">.</span><span class="n">ParseException</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">pot</span><span class="si">}</span><span class="s2"> is neither potential nor input_parameters file"</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">input_file</span><span class="p">:</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">input_file</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">task</span><span class="p">:</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">task</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s2">"empty_spheres"</span><span class="p">,</span> <span class="s2">"print_output"</span><span class="p">,</span> <span class="s2">"output_file"</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">o</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span>
+
+    <span class="n">manager</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">project_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">manager</span><span class="p">,</span> <span class="n">project</span> <span class="o">=</span> <span class="n">_project_manager</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">project_id</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"project"</span><span class="p">]</span> <span class="o">=</span> <span class="n">manager</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">project</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"directory"</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">directory</span>
+    <span class="k">elif</span> <span class="n">project</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">project</span><span class="o">.</span><span class="n">directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"directory"</span><span class="p">]</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">directory</span>
+
+    <span class="k">if</span> <span class="n">manager</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
+            <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+    <span class="n">runner</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span>
+        <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">submit_only</span> <span class="ow">and</span> <span class="n">runner</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">execution_mode</span> <span class="o">!=</span> <span class="s2">"managed"</span><span class="p">:</span>
+        <span class="n">runner</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">CLIUsageError</span><span class="p">(</span>
+            <span class="s2">"--submit-only requires a managed backend (kkrunner or psij); "</span>
+            <span class="s2">"select one using --profile"</span>
+        <span class="p">)</span>
+
+    <span class="n">runner</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Run ID: </span><span class="si">{</span><span class="n">runner</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">submit_only</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">CalculationFailed</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunState</span>
+
+    <span class="k">if</span> <span class="n">runner</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CalculationFailed</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"SPR-KKR calculation </span><span class="si">{</span><span class="n">runner</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2"> "</span>
+            <span class="sa">f</span><span class="s2">"(return code </span><span class="si">{</span><span class="n">runner</span><span class="o">.</span><span class="n">return_code</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">runner</span><span class="o">.</span><span class="n">failure_message</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="270pt" height="29pt" viewBox="0.00 0.00 270.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritanced6daaa606a</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>data.Prefixed</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.data.Prefixed.html#ase2sprkkr.common.grammar_types.data.Prefixed" ns1:title="This value consists from a few lines, each prefixed with a given prefix" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="261.75,-20.75 182,-20.75 182,0 261.75,0 261.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="221.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">data.Prefixed</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>grammar_type.GrammarType</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" ns1:title="Base class for definition of configuration option types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="160,-20.75 0,-20.75 0,0 160,0 160,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="80" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">grammar_type.GrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>grammar_type.GrammarType-&gt;data.Prefixed</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M160.34,-10.38C164.73,-10.38 169.07,-10.38 173.29,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="174.01,-12.83 181.01,-10.38 174.01,-7.93 174.01,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

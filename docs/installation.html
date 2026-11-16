@@ -6,12 +6,12 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation of the package using package managers &mdash; ASE2SPRKKR  documentation</title>
+  <title>Installation and upgrading &mdash; ASE2SPRKKR  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=adf6db29" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -21,7 +21,9 @@
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using ASE2SPRKKR" href="usage.html" />
+    <link rel="prev" title="First calculation: aluminium SCF and DOS" href="quickstart.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,31 +45,59 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation and native executables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-or-upgrade-ase2sprkkr">Install or upgrade ASE2SPRKKR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conda">Conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-spr-kkr-executables">Configure SPR-KKR executables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#virtual-environments">Virtual environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#upgrading-from-3-x-or-older-versions">Upgrading from 3.x or older versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#developer-installation">Developer installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-this-documentation">Building this documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Architecture for developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
         </div>
@@ -84,7 +114,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Installation of the package using package managers</li>
+      <li class="breadcrumb-item active">Installation and upgrading</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -94,176 +124,255 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="installation-of-the-package-using-package-managers">
-<h1>Installation of the package using package managers<a class="headerlink" href="#installation-of-the-package-using-package-managers" title="Link to this heading"></a></h1>
-<p>The simplest way how to install and use the package is to install them
-using package managers: either pip</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ase2sprkkr
-</pre></div>
-</div>
-<p>or conda</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>ase2sprkkr<span class="w"> </span>ase2sprkkr
-</pre></div>
-</div>
-<p>I reccomend to install beta version: there can be some bugs, but mostly it has
-more bugs repaired than introduced, moreover, you can enjoy new properties. The
-beta versions are available only through <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>ase2sprkkr
-</pre></div>
-</div>
-<p>To use bleading edge sources (the newest features, but you risk to encounter bugs),
-you can install the packages from github:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
-</pre></div>
-</div>
-<section id="kkrunner-dependency">
-<h2>KKRunner dependency<a class="headerlink" href="#kkrunner-dependency" title="Link to this heading"></a></h2>
-<p>Pip installs KKRunner as a separate runtime dependency. For source development,
-install it before ASE2SPRKKR. Run the following from the ASE2SPRKKR checkout:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install -e "&lt;path-to-kkrunner&gt;"</span>
-<span class="go">python -m pip install -e .</span>
-</pre></div>
-</div>
-<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;path-to-kkrunner&gt;</span></code> with the location of your KKRunner checkout.</p>
-<p>For scheduler support install <code class="docutils literal notranslate"><span class="pre">ase2sprkkr[psij]</span></code>. On an SSH target, install
-<code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> (or <code class="docutils literal notranslate"><span class="pre">kkrunner[psij]</span></code> for a scheduler), SPR-KKR and its required MPI
-runtime. The target does not need ASE2SPRKKR just to run its executables.
-See the <a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a>
-for backend requirements and installation details.</p>
-</section>
-<section id="further-notes">
-<h2>Further notes<a class="headerlink" href="#further-notes" title="Link to this heading"></a></h2>
-<p>In some systems, the <code class="docutils literal notranslate"><span class="pre">pip</span></code> utility for <code class="docutils literal notranslate"><span class="pre">python3</span></code> is called <code class="docutils literal notranslate"><span class="pre">pip3</span></code>.
-It may be possible, that <code class="docutils literal notranslate"><span class="pre">pip</span></code> is installed, but it is not in <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.
-In such case, the pip utility can be runned using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span></code> or <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip3</span></code>.</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">pip</span></code> is not installed, you can install it using the linux distribution package
-manager, e.g. in Debian/Ubuntu</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt<span class="w"> </span>install<span class="w"> </span>pip3
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>zypper<span class="w"> </span>install<span class="w"> </span>pip
-</pre></div>
-</div>
-<p>For the conda installation instructions, see the Anaconda documentation
-<a class="reference external" href="https://docs.anaconda.com/anaconda/install/linux/">https://docs.anaconda.com/anaconda/install/linux/</a> however, for the users
-unexperienced with conda, the (simpler) pip way is recommended.</p>
-</section>
-</section>
-<section id="install-the-packages-from-git-and-or-source-codes">
-<h1>Install the packages from GIT (and/or source codes)<a class="headerlink" href="#install-the-packages-from-git-and-or-source-codes" title="Link to this heading"></a></h1>
-<p>If you do not want to use public package managers as pip or conda, or
-you want to contribute to development, you can use GIT to obtain the
-package sources.</p>
+  <section id="installation-and-upgrading">
+<h1>Installation and upgrading<a class="headerlink" href="#installation-and-upgrading" title="Link to this heading"></a></h1>
+<p>ASE2SPRKKR provides a Python-based interface for preparing, executing and
+analyzing calculations with the <strong>separately installed</strong> SPR-KKR software.
+For the first calculation, continue with <a class="reference internal" href="quickstart.html"><span class="doc">First calculation: aluminium SCF and DOS</span></a> after installing
+the interface and configuring the executables.</p>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Python &gt;= 3.9</p></li>
-<li><p>SPR-KKR (not checked by the installer)</p></li>
-<li><p>Python packages: see the the pypoject.toml file</p></li>
-<li><p>Git (to obtain the sources)</p></li>
+<li><p><strong>Python 3.9 or newer</strong> for ASE2SPRKKR 4.x. Earlier releases have
+different Python requirements; version 3.6 was the last supporting Python 3.8.</p></li>
+<li><p>Native SPR-KKR executables, libraries and any required MPI runtime for
+<strong>running</strong> calculations. The interface can be used to inspect task
+definitions and parse existing results without these executables.</p></li>
 </ul>
+<p>Get the native binaries from the
+<a class="reference external" href="https://sprkkr.org/download/">SPR-KKR download page</a> and follow the
+installation instructions distributed with the program. The
+<a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a> covers the native
+build requirements, methodology and numerical settings. ASE2SPRKKR does
+not distribute or compile SPR-KKR.</p>
+<p>Check whether native executables are on <code class="docutils literal notranslate"><span class="pre">PATH</span></code> (for example,
+<code class="docutils literal notranslate"><span class="pre">command</span> <span class="pre">-v</span> <span class="pre">kkrscf</span></code> on Unix-like systems). The command
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">info</span> <span class="pre">--executables</span></code> lists known SPR-KKR programs,
+not necessarily the binaries installed on your system.</p>
 </section>
-<section id="obtaining-the-package-using-git">
-<h2>Obtaining the package using GIT<a class="headerlink" href="#obtaining-the-package-using-git" title="Link to this heading"></a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ase2sprkkr/ase2sprkkr.git
-git<span class="w"> </span>checkout<span class="w"> </span>release
+<section id="install-or-upgrade-ase2sprkkr">
+<h2>Install or upgrade ASE2SPRKKR<a class="headerlink" href="#install-or-upgrade-ase2sprkkr" title="Link to this heading"></a></h2>
+<p>Install the latest stable release into the Python environment where
+you intend to run ASE2SPRKKR:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">ase2sprkkr</span>
+<span class="n">ase2sprkkr</span> <span class="o">--</span><span class="n">version</span>
 </pre></div>
 </div>
-<p>The first line fetches the code of the package. The second one checks
-out the stable (production) version of the code.</p>
-<p>If you want to obtain the current version of the (earlier-downloaded)
-code, run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>fetch
-git<span class="w"> </span>checkout<span class="w"> </span>release
+<p>Pip does not select beta releases by default. To install the newest
+available pre-release (for example in the 4.0 beta series), use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="o">--</span><span class="n">pre</span> <span class="n">ase2sprkkr</span>
 </pre></div>
 </div>
-<p>Alternatively, you can checkout <code class="docutils literal notranslate"><span class="pre">master</span></code> branch</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
-</pre></div>
-</div>
-<p>to obtain a newer (not thorougly tested yet) version or <code class="docutils literal notranslate"><span class="pre">develop`</span></code></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>develop
-</pre></div>
-</div>
-<p>to obtain the bleeding edge version (feel free to try it, test it
-and report the bugs).</p>
+<p>The version 4 features described in this documentation may not be
+available in earlier stable releases. Check the installed version with
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">--version</span></code> and consult <a class="reference internal" href="changelog.html"><span class="doc">Changelog</span></a>.</p>
+<p>The Python distribution automatically installs its required packages,
+including KKRunner on the local machine. To reproduce a specific
+version, pin it with
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">'ase2sprkkr==VERSION'</span></code>.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span></code> with the intended Python interpreter. Do not use
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span></code> on distribution-managed Python installations. If your
+system restricts installation into the main environment, use the
+<a class="reference internal" href="#installation-venv"><span class="std std-ref">Virtual environments</span></a> below.</p>
 </section>
-<section id="using-the-package-without-installing-the-pip-conda-packages">
-<h2>Using the package (without installing the pip/conda packages)<a class="headerlink" href="#using-the-package-without-installing-the-pip-conda-packages" title="Link to this heading"></a></h2>
-<p>You can install the package from the obtained sources using</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>.
+<section id="conda">
+<h2>Conda<a class="headerlink" href="#conda" title="Link to this heading"></a></h2>
+<p>ASE2SPRKKR is also distributed through
+<a class="reference external" href="https://anaconda.org/conda-forge/ase2sprkkr">conda-forge</a>.
+Install the version offered for your platform in a Conda environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span><span class="p">::</span><span class="n">ase2sprkkr</span>
 </pre></div>
 </div>
-<p>Or, if you want to develop ase2sprkkr, it is better idea to
-do an <cite>editable</cite> installation, where the package will see
-the changes made.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span>--editable<span class="w"> </span>.
-</pre></div>
-</div>
-<p>You can add <code class="docutils literal notranslate"><span class="pre">--no-deps</span></code> switch for a faster rebuild.</p>
-<section id="the-known-issues-of-the-editable-build">
-<h3>The known issues of the editable build<a class="headerlink" href="#the-known-issues-of-the-editable-build" title="Link to this heading"></a></h3>
-<p>1. Unfortunatelly, pip is not able to install the build requirements.
-So if they are not installed, the previous command will fail.
-You can either install the dependencies manually,
-copying them out from pyproject.toml:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>scikit-build<span class="w"> </span>cmake<span class="w"> </span>ninja<span class="w"> </span>cython
-</pre></div>
-</div>
-<p>or (which will be usefull if I add a build requirement and forgot
-to update this help) run the following snippet to install all the build-dependencies
-mentioned in pyproject.toml:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>tomllib
-pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import tomllib; print(' '.join(tomllib.load(open('pyproject.toml','rb'))['build-system']['requires']))"</span><span class="k">)</span>
-</pre></div>
-</div>
-<p>2. The limitation of the editable install is, that it won’t see
-newly created files automatically: you need run the command above
-again to make it notice it.</p>
-<p>3. If the build process fail, try to remove the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory created
-by the previous build (if it exists). Mostly, it happens if the
-<code class="docutils literal notranslate"><span class="pre">--no-build-isolation</span></code> switch is ommited.</p>
+<p>The available Conda versions and platforms can differ from PyPI; check
+the linked package listing and <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">--version</span></code>.
+In particular, the newest 4.x beta features described here may not yet
+be available through Conda. If you need a specific prerelease, follow
+the pip instructions above in an appropriate environment instead.
+This installs the Python interface, not the native SPR-KKR programs.</p>
 </section>
-</section>
-</section>
-<section id="documentation-of-the-package">
-<h1>Documentation of the package<a class="headerlink" href="#documentation-of-the-package" title="Link to this heading"></a></h1>
-<p>The documentation is published online at
-<a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">https://ase2sprkkr.github.io/ase2sprkkr/</a></p>
-<p>If you are using Git cloned sources, you can run</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">open</span> <span class="n">docs</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span>
+<section id="configure-spr-kkr-executables">
+<h2>Configure SPR-KKR executables<a class="headerlink" href="#configure-spr-kkr-executables" title="Link to this heading"></a></h2>
+<p>If SPR-KKR executables are already on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, no additional setting is
+needed. Otherwise, specify the directory containing the executables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">executable_dir</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">sprkkr</span><span class="o">/</span><span class="nb">bin</span>
 </pre></div>
 </div>
-<p>to see the (offline version of the) documentation. The documentation
-contains parts, that are generated from the docstrings in the source
-code. You can regenerate these by</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>docs
+<p>Replace the example path with the real directory. The command edits the
+active execution profile; by default this is ASE’s <code class="docutils literal notranslate"><span class="pre">[sprkkr]</span></code>
+configuration. To edit ASE’s profile explicitly, use <code class="docutils literal notranslate"><span class="pre">profiles.ase</span></code>.</p>
+<p>If your executables use a suffix (for example <code class="docutils literal notranslate"><span class="pre">kkrscf_v8</span></code>), configure
+it as well:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">executable_suffix</span> <span class="n">_v8</span>
 </pre></div>
 </div>
-<p>Sphinx and sphinx-toolbox python packages (installable e.g. using pip) and pandoc
-(for generating README.md) are needed for the build.</p>
-<p>However, the official build of Sphinx miss some attributes when it is used
-to build the documentation. So, till the pullrequest that corrects the Sphinx
-behavior will be merged into Sphinx, please use the following fork for
-building the documentation.
-<a class="reference external" href="https://github.com/lokik/sphinx.git">https://github.com/lokik/sphinx.git</a></p>
+<p>Inspect the current configuration and existing profiles with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="n">show</span>
+<span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="n">profiles</span>
+</pre></div>
+</div>
+<p>The default MPI policy is <code class="docutils literal notranslate"><span class="pre">auto</span></code>. When only serial executables are
+installed and automatic selection cannot use them, explicitly disable
+MPI with <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">profiles.default.mpi</span> <span class="pre">false</span></code>.
+Execution profiles, MPI and clusters are covered in <a class="reference internal" href="remote.html"><span class="doc">Remote running, MPI and execution profiles</span></a>.</p>
+<p>Named profiles use ASE2SPRKKR’s YAML configuration; the ASE profile
+uses ASE’s own <code class="docutils literal notranslate"><span class="pre">config.ini</span></code>. CLI <code class="docutils literal notranslate"><span class="pre">config</span> <span class="pre">--set</span></code> changes are
+saved immediately. Changes made through Python
+<code class="docutils literal notranslate"><span class="pre">config.profiles.ase.OPTION.set(value)</span></code> stay in memory until saved
+with <code class="docutils literal notranslate"><span class="pre">config.save_user_preferences()</span></code>.</p>
 </section>
-<section id="how-to-contribute-or-to-report-a-bug">
-<h1>How to contribute or to report a bug<a class="headerlink" href="#how-to-contribute-or-to-report-a-bug" title="Link to this heading"></a></h1>
-<p>Please feel free to make a pull-request or post an issue at:
-<a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">https://github.com/ase2sprkkr/ase2sprkkr</a></p>
+<section id="virtual-environments">
+<span id="installation-venv"></span><h2>Virtual environments<a class="headerlink" href="#virtual-environments" title="Link to this heading"></a></h2>
+<p>A virtual environment keeps an ASE2SPRKKR installation and its Python
+dependencies separate. This is useful when testing a different version,
+avoiding package conflicts, or working on a system-managed Python
+installation. It is optional if your current environment is suitable.</p>
+<p>For example, on Linux/macOS:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">.</span><span class="n">venv</span>
+<span class="n">source</span> <span class="o">.</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">ase2sprkkr</span>
+<span class="n">ase2sprkkr</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>On Windows, activate with <code class="docutils literal notranslate"><span class="pre">.venv\Scripts\activate</span></code>.
+Run <code class="docutils literal notranslate"><span class="pre">deactivate</span></code> to leave the environment. Installing the Python
+interface in a venv does not install the native SPR-KKR programs;
+configure or find the same native executables as described above.</p>
+</section>
+<section id="upgrading-from-3-x-or-older-versions">
+<span id="installation-upgrade"></span><h2>Upgrading from 3.x or older versions<a class="headerlink" href="#upgrading-from-3-x-or-older-versions" title="Link to this heading"></a></h2>
+<p>Upgrade the package in your regular Python environment with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">ase2sprkkr</span>
+</pre></div>
+</div>
+<p>When upgrading an installation with legacy Python configuration
+(<code class="docutils literal notranslate"><span class="pre">~/.config/ase2sprkkr/__init__.py</span></code> on typical Linux systems), run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">migrate</span>
+</pre></div>
+</div>
+<p>This command converts supported declarative configuration settings
+to <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>, including legacy execution settings migrated into
+a named execution profile. It leaves unrelated Python statements alone.
+By default it removes the migrated assignments from the old hook;
+use <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">migrate</span> <span class="pre">--keep-init</span></code> to retain that hook unchanged,
+or <code class="docutils literal notranslate"><span class="pre">--delete-init</span></code> to remove it. The existing
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">config</span> <span class="pre">--migrate</span></code> spelling is also supported.
+If the destination YAML file already exists, the migration does not
+overwrite it. Review the settings afterward with
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">config</span> <span class="pre">--show</span></code>.</p>
+<p>For an <strong>isolated trial upgrade</strong>, follow <a class="reference internal" href="#installation-venv"><span class="std std-ref">Virtual environments</span></a>
+instead of changing the active environment.</p>
+<p>Version 4 changes task definitions, execution and result handling.
+When upgrading existing scripts, check the following:</p>
+<ul class="simple">
+<li><p>Task names and options: <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">info</span> <span class="pre">--task</span></code> and <a class="reference internal" href="usage.html"><span class="doc">Using ASE2SPRKKR</span></a>.</p></li>
+<li><p>Execution profiles and SSH/schedulers: <a class="reference internal" href="remote.html"><span class="doc">Remote running, MPI and execution profiles</span></a>.</p></li>
+<li><p>Persistent projects and run history: <a class="reference internal" href="execution.html"><span class="doc">Persistent project calculations</span></a>.</p></li>
+<li><p>Result parsing, plotting and NeXus export: <a class="reference internal" href="result-files.html"><span class="doc">Result files, plots and NeXus export</span></a>.</p></li>
+</ul>
+<p>See <a class="reference internal" href="changelog.html"><span class="doc">Changelog</span></a> for the complete release-specific changes.
+Test important calculations before migrating production workflows.</p>
+</section>
+<section id="optional-dependencies">
+<span id="installation-optional"></span><h2>Optional dependencies<a class="headerlink" href="#optional-dependencies" title="Link to this heading"></a></h2>
+<p>The core Python installation does not need all optional plotting, data-export
+or integration dependencies. Add only the features you use; extras
+can be combined, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="s1">'ase2sprkkr[plot,nexus]'</span>
+</pre></div>
+</div>
+<p>The extras are:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">plot</span></code></dt><dd><p>Matplotlib, SciPy and scikit-image for supported scientific plots
+and Grace <code class="docutils literal notranslate"><span class="pre">.agr</span></code> files. The declared extra is currently called
+<code class="docutils literal notranslate"><span class="pre">plot</span></code>; use the name listed by your installed version.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">nexus</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">h5py</span></code> and <code class="docutils literal notranslate"><span class="pre">nexusformat</span></code> for ARPES SPC to NeXus/HDF5
+export. See <a class="reference internal" href="result-files.html"><span class="doc">Result files, plots and NeXus export</span></a>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">mendeleev</span></code></dt><dd><p>Extended element metadata, accessed lazily through
+<code class="docutils literal notranslate"><span class="pre">AtomicType.mendeleev</span></code>. Basic atomic information uses ASE or
+built-in tables without requiring this extra.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">psij</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">kkrunner[psij]</span></code> for integration with PSI/J job schedulers.
+Remote scheduler requirements are explained in <a class="reference internal" href="remote.html"><span class="doc">Remote running, MPI and execution profiles</span></a>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">jupyter</span></code></dt><dd><p>JupyterLab, nbformat and nbconvert for notebook workflows.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">es_finder</span></code></dt><dd><p>Integration with the <strong>proprietary, non-public</strong> <code class="docutils literal notranslate"><span class="pre">es_finder</span></code>
+empty-sphere finder. This package is not distributed through PyPI:
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr[es_finder]</span></code> installs only the public
+<code class="docutils literal notranslate"><span class="pre">pymatgen</span></code> prerequisite, <strong>not the proprietary program</strong>.
+The integration requires separately obtaining and installing
+the proprietary software.</p>
+</dd>
+</dl>
+<p>The <a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr-gui">ASE2SPRKKR GUI</a>
+is a separately installed application, not an <code class="docutils literal notranslate"><span class="pre">ase2sprkkr[gui]</span></code>
+extra. Install optional packages in the Python environment used by
+the corresponding application.</p>
+</section>
+<section id="developer-installation">
+<h2>Developer installation<a class="headerlink" href="#developer-installation" title="Link to this heading"></a></h2>
+<p>The repository uses separate branches for ongoing work and releases:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">develop</span></code> — active development and the normal base for contributions.
+It may contain code not yet included in a published version.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">master</span></code> — the beta-release line; it may lag behind <code class="docutils literal notranslate"><span class="pre">develop</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">release</span></code> — the stable-release line, when present; it tracks
+published stable versions rather than ongoing development.</p></li>
+</ul>
+<p>Use a version <strong>tag</strong> for a reproducible release checkout instead of
+depending on the moving branch heads. For development, clone
+<code class="docutils literal notranslate"><span class="pre">develop</span></code> and install in editable mode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ase2sprkkr</span><span class="o">/</span><span class="n">ase2sprkkr</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">ase2sprkkr</span>
+<span class="n">git</span> <span class="n">switch</span> <span class="n">develop</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>Source builds require a native compiler and CMake. Pip’s isolated
+build installs the declared Python build dependencies (including
+scikit-build-core and Cython); using <code class="docutils literal notranslate"><span class="pre">--no-build-isolation</span></code> means
+installing them yourself. For a smoke test without native executables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">test</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">kkr</span> <span class="o">--</span><span class="n">fast</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="philosophy.html"><span class="doc">ASE2SPRKKR architecture for developers</span></a> for developer architecture and <a class="reference internal" href="remote.html"><span class="doc">Remote running, MPI and execution profiles</span></a>
+for SSH and scheduler requirements.</p>
+</section>
+<section id="building-this-documentation">
+<h2>Building this documentation<a class="headerlink" href="#building-this-documentation" title="Link to this heading"></a></h2>
+<p>The Sphinx sources live in <code class="docutils literal notranslate"><span class="pre">doc_src/</span></code>; generated HTML lives in
+<code class="docutils literal notranslate"><span class="pre">docs/</span></code>. The authoritative GitHub README is
+<code class="docutils literal notranslate"><span class="pre">doc_src/README.rst</span></code>, synchronized to <code class="docutils literal notranslate"><span class="pre">README.md</span></code> by
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docs</span></code> or <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">doc-readme</span></code>. Verify the synchronization
+using <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">doc-readme-check</span></code>.</p>
+<p>From an editable source checkout, install the documentation tools:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">sphinx</span> <span class="n">sphinx</span><span class="o">-</span><span class="n">toolbox</span> <span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span> <span class="n">matplotlib</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">doc-build</span></code> generates the HTML and source-driven example gallery.
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docs</span></code> additionally regenerates <code class="docutils literal notranslate"><span class="pre">README.md</span></code> from
+<code class="docutils literal notranslate"><span class="pre">doc_src/README.rst</span></code>; this requires the external <code class="docutils literal notranslate"><span class="pre">pandoc</span></code> program.
+To verify that the checked-in Markdown matches its source, run
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">doc-readme-check</span></code> (also requiring Pandoc).</p>
+<p>The full HTML build imports ASE2SPRKKR and its dependencies; install
+the package from this checkout before invoking Sphinx.</p>
+</section>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="First calculation: aluminium SCF and DOS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usage.html" class="btn btn-neutral float-right" title="Using ASE2SPRKKR" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

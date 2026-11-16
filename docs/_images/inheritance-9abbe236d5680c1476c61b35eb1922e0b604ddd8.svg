@@ -1,0 +1,59 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="574pt" height="29pt" viewBox="0.00 0.00 574.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance3df3c76fcf</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>configuration.Configuration</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" ns1:title="The common base class for all configurations values and containers. I.e." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="148,-20.75 0,-20.75 0,0 148,0 148,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="74" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration.Configuration</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>options.BaseOption</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" ns1:title="A base placeholder for a leaf element of a grammar file," target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="281.25,-20.75 170,-20.75 170,0 281.25,0 281.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="225.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">options.BaseOption</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>configuration.Configuration-&gt;options.BaseOption</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M148.5,-10.38C152.71,-10.38 156.93,-10.38 161.1,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="161.82,-12.83 168.82,-10.38 161.82,-7.93 161.82,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>options.Option</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" ns1:title="Class for one option (a configuration value) of SPRKKR - either to" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="390.5,-20.75 303.25,-20.75 303.25,0 390.5,0 390.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="346.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">options.Option</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>options.BaseOption-&gt;options.Option</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M281.71,-10.38C285.92,-10.38 290.15,-10.38 294.33,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="295.05,-12.83 302.05,-10.38 295.05,-7.93 295.05,-12.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>result_options.OutputOption</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.result_options.OutputOption.html#ase2sprkkr.outputs.result_options.OutputOption" ns1:title="result_options.OutputOption" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="565.75,-20.75 412.5,-20.75 412.5,0 565.75,0 565.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="489.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">result_options.OutputOption</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>options.Option-&gt;result_options.OutputOption</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M390.72,-10.38C395,-10.38 399.44,-10.38 403.96,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="404.41,-12.83 411.41,-10.38 404.41,-7.93 404.41,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

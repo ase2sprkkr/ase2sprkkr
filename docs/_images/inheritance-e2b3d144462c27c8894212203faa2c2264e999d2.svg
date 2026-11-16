@@ -1,0 +1,29 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="304pt" height="29pt" viewBox="0.00 0.00 304.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance56cdd31b3e</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>bsf.BsfOutputReader</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.bsf.BsfOutputReader.html#ase2sprkkr.outputs.readers.bsf.BsfOutputReader" ns1:title="BSF task has no special parser, it just has a special" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="295.5,-20.75 179,-20.75 179,0 295.5,0 295.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="237.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">bsf.BsfOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>task_result.KkrOutputReader</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" ns1:title="Parse SPR-KKR output streams into a TaskResult." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="157,-20.75 0,-20.75 0,0 157,0 157,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="78.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">task_result.KkrOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>task_result.KkrOutputReader-&gt;bsf.BsfOutputReader</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M157.42,-10.38C161.82,-10.38 166.22,-10.38 170.57,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="171.1,-12.83 178.1,-10.38 171.1,-7.93 171.1,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

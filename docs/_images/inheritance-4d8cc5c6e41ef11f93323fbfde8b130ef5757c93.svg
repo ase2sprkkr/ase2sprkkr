@@ -1,0 +1,20 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="125pt" height="47pt" viewBox="0.00 0.00 125.00 47.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42.75)">
+<ns0:title>inheritance3dbb7917cb</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>EmptySpheresResult</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.bindings.empty_spheres.EmptySpheresResult.html#ase2sprkkr.bindings.empty_spheres.EmptySpheresResult" ns1:title="EmptySpheresResult(positions, radii)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="117.25,-20.75 0,-20.75 0,0 117.25,0 117.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">EmptySpheresResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>EmptySpheresResult-&gt;EmptySpheresResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M39.73,-21.15C32.18,-29.81 38.47,-38.75 58.62,-38.75 72.48,-38.75 79.79,-34.52 80.54,-29.07" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="82.57,-27.52 77.79,-21.85 78,-29.27 82.57,-27.52" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

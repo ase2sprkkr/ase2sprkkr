@@ -6,11 +6,15 @@ PotentialDefinition
 
 .. autoclass:: PotentialDefinition
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.potentials.potential_definitions.PotentialDefinition
       :parts: 2
+
 
    |
 

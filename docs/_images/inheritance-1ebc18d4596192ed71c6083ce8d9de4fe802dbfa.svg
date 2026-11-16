@@ -1,0 +1,44 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="177pt" height="68pt" viewBox="0.00 0.00 177.00 68.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 63.75)">
+<ns0:title>inheritancef2e98d7ec6</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseIoData</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.io_data.BaseIoData.html#ase2sprkkr.sprkkr.io_data.BaseIoData" ns1:title="Base class for object used during reading/writing." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="72.25,-39.75 0,-39.75 0,-19 72.25,-19 72.25,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="36.12" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseIoData</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>ReadIoData</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.io_data.ReadIoData.html#ase2sprkkr.sprkkr.io_data.ReadIoData" ns1:title="Object to store data during reading of a potential file." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="168,-59.75 95,-59.75 95,-39 168,-39 168,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="131.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ReadIoData</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>BaseIoData-&gt;ReadIoData</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M72.69,-36.99C77.2,-37.96 81.86,-38.96 86.48,-39.95" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="86.62,-42.48 93.98,-41.55 87.65,-37.69 86.62,-42.48" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>WriteIoData</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.io_data.WriteIoData.html#ase2sprkkr.sprkkr.io_data.WriteIoData" ns1:title="During writing of potential file, some lists are needed in more sections," target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="168.75,-20.75 94.25,-20.75 94.25,0 168.75,0 168.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="131.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">WriteIoData</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>BaseIoData-&gt;WriteIoData</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M72.69,-22.14C76.9,-21.28 81.24,-20.4 85.55,-19.52" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="86.68,-21.79 93.05,-18 85.7,-16.99 86.68,-21.79" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

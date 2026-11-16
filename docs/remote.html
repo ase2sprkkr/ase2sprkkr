@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Remote running, MPI and execution profiles &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=adf6db29" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Persistent project calculations" href="execution.html" />
+    <link rel="prev" title="Crystal symmetry and cell transformations" href="symmetry.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Remote running and execution profiles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#choosing-an-execution-profile">Choosing an execution profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#execution-backends-and-remote-requirements">Execution backends and remote requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#persistence-reattachment-and-recovery">Persistence, reattachment and recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mpi-and-executable-selection">MPI and executable selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#monitoring-recorded-runs">Monitoring recorded runs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Remote running, MPI and execution profiles</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/remote.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="remote-running-mpi-and-execution-profiles">
+<h1>Remote running, MPI and execution profiles<a class="headerlink" href="#remote-running-mpi-and-execution-profiles" title="Link to this heading"></a></h1>
+<p>The same SPR-KKR calculations can run locally, over SSH, or through a
+job scheduler. Execution profiles select the machine, executable and
+execution backend without changing the scientific task.</p>
+<p><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a>
+describes the execution library. Its source is on
+<a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">GitHub</a>.</p>
+<section id="choosing-an-execution-profile">
+<h2>Choosing an execution profile<a class="headerlink" href="#choosing-an-execution-profile" title="Link to this heading"></a></h2>
+<p>Inspect the current settings and named profiles:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="n">show</span>
+<span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="n">profiles</span>
+</pre></div>
+</div>
+<p>Without an explicitly selected named profile, ASE’s <code class="docutils literal notranslate"><span class="pre">[sprkkr]</span></code>
+configuration supplies the defaults. See <a class="reference internal" href="installation.html"><span class="doc">Installation and upgrading</span></a> for
+configuring local SPR-KKR executables.</p>
+<p>For example, create a named profile for SSH execution without
+installing KKRunner on the remote host (replace the paths and host):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">executor</span> <span class="n">ssh</span>
+<span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">host</span> <span class="n">user</span><span class="nd">@cluster</span>
+<span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">backend</span> <span class="n">direct</span>
+<span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">local_root</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">work</span>
+<span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">remote_root</span> <span class="o">/</span><span class="n">scratch</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">work</span>
+</pre></div>
+</div>
+<p>Run with that profile:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">run</span> <span class="n">calculation</span><span class="o">.</span><span class="n">pot</span> <span class="o">--</span><span class="n">profile</span> <span class="n">cluster</span>
+</pre></div>
+</div>
+<p>For an SSH job managed by a remote KKRunner supervisor, set
+<code class="docutils literal notranslate"><span class="pre">profiles.cluster.backend</span></code> to <code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> instead. This is also
+the default backend for SSH profiles that do not specify a backend.
+To make the named profile the default, run
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">default_profile</span> <span class="pre">cluster</span></code>.</p>
+<p>Select a profile from Python with
+<code class="docutils literal notranslate"><span class="pre">calculator.calculate(profile=&quot;cluster&quot;)</span></code>, or construct one directly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRProfile</span>
+
+<span class="n">profile</span> <span class="o">=</span> <span class="n">SPRKKRProfile</span><span class="p">(</span>
+    <span class="n">executor</span><span class="o">=</span><span class="s2">"ssh"</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="s2">"user@cluster"</span><span class="p">,</span>
+    <span class="n">local_root</span><span class="o">=</span><span class="s2">"/path/to/local/work"</span><span class="p">,</span>
+    <span class="n">remote_root</span><span class="o">=</span><span class="s2">"/path/to/remote/work"</span><span class="p">,</span>
+    <span class="n">backend</span><span class="o">=</span><span class="s2">"direct"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="s2">"calculation.pot"</span><span class="p">)</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Check that SSH login works, the remote directory is writable and the
+remote host can run the required SPR-KKR and MPI executables. Set the
+profile’s <code class="docutils literal notranslate"><span class="pre">executable_dir</span></code> if they are not on the remote <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p>
+</section>
+<section id="execution-backends-and-remote-requirements">
+<h2>Execution backends and remote requirements<a class="headerlink" href="#execution-backends-and-remote-requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Direct</strong> (<code class="docutils literal notranslate"><span class="pre">backend=&quot;direct&quot;</span></code>): runs SPR-KKR over SSH using Python
+on the target, but <strong>does not require KKRunner there</strong>. It has no
+independent supervisor retaining a definitive exit status.</p></li>
+<li><p><strong>KKRunner supervisor</strong> (<code class="docutils literal notranslate"><span class="pre">backend=&quot;kkrunner&quot;</span></code>): runs SPR-KKR
+under a supervisor on the execution host. This requires a compatible
+KKRunner installation in the target Python environment and retains
+completion information for reconnection and recovery.</p></li>
+<li><p><strong>PSI/J</strong> (<code class="docutils literal notranslate"><span class="pre">backend=&quot;psij&quot;</span></code>): submits through a job scheduler,
+such as Slurm. Local scheduler access needs <code class="docutils literal notranslate"><span class="pre">ase2sprkkr[psij]</span></code>
+on the client; scheduler access over SSH requires a compatible
+<code class="docutils literal notranslate"><span class="pre">kkrunner[psij]</span></code> installation on the remote host. Set
+<code class="docutils literal notranslate"><span class="pre">psij_backend=&quot;slurm&quot;</span></code> for Slurm.</p></li>
+</ul>
+<p>These are backend selections, independent of whether the calculation
+is recorded in a project. See the
+<a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/backends.html">KKRunner backend guide</a>
+for further details.</p>
+</section>
+<section id="persistence-reattachment-and-recovery">
+<h2>Persistence, reattachment and recovery<a class="headerlink" href="#persistence-reattachment-and-recovery" title="Link to this heading"></a></h2>
+<p>These describe different properties of a run:</p>
+<ul class="simple">
+<li><p><strong>Persistence:</strong> saving a run ID, its status, file paths and other
+metadata in a run store. Any backend can be used with a persistent
+project. Untracked execution is also possible with any backend.</p></li>
+<li><p><strong>Reattachment:</strong> reconnecting to a known run after the original
+client session ends. With a direct backend, a saved process identity
+and output paths allow limited status checks and resuming observation
+of output. Once the original connection is lost, however, the final
+exit code may be unavailable, so completion cannot necessarily be
+verified as successful. The <code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> supervisor retains
+completion information and supports fuller reattachment.</p></li>
+<li><p><strong>Submission recovery:</strong> finding a job when the client disconnected
+before its backend ID was saved. Direct execution cannot do this.
+The supervisor or a scheduler may support it, subject to available
+receipts or scheduler records.</p></li>
+</ul>
+<p>A lost connection does not, by itself, prove that a running process
+has terminated. Equally, a persistent record alone does not guarantee
+reliable reattachment or successful postprocessing. See
+<a class="reference internal" href="execution.html"><span class="doc">Persistent project calculations</span></a> for enabling project tracking and loading history.</p>
+</section>
+<section id="mpi-and-executable-selection">
+<h2>MPI and executable selection<a class="headerlink" href="#mpi-and-executable-selection" title="Link to this heading"></a></h2>
+<p>MPI defaults to <code class="docutils literal notranslate"><span class="pre">auto</span></code>. Request four ranks with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="s2">"calculation.pot"</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A required MPI calculation must not silently fall back to serial.
+If only serial executables are installed and automatic selection
+cannot use them, disable MPI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">mpi</span> <span class="n">false</span>
+</pre></div>
+</div>
+<p>For Slurm, select <code class="docutils literal notranslate"><span class="pre">backend=&quot;psij&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">psij_backend=&quot;slurm&quot;</span></code>. With <code class="docutils literal notranslate"><span class="pre">executor=&quot;psij&quot;</span></code>, PSI/J
+connects to a local scheduler; with <code class="docutils literal notranslate"><span class="pre">executor=&quot;ssh&quot;</span></code>, the
+backend runs on a scheduler-accessible host via SSH.</p>
+</section>
+<section id="monitoring-recorded-runs">
+<h2>Monitoring recorded runs<a class="headerlink" href="#monitoring-recorded-runs" title="Link to this heading"></a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">remote</span> <span class="pre">status</span></code>, <code class="docutils literal notranslate"><span class="pre">follow</span></code> and <code class="docutils literal notranslate"><span class="pre">cancel</span></code>
+with saved run IDs. The <code class="docutils literal notranslate"><span class="pre">--remote-id</span></code> alternative accepts an
+explicit backend handle instead. See <a class="reference internal" href="cli.html"><span class="doc">Command-line reference</span></a> for syntax.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="symmetry.html" class="btn btn-neutral float-left" title="Crystal symmetry and cell transformations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="execution.html" class="btn btn-neutral float-right" title="Persistent project calculations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

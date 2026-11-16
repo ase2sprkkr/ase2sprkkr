@@ -1,0 +1,14 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="145pt" height="29pt" viewBox="0.00 0.00 145.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance97610fdefc</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>FindEmptySpheresInputs</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.html#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" ns1:title="FindEmptySpheresInputs(max_spheres: 'int', min_radius_bohr: 'float', max_radius_bohr: 'float', alat_bohr: 'float', cell_scaled: 'np.ndarray', positions_scaled: 'np.ndarray', mapping: 'np.ndarray', n_classes: 'int', n_types: 'int', symbols4: 'list[str]', atomic_numbers: 'np.ndarray', occupations: 'np.ndarray', type_eq_class: 'np.ndarray', mesh: 'np.ndarray', n_symmetry_ops: 'int', rotations: 'np.ndarray | None', translations: 'np.ndarray | None', verbose: 'int')" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="136.75,-20.75 0,-20.75 0,0 136.75,0 136.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="68.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">FindEmptySpheresInputs</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

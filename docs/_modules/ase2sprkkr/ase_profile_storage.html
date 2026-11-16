@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.ase_profile_storage &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mods.css?v=adf6db29" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.ase_profile_storage</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.ase_profile_storage</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Safe persistence of the virtual ASE SPR-KKR execution profile.</span>
+
+<span class="sd">ASE configuration is INI, not ASE2SPRKKR YAML. Only the [sprkkr]</span>
+<span class="sd">section in the highest-priority permitted file defining [sprkkr] is edited;</span>
+<span class="sd">Linux /etc and Windows shared configuration are protected by default.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ntpath</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span><span class="p">,</span> <span class="n">PureWindowsPath</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stat</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+
+
+<span class="n">_SECTION</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\s*\[([^\]]+)\]\s*(?:[#;].*)?$"</span><span class="p">)</span>
+<span class="n">_OPTION</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^(\s*)([^\s=:#;][^=:]*?)(\s*[=:]\s*)(.*)$"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ase_config_candidates">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.ase_profile_storage.ase_config_candidates.html#ase2sprkkr.ase_profile_storage.ase_config_candidates">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ase_config_candidates</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Return ASE's configuration search paths in increasing precedence.</span>
+
+<span class="sd">    The last listed file overrides earlier ones when ASE reads config.</span>
+<span class="sd">    An explicitly empty ASE_CONFIG_PATH disables ASE's configuration,</span>
+<span class="sd">    so it must not silently create a config file at an unrelated path.</span>
+<span class="sd">    """</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ASE_CONFIG_PATH"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">paths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">separator</span> <span class="o">=</span> <span class="s2">";"</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">"win32"</span> <span class="k">else</span> <span class="s2">":"</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">paths</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"ASE_CONFIG_PATH is empty; no ASE configuration file is selected"</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ASE_CONFIG_FILE</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">ASE_CONFIG_FILE</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(),)</span></div>
+
+
+
+<div class="viewcode-block" id="_has_sprkkr_section">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.ase_profile_storage._has_sprkkr_section.html#ase2sprkkr.ase_profile_storage._has_sprkkr_section">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_has_sprkkr_section</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Check whether one ASE configuration file defines [sprkkr].</span>
+
+<span class="sd">    Each file is inspected independently: ASE merges these sections across</span>
+<span class="sd">    files, so a high-priority file with an unrelated calculator must not</span>
+<span class="sd">    move edits away from the file already defining SPR-KKR.</span>
+<span class="sd">    """</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span><span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="s2">"sprkkr"</span><span class="p">)</span></div>
+
+
+
+<span class="n">_SYSTEM_CONFIG_DIRECTORY</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"/etc"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="_is_system_config_path">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.ase_profile_storage._is_system_config_path.html#ase2sprkkr.ase_profile_storage._is_system_config_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_system_config_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Classify protected global configuration paths, including symlinks."""</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"linux"</span><span class="p">):</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">_SYSTEM_CONFIG_DIRECTORY</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">"win32"</span><span class="p">:</span>
+        <span class="c1"># ProgramData is shared configuration; Users/Default is a template</span>
+        <span class="c1"># for newly created accounts, *not* this user's private directory.</span>
+        <span class="n">candidate</span> <span class="o">=</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">normcase</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">PureWindowsPath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))))</span>
+        <span class="n">roots</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ProgramData"</span><span class="p">,</span> <span class="s2">"C:</span><span class="se">\\</span><span class="s2">ProgramData"</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ALLUSERSPROFILE"</span><span class="p">,</span> <span class="s2">"C:</span><span class="se">\\</span><span class="s2">ProgramData"</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SystemRoot"</span><span class="p">,</span> <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Windows"</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ProgramFiles"</span><span class="p">,</span> <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Program Files"</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ProgramFiles(x86)"</span><span class="p">,</span> <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Program Files (x86)"</span><span class="p">),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">PureWindowsPath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SystemDrive"</span><span class="p">,</span> <span class="s2">"C:"</span><span class="p">)</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">92</span><span class="p">))</span> <span class="o">/</span> <span class="s2">"Users"</span> <span class="o">/</span> <span class="s2">"Default"</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">roots</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">commonpath</span><span class="p">((</span><span class="n">candidate</span><span class="p">,</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">normcase</span><span class="p">(</span><span class="n">root</span><span class="p">)))</span> <span class="o">==</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">normcase</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="c1"># Check real location as well, to avoid links into system directories.</span>
+        <span class="n">resolved</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">resolved</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_is_system_config_path_resolved</span><span class="p">(</span><span class="n">resolved</span><span class="p">,</span> <span class="n">roots</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="_is_system_config_path_resolved">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.ase_profile_storage._is_system_config_path_resolved.html#ase2sprkkr.ase_profile_storage._is_system_config_path_resolved">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_system_config_path_resolved</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">roots</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Check a resolved Windows path without following links again."""</span>
+    <span class="n">candidate</span> <span class="o">=</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">normcase</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">PureWindowsPath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))))</span>
+    <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">roots</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">normalized</span> <span class="o">=</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">normcase</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">commonpath</span><span class="p">((</span><span class="n">candidate</span><span class="p">,</span> <span class="n">normalized</span><span class="p">))</span> <span class="o">==</span> <span class="n">normalized</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">continue</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="ase_config_target">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.ase_profile_storage.ase_config_target.html#ase2sprkkr.ase_profile_storage.ase_config_target">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ase_config_target</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Select the highest-priority *permitted* ASE file with [sprkkr].</span>
+
+<span class="sd">    By default, Linux /etc and Windows shared system configuration are</span>
+<span class="sd">    excluded. Do not write a lower-priority user file if a protected</span>
+<span class="sd">    higher-priority [sprkkr] section would override the edit.</span>
+<span class="sd">    """</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">ase_config_candidates</span><span class="p">()</span>
+    <span class="n">permitted</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">system</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">_is_system_config_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">permitted</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">PermissionError</span><span class="p">(</span>
+            <span class="s2">"No user-level ASE configuration path is available. "</span>
+            <span class="s2">"Configure a user path in ASE_CONFIG_PATH, or explicitly "</span>
+            <span class="s2">"request --system (system=True in Python)."</span>
+        <span class="p">)</span>
+
+    <span class="n">target_index</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+        <span class="p">((</span><span class="n">index</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">permitted</span><span class="p">)</span>
+         <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">_has_sprkkr_section</span><span class="p">(</span><span class="n">path</span><span class="p">)),</span>
+        <span class="n">permitted</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">system</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">[</span><span class="n">target_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">_is_system_config_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+                <span class="ow">and</span> <span class="n">_has_sprkkr_section</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">PermissionError</span><span class="p">(</span>
+                    <span class="s2">"A higher-priority system ASE file defines [sprkkr], "</span>
+                    <span class="s2">"so this user-level edit would be overridden. "</span>
+                    <span class="s2">"Change ASE_CONFIG_PATH to put a user file last, "</span>
+                    <span class="s2">"or explicitly request --system."</span>
+                <span class="p">)</span>
+    <span class="k">return</span> <span class="n">target</span></div>
+
+
+
+<div class="viewcode-block" id="_rewrite_section">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.ase_profile_storage._rewrite_section.html#ase2sprkkr.ase_profile_storage._rewrite_section">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_rewrite_section</span><span class="p">(</span><span class="n">original</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">updates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Edit INI options without rewriting unrelated sections or comments."""</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="n">keepends</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">_SECTION</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">first</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="n">found</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"sprkkr"</span><span class="p">:</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="k">if</span> <span class="n">first</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">updates</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="n">original</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">original</span>
+        <span class="k">if</span> <span class="n">prefix</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">prefix</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+            <span class="n">prefix</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="k">if</span> <span class="n">prefix</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">prefix</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">):</span>
+            <span class="n">prefix</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s2">"[sprkkr]</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">updates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+    <span class="n">written</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">replacement</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">last</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">_OPTION</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">))</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">match</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">updates</span><span class="p">:</span>
+            <span class="n">replacement</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="n">updates</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">written</span><span class="p">:</span>
+            <span class="n">ending</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="n">replacement</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="si">}{</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="si">}{</span><span class="n">value</span><span class="si">}{</span><span class="n">ending</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="n">written</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># ConfigParser permits indented continuation lines. If the edited</span>
+        <span class="c1"># option was multiline, the continuation belongs to that option.</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">last</span> <span class="ow">and</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isspace</span><span class="p">()</span>
+               <span class="ow">and</span> <span class="ow">not</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"#"</span><span class="p">,</span> <span class="s2">";"</span><span class="p">))):</span>
+            <span class="k">if</span> <span class="n">_OPTION</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">)):</span>
+                <span class="k">break</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">updates</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">written</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">replacement</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">replacement</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\r</span><span class="s2">"</span><span class="p">)):</span>
+                <span class="n">replacement</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">replacement</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">[:</span><span class="n">first</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">replacement</span> <span class="o">+</span> <span class="n">lines</span><span class="p">[</span><span class="n">last</span><span class="p">:])</span></div>
+
+
+
+<div class="viewcode-block" id="write_ase_sprkkr">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.ase_profile_storage.write_ase_sprkkr.html#ase2sprkkr.ase_profile_storage.write_ase_sprkkr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_ase_sprkkr</span><span class="p">(</span><span class="n">updates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Atomically update ASE's [sprkkr] section and preserve other settings.</span>
+
+<span class="sd">    Before changing anything, both the existing and proposed file must be</span>
+<span class="sd">    valid INI. Preserve symlinks and permissions in the same way as the</span>
+<span class="sd">    ASE2SPRKKR YAML writer.</span>
+<span class="sd">    """</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">ase_config_target</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">system</span> <span class="ow">and</span> <span class="n">_is_system_config_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">PermissionError</span><span class="p">(</span><span class="s2">"System ASE configuration cannot be modified without --system"</span><span class="p">)</span>
+    <span class="n">original</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="k">else</span> <span class="s2">""</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
+        <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">original</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">read_string</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="n">revised</span> <span class="o">=</span> <span class="n">_rewrite_section</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">updates</span><span class="p">)</span>
+    <span class="n">check</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
+        <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">revised</span><span class="p">:</span>
+        <span class="n">check</span><span class="o">.</span><span class="n">read_string</span><span class="p">(</span><span class="n">revised</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">revised</span> <span class="o">==</span> <span class="n">original</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">temporary</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s2">"w"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
+            <span class="n">prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">."</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".tmp"</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">temporary</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">revised</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">mode</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IMODE</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+            <span class="n">stream</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">fsync</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">temporary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">temporary</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

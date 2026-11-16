@@ -6,11 +6,15 @@ Values
 
 .. autoclass:: Values
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.parsing_results.Values
       :parts: 2
+
 
    |
 

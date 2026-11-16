@@ -1,0 +1,89 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="368pt" height="68pt" viewBox="0.00 0.00 368.00 68.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 63.75)">
+<ns0:title>inheritance90f5e2ea32</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseOption</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" ns1:title="A base placeholder for a leaf element of a grammar file," target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="175.5,-39.75 103.25,-39.75 103.25,-19 175.5,-19 175.5,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="139.38" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseOption</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>Option</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" ns1:title="Class for one option (a configuration value) of SPRKKR - either to" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="252,-59.75 198,-59.75 198,-39 252,-39 252,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="225" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Option</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>BaseOption-&gt;Option</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M175.84,-37.86C180.4,-38.95 185.07,-40.06 189.61,-41.15" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="189.5,-43.64 196.88,-42.89 190.64,-38.88 189.5,-43.64" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>Dummy</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.Dummy.html#ase2sprkkr.common.options.Dummy" ns1:title="Dummy" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="252.5,-20.75 197.5,-20.75 197.5,0 252.5,0 252.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="225" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Dummy</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>BaseOption-&gt;Dummy</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M175.84,-21.32C180.18,-20.33 184.61,-19.32 188.95,-18.34" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="190.09,-20.59 196.37,-16.65 189,-15.81 190.09,-20.59" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>Configuration</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" ns1:title="The common base class for all configurations values and containers. I.e." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="81.25,-39.75 0,-39.75 0,-19 81.25,-19 81.25,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="40.62" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Configuration</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>Configuration-&gt;BaseOption</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M81.54,-29.38C85.85,-29.38 90.26,-29.38 94.61,-29.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="95.13,-31.83 102.13,-29.38 95.13,-26.93 95.13,-31.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>CustomOption</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" ns1:title="An user-added option (configuration value). It can be removed from the section." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="360.25,-59.75 274.5,-59.75 274.5,-39 360.25,-39 360.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="317.38" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">CustomOption</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>Option-&gt;CustomOption</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M252.14,-49.38C256.44,-49.38 261.02,-49.38 265.69,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="266.36,-51.83 273.36,-49.38 266.36,-46.93 266.36,-51.83" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>DummyStub</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.options.DummyStub.html#ase2sprkkr.common.options.DummyStub" ns1:title="DummyStub" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="355.75,-20.75 279,-20.75 279,0 355.75,0 355.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="317.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">DummyStub</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>Dummy-&gt;DummyStub</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M252.63,-10.38C258.21,-10.38 264.25,-10.38 270.32,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="270.8,-12.83 277.8,-10.38 270.8,-7.93 270.8,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

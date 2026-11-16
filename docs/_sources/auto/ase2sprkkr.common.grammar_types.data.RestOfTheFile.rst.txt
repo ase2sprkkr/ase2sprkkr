@@ -6,11 +6,15 @@ RestOfTheFile
 
 .. autoclass:: RestOfTheFile
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.grammar_types.data.RestOfTheFile
       :parts: 2
+
 
    |
 

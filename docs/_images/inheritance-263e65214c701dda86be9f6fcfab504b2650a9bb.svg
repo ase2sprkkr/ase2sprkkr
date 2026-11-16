@@ -1,0 +1,44 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="378pt" height="29pt" viewBox="0.00 0.00 378.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance106ea1a677</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>arpes.ArpesResult</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" ns1:title="ARPES result provides acces to the generated SPC output file" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="252,-20.75 147.5,-20.75 147.5,0 252,0 252,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="199.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">arpes.ArpesResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>spec.SpecResult</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult" ns1:title="Class representing the results of a spectral function calculation." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="369.5,-20.75 274,-20.75 274,0 369.5,0 369.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="321.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">spec.SpecResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>arpes.ArpesResult-&gt;spec.SpecResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M252.34,-10.38C256.67,-10.38 261.07,-10.38 265.43,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="266,-12.83 273,-10.38 266,-7.93 266,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>task_result.TaskResult</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" ns1:title="A base class for a result of a runned task (kkrscf executable)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="125.5,-20.75 0,-20.75 0,0 125.5,0 125.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="62.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">task_result.TaskResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>task_result.TaskResult-&gt;arpes.ArpesResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M125.72,-10.38C130.11,-10.38 134.54,-10.38 138.92,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="139.51,-12.83 146.51,-10.38 139.51,-7.93 139.51,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

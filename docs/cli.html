@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Command-line reference &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=adf6db29" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Crystal symmetry and cell transformations" href="symmetry.html" />
+    <link rel="prev" title="Result files, plots and NeXus export" href="result-files.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command-line reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#discover-tasks-formats-and-executables">Discover tasks, formats and executables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-and-examples">Configuration and examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-and-inspect-files">Run and inspect files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-grace-and-nexus">Plotting, Grace and NeXus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remote-status-output-and-cancellation">Remote status, output and cancellation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-tools">Other tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Command-line reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cli.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="command-line-reference">
+<h1>Command-line reference<a class="headerlink" href="#command-line-reference" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span></code> command is installed by the Python distribution.
+Use the installed version’s help for the authoritative options:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="o">--</span><span class="n">help</span>
+<span class="n">ase2sprkkr</span> <span class="o">--</span><span class="n">version</span>
+<span class="n">ase2sprkkr</span> <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>Some features require separately installed SPR-KKR binaries or
+additional Python packages. See <a class="reference internal" href="installation.html"><span class="doc">Installation and upgrading</span></a>.</p>
+<section id="discover-tasks-formats-and-executables">
+<h2>Discover tasks, formats and executables<a class="headerlink" href="#discover-tasks-formats-and-executables" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ase2sprkkr info --task</span>
+<span class="go">ase2sprkkr info --task=SCF</span>
+<span class="go">ase2sprkkr info --task=SCF.ENERGY</span>
+<span class="go">ase2sprkkr info --output-file</span>
+<span class="go">ase2sprkkr info --executables</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">info</span> <span class="pre">--task</span></code> lists the available tasks, marking experimental ones.
+Use <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> for additional parameter descriptions.</p>
+</section>
+<section id="configuration-and-examples">
+<h2>Configuration and examples<a class="headerlink" href="#configuration-and-examples" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ase2sprkkr config --show</span>
+<span class="go">ase2sprkkr config --path</span>
+<span class="go">ase2sprkkr config --list-profiles</span>
+<span class="go">ase2sprkkr config --info</span>
+<span class="go">ase2sprkkr config --set profiles.default.executable_dir /opt/sprkkr/bin</span>
+<span class="go">ase2sprkkr config --set profiles.default.executable_suffix _v8</span>
+<span class="go">ase2sprkkr migrate</span>
+<span class="go">ase2sprkkr example</span>
+<span class="go">ase2sprkkr example --regex ARPES</span>
+<span class="go">ase2sprkkr example 8 --copy ./my-example</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">profiles.default</span></code> to configure the active profile. By default,
+this is ASE’s <code class="docutils literal notranslate"><span class="pre">[sprkkr]</span></code> configuration; <code class="docutils literal notranslate"><span class="pre">profiles.ase</span></code> edits it
+explicitly. Named ASE2SPRKKR profiles use YAML configuration.
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">migrate</span></code> converts supported older settings.
+For further profile options see <a class="reference internal" href="remote.html"><span class="doc">Remote running, MPI and execution profiles</span></a>; for upgrading and
+configuration storage see <a class="reference internal" href="installation.html"><span class="doc">Installation and upgrading</span></a>.
+<code class="docutils literal notranslate"><span class="pre">config</span> <span class="pre">--show-default</span></code> displays the available YAML settings.</p>
+</section>
+<section id="run-and-inspect-files">
+<h2>Run and inspect files<a class="headerlink" href="#run-and-inspect-files" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ase2sprkkr run example.pot --task SCF</span>
+<span class="go">ase2sprkkr run example.pot --task SCF --profile cluster --project-id PROJECT_UUID</span>
+<span class="go">ase2sprkkr run example.pot --project-id PROJECT_UUID --profile cluster --submit-only</span>
+<span class="go">ase2sprkkr run example.pot --project-id PROJECT_UUID --directory ./work</span>
+<span class="go">ase2sprkkr show-structure example.pot --no-view -o example.cif</span>
+<span class="go">ase2sprkkr symmetry input.cif</span>
+<span class="go">ase2sprkkr symmetry input.cif --primitive -o primitive.cif</span>
+<span class="go">ase2sprkkr k-path example.pot</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">run</span></code> accepts a potential file or an input file and optional
+<code class="docutils literal notranslate"><span class="pre">NAME=VALUE</span></code> overrides. <code class="docutils literal notranslate"><span class="pre">--profile</span></code> selects a named execution
+profile; <code class="docutils literal notranslate"><span class="pre">--project-id</span></code> creates a persistent calculation in an existing
+project and prints its run ID. Without <code class="docutils literal notranslate"><span class="pre">--project-id</span></code> the calculation
+is untracked. The command normally waits for completion. For a managed
+<code class="docutils literal notranslate"><span class="pre">kkrunner</span></code> or <code class="docutils literal notranslate"><span class="pre">psij</span></code> backend, <code class="docutils literal notranslate"><span class="pre">--submit-only</span></code> with <code class="docutils literal notranslate"><span class="pre">--project-id</span></code>
+submits the run and exits without waiting. <code class="docutils literal notranslate"><span class="pre">--directory</span></code> overrides the
+project’s working directory, if any. See <a class="reference internal" href="execution.html"><span class="doc">Persistent project calculations</span></a> for project
+tracking and <a class="reference internal" href="remote.html"><span class="doc">Remote running, MPI and execution profiles</span></a> for backends. The <code class="docutils literal notranslate"><span class="pre">run</span></code> command’s
+<code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">NAME</span></code> is distinct from the top-level <code class="docutils literal notranslate"><span class="pre">--cprofile</span></code>
+option for profiling the Python command. <code class="docutils literal notranslate"><span class="pre">show-structure</span></code> (alias <code class="docutils literal notranslate"><span class="pre">view</span></code>) can display or
+export the structure, and <code class="docutils literal notranslate"><span class="pre">--close-after</span></code> can close its viewer
+automatically. The interactive <code class="docutils literal notranslate"><span class="pre">k-path</span></code> tool requires
+a graphical environment. Symmetry analysis and conversion are described
+in <a class="reference internal" href="symmetry.html"><span class="doc">Crystal symmetry and cell transformations</span></a>.</p>
+</section>
+<section id="plotting-grace-and-nexus">
+<h2>Plotting, Grace and NeXus<a class="headerlink" href="#plotting-grace-and-nexus" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ase2sprkkr plot calculation.dos</span>
+<span class="go">ase2sprkkr plot calculation.dos --show-values</span>
+<span class="go">ase2sprkkr plot calculation.dos -o dos.png</span>
+<span class="go">ase2sprkkr plot plot.agr --show-values</span>
+<span class="go">ase2sprkkr plot plot.agr -o grace.png</span>
+<span class="go">ase2sprkkr nexus arpes.spc -o arpes.nxs</span>
+<span class="go">ase2sprkkr nexus arpes.spc -o arpes.nxs --input-file arpes.inp</span>
+</pre></div>
+</div>
+<p>Install <code class="docutils literal notranslate"><span class="pre">ase2sprkkr[plot]</span></code> for plotting or
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr[nexus]</span></code> for NeXus export; see
+<a class="reference internal" href="installation.html#installation-optional"><span class="std std-ref">Optional dependencies</span></a>. The <code class="docutils literal notranslate"><span class="pre">nexus</span></code> command takes a positional <code class="docutils literal notranslate"><span class="pre">.spc</span></code> filename;
+<code class="docutils literal notranslate"><span class="pre">-o/--output</span></code> selects the destination and <code class="docutils literal notranslate"><span class="pre">-i/--input-file</span></code>
+supplies optional provenance.
+See <a class="reference internal" href="result-files.html"><span class="doc">Result files, plots and NeXus export</span></a> for supported data and limitations.</p>
+</section>
+<section id="remote-status-output-and-cancellation">
+<h2>Remote status, output and cancellation<a class="headerlink" href="#remote-status-output-and-cancellation" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ase2sprkkr remote status RUN_ID</span>
+<span class="go">ase2sprkkr remote status RUN_ID --status-only</span>
+<span class="go">ase2sprkkr remote follow RUN_ID --info --from-start</span>
+<span class="go">ase2sprkkr remote follow RUN_ID --regex 'ERROR'</span>
+<span class="go">ase2sprkkr remote cancel RUN_ID</span>
+</pre></div>
+</div>
+<p>These default to a <strong>persistent project run ID</strong> in the current user’s
+project run store. To address an explicit target-side backend handle,
+use <code class="docutils literal notranslate"><span class="pre">--remote-id</span></code> <strong>instead</strong> of the positional run ID:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">remote</span> <span class="n">status</span> <span class="o">--</span><span class="n">remote</span><span class="o">-</span><span class="nb">id</span> <span class="n">HANDLE</span>
+<span class="n">ase2sprkkr</span> <span class="n">remote</span> <span class="n">follow</span> <span class="o">--</span><span class="n">remote</span><span class="o">-</span><span class="nb">id</span> <span class="n">HANDLE</span> <span class="o">--</span><span class="n">from</span><span class="o">-</span><span class="n">start</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">remote</span> <span class="pre">follow</span> <span class="pre">--raw</span></code> emits binary framed output; do not combine
+it with <code class="docutils literal notranslate"><span class="pre">--info</span></code> or <code class="docutils literal notranslate"><span class="pre">--regex</span></code>. <code class="docutils literal notranslate"><span class="pre">--stdout-path</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--stderr-path</span></code> apply only with <code class="docutils literal notranslate"><span class="pre">--remote-id</span></code>.
+See <a class="reference internal" href="execution.html"><span class="doc">Persistent project calculations</span></a> for persistence and <a class="reference internal" href="remote.html"><span class="doc">Remote running, MPI and execution profiles</span></a> for profiles.</p>
+</section>
+<section id="other-tools">
+<h2>Other tools<a class="headerlink" href="#other-tools" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">uppasd</span></code> can write inputs for UppASD from JXC/DMI
+results; <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">nomad</span></code> provides NOMAD integration;
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">shell</span></code> opens an interactive environment. For local
+sanity checks without installed SPR-KKR executables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">test</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">kkr</span> <span class="o">--</span><span class="n">fast</span>
+</pre></div>
+</div>
+<p>Third-party distributions can add commands through documented entry
+points; see <a class="reference internal" href="cli-plugins.html"><span class="doc">CLI command plugins</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="result-files.html" class="btn btn-neutral float-left" title="Result files, plots and NeXus export" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="symmetry.html" class="btn btn-neutral float-right" title="Crystal symmetry and cell transformations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

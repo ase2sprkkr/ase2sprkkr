@@ -1,0 +1,14 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="136pt" height="29pt" viewBox="0.00 0.00 136.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritancece022cee8f</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>spglib.TransformedCell</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.bindings.spglib.TransformedCell.html#ase2sprkkr.bindings.spglib.TransformedCell" ns1:title="Geometry and species labels in the order supplied by spglib." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="127.75,-20.75 0,-20.75 0,0 127.75,0 127.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="63.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">spglib.TransformedCell</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

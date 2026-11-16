@@ -1,0 +1,74 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="299pt" height="107pt" viewBox="0.00 0.00 299.00 107.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 102.75)">
+<ns0:title>inheritance2cc8449e94</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>GrammarType</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" ns1:title="Base class for definition of configuration option types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="85,-59.75 0,-59.75 0,-39 85,-39 85,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="42.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">GrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>RawData</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.data.RawData.html#ase2sprkkr.common.grammar_types.data.RawData" ns1:title="Match anything up to the end of the file or to the given delimiter" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="179.25,-98.75 119,-98.75 119,-78 179.25,-78 179.25,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="149.12" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RawData</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>GrammarType-&gt;RawData</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M72.64,-60.24C84.66,-64.72 98.72,-69.96 111.43,-74.7" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="111.01,-77.16 118.43,-77.31 112.72,-72.56 111.01,-77.16" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>Prefixed</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.data.Prefixed.html#ase2sprkkr.common.grammar_types.data.Prefixed" ns1:title="This value consists from a few lines, each prefixed with a given prefix" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="176.62,-59.75 121.62,-59.75 121.62,-39 176.62,-39 176.62,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="149.12" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Prefixed</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>GrammarType-&gt;Prefixed</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M85.45,-49.38C94.49,-49.38 103.96,-49.38 112.72,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="113.45,-51.83 120.45,-49.38 113.45,-46.93 113.45,-51.83" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>RestOfTheFile</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.data.RestOfTheFile.html#ase2sprkkr.common.grammar_types.data.RestOfTheFile" ns1:title="Match anything up to the end of the file" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="191.25,-20.75 107,-20.75 107,0 191.25,0 191.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="149.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RestOfTheFile</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>GrammarType-&gt;RestOfTheFile</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M72.64,-38.51C84.66,-34.03 98.72,-28.79 111.43,-24.05" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="112.72,-26.19 118.43,-21.44 111.01,-21.59 112.72,-26.19" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>NumpyArray</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.data.NumpyArray.html#ase2sprkkr.common.grammar_types.data.NumpyArray" ns1:title="Match anything up to the end of the file or to the given delimiter, as numpy array" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="290.75,-98.75 213.25,-98.75 213.25,-78 290.75,-78 290.75,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="252" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">NumpyArray</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>RawData-&gt;NumpyArray</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M179.57,-88.38C187.42,-88.38 196.1,-88.38 204.62,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="205.3,-90.83 212.3,-88.38 205.3,-85.93 205.3,-90.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

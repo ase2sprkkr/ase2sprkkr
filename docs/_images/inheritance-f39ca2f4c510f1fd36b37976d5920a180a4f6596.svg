@@ -1,0 +1,59 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="434pt" height="29pt" viewBox="0.00 0.00 434.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance7b8a7ae414</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>abc.ABC</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Helper class that provides a standard way to create an ABC using">
+<ns0:polygon fill="lightgray" stroke="black" points="56.5,-20.75 0,-20.75 0,0 56.5,0 56.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="28.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">abc.ABC</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>core.ParserElement</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:title="Abstract base level parser element class.">
+<ns0:polygon fill="lightgray" stroke="black" points="189,-20.75 78.5,-20.75 78.5,0 189,0 189,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="133.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">core.ParserElement</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>abc.ABC-&gt;core.ParserElement</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M56.99,-10.38C61.1,-10.38 65.48,-10.38 69.97,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="70.4,-12.83 77.4,-10.38 70.4,-7.93 70.4,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>core.Token</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:title="Abstract :class:`ParserElement` subclass, for defining atomic">
+<ns0:polygon fill="lightgray" stroke="black" points="278.75,-20.75 211,-20.75 211,0 278.75,0 278.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="244.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">core.Token</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>core.ParserElement-&gt;core.Token</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M189.31,-10.38C193.62,-10.38 197.92,-10.38 202.11,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="202.78,-12.83 209.78,-10.38 202.78,-7.93 202.78,-12.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>grammar.SkipToRegex</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar.SkipToRegex.html#ase2sprkkr.common.grammar.SkipToRegex" ns1:title="Skip to given regex" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="426.25,-20.75 300.75,-20.75 300.75,0 426.25,0 426.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="363.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">grammar.SkipToRegex</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>core.Token-&gt;grammar.SkipToRegex</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M278.98,-10.38C283.19,-10.38 287.62,-10.38 292.14,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="292.62,-12.83 299.62,-10.38 292.62,-7.93 292.62,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

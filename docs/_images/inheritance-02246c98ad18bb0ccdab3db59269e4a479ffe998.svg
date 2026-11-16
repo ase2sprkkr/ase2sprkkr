@@ -1,0 +1,29 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="235pt" height="29pt" viewBox="0.00 0.00 235.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance7d67437070</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>bsf.BsfResult</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult" ns1:title="BSF result provides access to the computed Bloch spectral functions in the" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="227.25,-20.75 147.5,-20.75 147.5,0 227.25,0 227.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="187.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">bsf.BsfResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>task_result.TaskResult</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" ns1:title="A base class for a result of a runned task (kkrscf executable)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="125.5,-20.75 0,-20.75 0,0 125.5,0 125.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="62.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">task_result.TaskResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>task_result.TaskResult-&gt;bsf.BsfResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M125.78,-10.38C130.08,-10.38 134.38,-10.38 138.59,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="139.32,-12.83 146.32,-10.38 139.32,-7.93 139.32,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

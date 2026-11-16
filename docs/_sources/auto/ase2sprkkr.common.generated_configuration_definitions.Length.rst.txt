@@ -6,11 +6,15 @@ Length
 
 .. autoclass:: Length
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.generated_configuration_definitions.Length
       :parts: 2
+
 
    |
 

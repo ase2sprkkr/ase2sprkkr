@@ -1,0 +1,527 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr_cli.commands.remote &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=adf6db29" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr_cli.commands.remote</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr_cli.commands.remote</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Human-facing run observation, deliberately independent of KKRunner's CLI.</span>
+
+<span class="sd">KKRunner owns execution identity, persistence, and byte transport. This CLI</span>
+<span class="sd">owns argparse, run selection, SCF interpretation, and text filtering.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">help</span> <span class="o">=</span> <span class="s2">"Inspect, follow, or cancel persisted runs or explicit backend handles."</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"Show run status and live output, with SPR-KKR-specific progress reporting."</span>
+<span class="n">lazy_parser</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="_FollowSourceAction">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._FollowSourceAction.html#ase2sprkkr_cli.commands.remote._FollowSourceAction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">_FollowSourceAction</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">Action</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Reject persisted IDs with direct stream paths in either argument order."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">option_string</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dest</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">namespace</span><span class="o">.</span><span class="n">run_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">namespace</span><span class="o">.</span><span class="n">stdout_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">namespace</span><span class="o">.</span><span class="n">stderr_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentError</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="s2">"--stdout-path and --stderr-path require --remote-id instead of run_id"</span>
+            <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote.parser.html#ase2sprkkr_cli.commands.remote.parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">argument_parser</span><span class="p">):</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="n">argument_parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s2">"remote_action"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">identity</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">run_id_action</span><span class="o">=</span><span class="s2">"store"</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">source</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"run_id"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"?"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">run_id_action</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"persistent run ID (default)"</span>
+        <span class="p">)</span>
+        <span class="n">source</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"--remote-id"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"HANDLE"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"use a low-level backend handle instead (no persisted file metadata)"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"status"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"show run state and latest SCF progress"</span><span class="p">)</span>
+    <span class="n">identity</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--status-only"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"omit SCF progress and show backend state only"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">follow</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"follow"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"observe an existing run's output"</span><span class="p">)</span>
+    <span class="n">identity</span><span class="p">(</span><span class="n">follow</span><span class="p">,</span> <span class="n">run_id_action</span><span class="o">=</span><span class="n">_FollowSourceAction</span><span class="p">)</span>
+    <span class="n">follow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--raw"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"send original binary stream frames rather than decoded text"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">follow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--info"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"show SCF iteration summaries"</span><span class="p">)</span>
+    <span class="n">follow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--regex"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"append"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATTERN"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"print matching lines; may be repeated and combined with --info"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">follow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--from-start"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"replay output from the beginning (default: observe new data only)"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">follow</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span>
+        <span class="s2">"Direct backend stream paths"</span><span class="p">,</span>
+        <span class="s2">"Only with --remote-id; persisted runs use their recorded file locations. Both paths may be supplied."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">paths</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--stdout-path"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">_FollowSourceAction</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"backend standard-output file"</span>
+    <span class="p">)</span>
+    <span class="n">paths</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--stderr-path"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">_FollowSourceAction</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"backend standard-error file"</span>
+    <span class="p">)</span>
+
+    <span class="n">cancel</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"cancel"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"cancel an execution"</span><span class="p">)</span>
+    <span class="n">identity</span><span class="p">(</span><span class="n">cancel</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_identity">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._identity.html#ase2sprkkr_cli.commands.remote._identity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_identity</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_id</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_id</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">run_id</span></div>
+
+
+
+<div class="viewcode-block" id="_manager_and_record">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._manager_and_record.html#ase2sprkkr_cli.commands.remote._manager_and_record">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_manager_and_record</span><span class="p">(</span><span class="n">run_id</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.projects</span><span class="w"> </span><span class="kn">import</span> <span class="n">project_execution_manager</span>
+
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">project_execution_manager</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="p">,</span> <span class="n">manager</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_task_is_scf">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._task_is_scf.html#ase2sprkkr_cli.commands.remote._task_is_scf">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_task_is_scf</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ase2sprkkr"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"SCF"</span></div>
+
+
+
+<div class="viewcode-block" id="_scf_summary">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._scf_summary.html#ase2sprkkr_cli.commands.remote._scf_summary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_scf_summary</span><span class="p">(</span><span class="n">progress</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"iteration"</span><span class="p">:</span> <span class="n">progress</span><span class="p">[</span><span class="s2">"iteration"</span><span class="p">],</span>
+        <span class="s2">"error"</span><span class="p">:</span> <span class="n">progress</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span>
+        <span class="s2">"b_error"</span><span class="p">:</span> <span class="n">progress</span><span class="p">[</span><span class="s2">"b_error"</span><span class="p">],</span>
+        <span class="s2">"fermi_energy"</span><span class="p">:</span> <span class="n">progress</span><span class="p">[</span><span class="s2">"energy"</span><span class="p">][</span><span class="s2">"EF"</span><span class="p">],</span>
+        <span class="s2">"spin_moment"</span><span class="p">:</span> <span class="n">progress</span><span class="p">[</span><span class="s2">"moment"</span><span class="p">][</span><span class="s2">"spin"</span><span class="p">],</span>
+        <span class="s2">"orbital_moment"</span><span class="p">:</span> <span class="n">progress</span><span class="p">[</span><span class="s2">"moment"</span><span class="p">][</span><span class="s2">"orbital"</span><span class="p">],</span>
+        <span class="s2">"converged"</span><span class="p">:</span> <span class="n">progress</span><span class="p">[</span><span class="s2">"converged"</span><span class="p">],</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="_snapshot_progress">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._snapshot_progress.html#ase2sprkkr_cli.commands.remote._snapshot_progress">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_snapshot_progress</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Read SCF progress from this run's declared stdout, including remote jobs.</span>
+
+<span class="sd">    A snapshot is observational and does not update the canonical local output</span>
+<span class="sd">    or the run record. Copying to a temporary destination bounds local memory.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_task_is_scf</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">output_file</span>
+    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.outputs.readers.scf</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScfProgressParser</span>
+
+    <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">:</span>
+        <span class="c1"># Never interpret an arbitrary replacement of a completed run's</span>
+        <span class="c1"># historical output as that run's SCF progress.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">manager</span><span class="o">.</span><span class="n">output_file_is_current</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">output</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ScfProgressParser</span><span class="o">.</span><span class="n">latest_from_file</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">"ase2sprkkr-scf-progress-"</span><span class="p">)</span> <span class="k">as</span> <span class="n">directory</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"progress.out"</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">manager</span><span class="o">.</span><span class="n">snapshot_file</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">ScfProgressParser</span><span class="o">.</span><span class="n">latest_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_persisted_status">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._persisted_status.html#ase2sprkkr_cli.commands.remote._persisted_status">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_persisted_status</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Query backend facts without mutating the client-owned lifecycle record."""</span>
+    <span class="n">facts</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"run_id"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="s2">"state"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="s2">"return_code"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">return_code</span><span class="p">,</span>
+        <span class="s2">"error"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+        <span class="s2">"failure_phase"</span><span class="p">:</span> <span class="p">(</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">failure_phase</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">record</span><span class="o">.</span><span class="n">failure_phase</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">is_terminal</span> <span class="ow">or</span> <span class="n">record</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">backend_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">facts</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.backends.contracts</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackendCapability</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">JobAttachment</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">client_for</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">BackendCapability</span><span class="o">.</span><span class="n">STATUS</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">supports</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">facts</span>
+    <span class="n">status</span><span class="p">,</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="n">JobAttachment</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">execution</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">files</span><span class="p">))</span>
+    <span class="n">facts</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">return_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">return_code</span><span class="p">,</span>
+        <span class="n">error</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+        <span class="n">failure_phase</span><span class="o">=</span><span class="p">(</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">failure_phase</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">status</span><span class="o">.</span><span class="n">failure_phase</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">facts</span></div>
+
+
+
+<div class="viewcode-block" id="_status">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._status.html#ase2sprkkr_cli.commands.remote._status">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_status</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">identifier</span> <span class="o">=</span> <span class="n">_identity</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_id</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.remote.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">status_remote</span>
+        <span class="n">facts</span> <span class="o">=</span> <span class="n">status_remote</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">manager</span><span class="p">,</span> <span class="n">record</span> <span class="o">=</span> <span class="n">_manager_and_record</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+        <span class="n">facts</span> <span class="o">=</span> <span class="n">_persisted_status</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">status_only</span><span class="p">:</span>
+            <span class="n">progress</span> <span class="o">=</span> <span class="n">_snapshot_progress</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">progress</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">facts</span><span class="p">[</span><span class="s2">"scf"</span><span class="p">]</span> <span class="o">=</span> <span class="n">_scf_summary</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">facts</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_TextSink">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._TextSink.html#ase2sprkkr_cli.commands.remote._TextSink">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">_TextSink</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Decode independent UTF-8 chunks without confusing flush with EOF."""</span>
+
+<div class="viewcode-block" id="_TextSink.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._TextSink.html#ase2sprkkr_cli.commands.remote._TextSink.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">codecs</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_decoder</span> <span class="o">=</span> <span class="n">codecs</span><span class="o">.</span><span class="n">getincrementaldecoder</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)(</span><span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span> <span class="o">=</span> <span class="n">callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">kind</span></div>
+
+
+<div class="viewcode-block" id="_TextSink.write">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._TextSink.html#ase2sprkkr_cli.commands.remote._TextSink.write">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoder</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">text</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kind</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_TextSink.flush">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._TextSink.html#ase2sprkkr_cli.commands.remote._TextSink.flush">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Transport flush is called on every chunk; not an end-of-stream.</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="_TextSink.finish">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._TextSink.html#ase2sprkkr_cli.commands.remote._TextSink.finish">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoder</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="p">,</span> <span class="n">final</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">text</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kind</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_FramedSink">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._FramedSink.html#ase2sprkkr_cli.commands.remote._FramedSink">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">_FramedSink</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Preserve the runner's binary stream protocol without parsing it."""</span>
+
+<div class="viewcode-block" id="_FramedSink.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._FramedSink.html#ase2sprkkr_cli.commands.remote._FramedSink.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">=</span> <span class="n">destination</span></div>
+
+
+<div class="viewcode-block" id="_FramedSink.write">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._FramedSink.html#ase2sprkkr_cli.commands.remote._FramedSink.write">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.remote.stream</span><span class="w"> </span><span class="kn">import</span> <span class="n">encode_stream_frame</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">encode_stream_frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="_FramedSink.flush">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._FramedSink.html#ase2sprkkr_cli.commands.remote._FramedSink.flush">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_observe">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._observe.html#ase2sprkkr_cli.commands.remote._observe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_observe</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">observer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span> <span class="ow">and</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">info</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">regex</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"--raw cannot be combined with --info or --regex"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.remote.stream</span><span class="w"> </span><span class="kn">import</span> <span class="n">STREAM_MAGIC</span><span class="p">,</span> <span class="n">encode_terminal_frame</span>
+
+        <span class="n">destination</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">buffer</span>
+        <span class="n">destination</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">STREAM_MAGIC</span><span class="p">)</span>
+        <span class="n">destination</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">_FramedSink</span><span class="p">(</span><span class="s2">"out"</span><span class="p">,</span> <span class="n">destination</span><span class="p">),</span> <span class="n">_FramedSink</span><span class="p">(</span><span class="s2">"err"</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="n">outcome</span> <span class="o">=</span> <span class="n">observer</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">)</span>
+        <span class="n">destination</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">encode_terminal_frame</span><span class="p">(</span><span class="n">outcome</span><span class="p">))</span>
+        <span class="n">destination</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">outcome</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.common.output_printing</span><span class="w"> </span><span class="kn">import</span> <span class="n">output_listeners</span>
+
+    <span class="n">listeners</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">output_listeners</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">regex</span> <span class="ow">or</span> <span class="p">())</span> <span class="ow">or</span> <span class="p">(</span><span class="kc">False</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info</span> <span class="k">else</span> <span class="kc">True</span><span class="p">))</span>
+    <span class="n">progress</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.outputs.readers.scf</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScfProgressParser</span>
+
+        <span class="n">progress</span> <span class="o">=</span> <span class="n">ScfProgressParser</span><span class="p">(</span><span class="n">on_info</span><span class="o">=</span><span class="k">lambda</span> <span class="n">message</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"out"</span> <span class="ow">and</span> <span class="n">progress</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">progress</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="n">listeners</span><span class="p">:</span>
+            <span class="n">listener</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+
+    <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">_TextSink</span><span class="p">(</span><span class="n">emit</span><span class="p">,</span> <span class="s2">"out"</span><span class="p">),</span> <span class="n">_TextSink</span><span class="p">(</span><span class="n">emit</span><span class="p">,</span> <span class="s2">"err"</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">observer</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">stdout</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        <span class="n">stderr</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">progress</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">progress</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="n">listeners</span><span class="p">:</span>
+            <span class="n">listener</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="_follow">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._follow.html#ase2sprkkr_cli.commands.remote._follow">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_follow</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">identifier</span> <span class="o">=</span> <span class="n">_identity</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_id</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.remote.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">follow_remote</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">):</span>
+            <span class="c1"># In direct mode no manifest is available; caller may explicitly</span>
+            <span class="c1"># provide paths for scheduler output files.</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">from_start</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">follow_remote</span><span class="p">(</span>
+                <span class="n">identifier</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span>
+                <span class="n">stdout_offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span> <span class="n">stderr_offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
+                <span class="n">stdout_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">stdout_path</span><span class="p">,</span> <span class="n">stderr_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">stderr_path</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">manager</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_manager_and_record</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">observe</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">follow_output</span><span class="p">(</span>
+                <span class="n">identifier</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="n">from_start</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">from_start</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_observe</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">observe</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_cancel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote._cancel.html#ase2sprkkr_cli.commands.remote._cancel">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_cancel</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">identifier</span> <span class="o">=</span> <span class="n">_identity</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_id</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">kkrunner.remote.service</span><span class="w"> </span><span class="kn">import</span> <span class="n">cancel_remote</span>
+
+        <span class="n">facts</span> <span class="o">=</span> <span class="n">cancel_remote</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">manager</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_manager_and_record</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+        <span class="n">facts</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">cancel_run</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">facts</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.remote.run.html#ase2sprkkr_cli.commands.remote.run">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"status"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_status</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"follow"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_follow</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"cancel"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_cancel</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown remote action: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">remote_action</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="114pt" height="68pt" viewBox="0.00 0.00 114.00 68.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 63.75)">
+<ns0:title>inheritance69cc86b58a</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>LaunchParameters</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.profile.LaunchParameters.html#ase2sprkkr.sprkkr.profile.LaunchParameters" ns1:title="Profile-level parameters controlling how calculations are launched." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="106,-20.75 0,-20.75 0,0 106,0 106,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="53" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">LaunchParameters</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>SPRKKRProfile</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.profile.SPRKKRProfile.html#ase2sprkkr.sprkkr.profile.SPRKKRProfile" ns1:title="Describe how and where SPR-KKR executables are invoked." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="95.88,-59.75 10.12,-59.75 10.12,-39 95.88,-39 95.88,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="53" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SPRKKRProfile</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

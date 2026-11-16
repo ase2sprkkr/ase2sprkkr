@@ -6,11 +6,15 @@ Directory
 
 .. autoclass:: Directory
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.file_utils.Directory
       :parts: 2
+
 
    |
 

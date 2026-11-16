@@ -6,11 +6,15 @@ RawData
 
 .. autoclass:: RawData
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.grammar_types.data.RawData
       :parts: 2
+
 
    |
 

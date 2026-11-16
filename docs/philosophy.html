@@ -6,12 +6,12 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ASE2SPR-KKR’s philosophy for the developers &mdash; ASE2SPRKKR  documentation</title>
+  <title>ASE2SPRKKR architecture for developers &mdash; ASE2SPRKKR  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=adf6db29" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Changelog" href="changelog.html" />
-    <link rel="prev" title="More about installing of the ASE2SPRKKR package" href="how-to-install.html" /> 
+    <link rel="prev" title="CLI command plugins" href="cli-plugins.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,46 +45,57 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
-<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Philosophy of the package (for developers)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#the-base-philosophy-of-the-package">The base philosophy of the package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#structure-of-the-package">Structure of the package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#common"><code class="xref py py-mod docutils literal notranslate"><span class="pre">common</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#input-parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">input_parameters</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#potentials"><code class="xref py py-mod docutils literal notranslate"><span class="pre">potentials</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#outputs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">outputs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sprkkr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sprkkr</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples by application</a></li>
 </ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#reading-the-configuration-files">Reading the configuration files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#writing-the-configuration-files">Writing the configuration files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-the-program">Running the program</a></li>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture for developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-files-and-definitions">Configuration files and definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parsing-and-writing-configuration-files">Parsing and writing configuration files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#taskdefinition-task-identity-versus-input-schema">TaskDefinition: task identity versus input schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scientific-layers">Scientific layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#execution-boundary">Execution boundary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-and-documentation">Development and documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#files-and-processing-maintainers">Files and processing (maintainers)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
         </div>
@@ -101,7 +112,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">ASE2SPR-KKR’s philosophy for the developers</li>
+      <li class="breadcrumb-item active">ASE2SPRKKR architecture for developers</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/philosophy.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -111,104 +122,126 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ase2spr-kkr-s-philosophy-for-the-developers">
-<h1>ASE2SPR-KKR’s philosophy for the developers<a class="headerlink" href="#ase2spr-kkr-s-philosophy-for-the-developers" title="Link to this heading"></a></h1>
-<section id="the-base-philosophy-of-the-package">
-<h2>The base philosophy of the package<a class="headerlink" href="#the-base-philosophy-of-the-package" title="Link to this heading"></a></h2>
-<p>The whole package is built around configuration objects.
-A configuration object is an object, that can both read and write configuration files.
-Each configuration object has the capabilities to both parse the configuration file
-(e.g. input file for SPR-KKR task or a potential file) and to write the file.</p>
-<p>The configuration object has a tree structure: it is divided by section, while each section
-can contain values. (However, some (mostly custom: i.e. e.g. sections of a potential file, that
-are not currently parsed and their value is given as is) sections are just containers for a single value.</p>
-<p>The leaves of the configuration object are options
-(<a class="reference internal" href="auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.options.Option</span></code></a>)
-- single value containers. They are described by
-configuration definitions
-(see <code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.ValueDefinition</span></code>),
-which hold the required type of the value (see <a class="reference internal" href="auto/ase2sprkkr.common.grammar_types.html#module-ase2sprkkr.common.grammar_types" title="ase2sprkkr.common.grammar_types"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types</span></code></a>) and its few other properties, such as the default value or parameters that determine the format of the value in the parsed/writed configuration file.</p>
-<p>The non-leaves nodes of a configuration trees are containers (<a class="reference internal" href="auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_containers.ConfigurationContainer</span></code></a>). Their content and the way how they are parsed from file and written to file is again determined by the corresponding definitions (<code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.ContainerDefinition</span></code>), thus, the definition form a tree with the same structure as the configuration object (so, there is many to one relationship between configuration (tree) object ad its definition, as for each “definition tree” can be instantiated many containers for various contents of a configuration file).</p>
+  <section id="ase2sprkkr-architecture-for-developers">
+<h1>ASE2SPRKKR architecture for developers<a class="headerlink" href="#ase2sprkkr-architecture-for-developers" title="Link to this heading"></a></h1>
+<p>ASE2SPRKKR separates scientific definitions and result parsing from
+the execution of native SPR-KKR programs. The <code class="docutils literal notranslate"><span class="pre">SPRKKR</span></code> calculator
+is the main user-facing interface; scientific file formats and
+execution profiles are also available independently.</p>
+<section id="configuration-files-and-definitions">
+<h2>Configuration files and definitions<a class="headerlink" href="#configuration-files-and-definitions" title="Link to this heading"></a></h2>
+<p>SPR-KKR input and potential files use configuration objects.
+Instances hold sections and option values; definitions specify
+grammar, types, defaults, validation and parsing/writing rules.
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr.common</span></code> provides <code class="docutils literal notranslate"><span class="pre">ConfigurationContainer</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Option</span></code>, <code class="docutils literal notranslate"><span class="pre">ContainerDefinition</span></code> and <code class="docutils literal notranslate"><span class="pre">ValueDefinition</span></code>,
+together with grammar types and
+<a class="reference external" href="https://pyparsing-docs.readthedocs.io/en/latest/">pyparsing</a>.</p>
 </section>
-<section id="structure-of-the-package">
-<h2>Structure of the package<a class="headerlink" href="#structure-of-the-package" title="Link to this heading"></a></h2>
-<p>There are the following subpackages in the ase2sprkkr package:</p>
-<section id="common">
-<h3><a class="reference internal" href="auto/ase2sprkkr.common.html#module-ase2sprkkr.common" title="ase2sprkkr.common"><code class="xref py py-mod docutils literal notranslate"><span class="pre">common</span></code></a><a class="headerlink" href="#common" title="Link to this heading"></a></h3>
-<p>There are the common shared modules: the options, containers, their definitions and grammar types and miscellaneous stuff.</p>
+<section id="parsing-and-writing-configuration-files">
+<h2>Parsing and writing configuration files<a class="headerlink" href="#parsing-and-writing-configuration-files" title="Link to this heading"></a></h2>
+<p>A configuration <em>definition</em> describes the syntax and allowed values
+of a file; a configuration <em>instance</em> holds the parsed or user-supplied
+values. The same definition is used for reading and writing:</p>
+<ol class="arabic simple">
+<li><p>Task and potential definitions assemble named sections and options,
+with value types, defaults and validation rules.</p></li>
+<li><p>Parsing uses the grammar generated from those definitions to
+recognize the file and build configuration objects. Their option
+values are converted to the declared Python types and validated.</p></li>
+<li><p>Python code can inspect or change those values, either through
+section attributes or the generic configuration interface.</p></li>
+<li><p>Serialization walks the configuration using the definition’s
+formatting and writing rules, producing native SPR-KKR text.</p></li>
+</ol>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">InputParameters.from_file(&quot;run.inp&quot;)</span></code> reads a file
+using the appropriate input definition, while
+<code class="docutils literal notranslate"><span class="pre">Potential.from_file(&quot;run.pot&quot;)</span></code> uses the potential definition.
+These are different schemas, but the parsing and serialization
+infrastructure is shared. See <a class="reference internal" href="usage.html"><span class="doc">Using ASE2SPRKKR</span></a> for practical examples;
+avoid adding file-specific parsing logic to the calculator.</p>
 </section>
-<section id="input-parameters">
-<h3><a class="reference internal" href="auto/ase2sprkkr.input_parameters.html#module-ase2sprkkr.input_parameters" title="ase2sprkkr.input_parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">input_parameters</span></code></a><a class="headerlink" href="#input-parameters" title="Link to this heading"></a></h3>
-<p>There are the specializations of the configuration objects and definitions for the input files.
-In the (<a class="reference internal" href="auto/ase2sprkkr.input_parameters.definitions.html#module-ase2sprkkr.input_parameters.definitions" title="ase2sprkkr.input_parameters.definitions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions</span></code></a>) subpackage are the definitions of the
-possible tasks, that can be run by SPR-KKR.</p>
+<section id="taskdefinition-task-identity-versus-input-schema">
+<h2>TaskDefinition: task identity versus input schema<a class="headerlink" href="#taskdefinition-task-identity-versus-input-schema" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.task_definition.TaskDefinition</span></code>
+is an <strong>immutable description of one SPR-KKR task</strong>. It declares
+the canonical <code class="docutils literal notranslate"><span class="pre">name</span></code>, associated <code class="docutils literal notranslate"><span class="pre">input_parameters_definition_name</span></code>,
+native <code class="docutils literal notranslate"><span class="pre">executable</span></code>, MPI support, output reader, experimental status
+and <code class="docutils literal notranslate"><span class="pre">TaskFile</span></code> input/output/cache manifests. It is not a second
+parser or a holder of the parameter values.</p>
+<p>The distinction matters because multiple tasks can share one input
+parameter schema. For example, the DMI task uses JXC input parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.input_parameters.task_definition</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskDefinition</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">task_definition</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">TaskDefinition</span><span class="p">(</span>
+        <span class="s2">"JXC"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"DMI"</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrgen"</span><span class="p">,</span>
+        <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">experimental</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_reader</span><span class="o">=</span><span class="s2">"JXC"</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>A task with its own input schema can declare
+<code class="docutils literal notranslate"><span class="pre">schema._task_definition</span></code> alongside the corresponding
+<code class="docutils literal notranslate"><span class="pre">input_parameters_definition()</span></code> function, as DOS and SCF do.
+Tasks sharing an existing schema are instead defined separately
+in <code class="docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.tasks</span></code>.</p>
+<p><strong>Resolve task identities through the TaskRegistry</strong>, not by assuming
+that an input schema name identifies exactly one task.
+<code class="docutils literal notranslate"><span class="pre">InputParametersRegistry</span></code> owns input schema resolution.
+The public API <code class="docutils literal notranslate"><span class="pre">InputParameters.for_task(task_name)</span></code> creates
+task-bound input parameters, and <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">info</span> <span class="pre">--task</span></code>
+shows the registered tasks.</p>
+<p>When adding a task, define its native executable and supported
+<code class="docutils literal notranslate"><span class="pre">TaskFile</span></code> manifests, select its parameter schema and output
+reader, and add focused tests. Avoid maintaining parallel task
+identities or hard-coding known files in the calculator.</p>
 </section>
-<section id="potentials">
-<h3><a class="reference internal" href="auto/ase2sprkkr.potentials.html#module-ase2sprkkr.potentials" title="ase2sprkkr.potentials"><code class="xref py py-mod docutils literal notranslate"><span class="pre">potentials</span></code></a><a class="headerlink" href="#potentials" title="Link to this heading"></a></h3>
-<p>There are specializations for the potential file definition.
-There is currently just one definition of a potential
-in (<a class="reference internal" href="auto/ase2sprkkr.potentials.definitions.potential.html#module-ase2sprkkr.potentials.definitions.potential" title="ase2sprkkr.potentials.definitions.potential"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.potentials.definitions.potential</span></code></a>)
-(there is just
-one format of the potential file, there is no support for creating
-different versions of potential in the 1.0 version of the package).
-The definitions of the potential sections are in
-(<a class="reference internal" href="auto/ase2sprkkr.potentials.definitions.sections.html#module-ase2sprkkr.potentials.definitions.sections" title="ase2sprkkr.potentials.definitions.sections"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.potentials.definitions.sections</span></code></a>).</p>
+<section id="scientific-layers">
+<h2>Scientific layers<a class="headerlink" href="#scientific-layers" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters</span></code> — task and schema registries,
+task definitions and native input parsing.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ase2sprkkr.potentials</span></code> — potential-file representations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr</span></code> — ASE calculator, atom/site properties,
+preparation, profiles and symmetry.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ase2sprkkr.outputs</span></code> — task output readers, <code class="docutils literal notranslate"><span class="pre">TaskResult</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ase2sprkkr.result_files</span></code> — structured result readers, Grace
+<code class="docutils literal notranslate"><span class="pre">.agr</span></code> and NeXus export.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ase2sprkkr.bindings</span></code> — optional external integrations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ase2sprkkr_cli</span></code> — lightweight command dispatcher and plugins.</p></li>
+</ul>
 </section>
-<section id="outputs">
-<h3><a class="reference internal" href="auto/ase2sprkkr.outputs.html#module-ase2sprkkr.outputs" title="ase2sprkkr.outputs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">outputs</span></code></a><a class="headerlink" href="#outputs" title="Link to this heading"></a></h3>
-<p>The outputs layer resolves task-owned readers and constructs scientific
-<code class="docutils literal notranslate"><span class="pre">TaskResult</span></code> objects from captured execution outputs. Reader and result-file
-registries belong to ASE2SPRKKR. They are separate from generic process
-execution, transfer and durable lifecycle handling in KKRunner.</p>
+<section id="execution-boundary">
+<h2>Execution boundary<a class="headerlink" href="#execution-boundary" title="Link to this heading"></a></h2>
+<p>Preparation via <code class="docutils literal notranslate"><span class="pre">sprkkr._preparation</span></code> materializes native
+inputs and file manifests. <code class="docutils literal notranslate"><span class="pre">PreparedCalculation</span></code> adapts those
+to KKRunner specifications.</p>
+<p><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner</a> handles
+local and MPI execution, SSH, schedulers, transfers, attachment
+and persistent runs. It does not depend on ASE2SPRKKR’s physics
+parsers. ASE2SPRKKR interprets completed calculations through
+its output reader layer. See <a class="reference internal" href="remote.html"><span class="doc">Remote running, MPI and execution profiles</span></a> for execution profiles and <a class="reference internal" href="execution.html"><span class="doc">Persistent project calculations</span></a>
+for persistent calculations.</p>
 </section>
-<section id="sprkkr">
-<h3><a class="reference internal" href="auto/ase2sprkkr.sprkkr.html#module-ase2sprkkr.sprkkr" title="ase2sprkkr.sprkkr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sprkkr</span></code></a><a class="headerlink" href="#sprkkr" title="Link to this heading"></a></h3>
-<p>ASE calculator for SPR-KKR, and data structures for holding the properties,
-that are special for SPR-KKR.</p>
-<p>To allow ASE Atoms object (of the ASE Atoms class) to hold the SPR-KKR specific
-properties, it has to change its (OOP) ancestor to the class
-(<a class="reference internal" href="auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></code></a>).
-This is done by <code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms()</span></code>
-method, which is either called automatically when any Atoms object is passed to
-ase2sprkkr routines, or can be called manually if it is needed.</p>
+<section id="development-and-documentation">
+<h2>Development and documentation<a class="headerlink" href="#development-and-documentation" title="Link to this heading"></a></h2>
+<p>Source builds and optional tools are described in <a class="reference internal" href="installation.html"><span class="doc">Installation and upgrading</span></a>.
+The authoritative README is <code class="docutils literal notranslate"><span class="pre">doc_src/README.rst</span></code> and
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docs</span></code> synchronizes the root <code class="docutils literal notranslate"><span class="pre">README.md</span></code>. API documentation
+and the examples gallery are generated from Python sources; avoid
+editing generated pages. See <a class="reference internal" href="cli-plugins.html"><span class="doc">CLI command plugins</span></a> for CLI extension.</p>
 </section>
-<section id="tools">
-<h3><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code><a class="headerlink" href="#tools" title="Link to this heading"></a></h3>
-<p>Scripts for postprocessing of the SPRKRR results.</p>
-</section>
-</section>
-<section id="reading-the-configuration-files">
-<h2>Reading the configuration files<a class="headerlink" href="#reading-the-configuration-files" title="Link to this heading"></a></h2>
-<p>Configuration definition utilizes <cite>pyparsing&lt;https://pyparsing-docs.readthedocs.io/en/latest/&gt;</cite>
-for creating the grammar, that parses the configuration file.</p>
-<p>Thus, the reading of a file has two phases. First, the definition parses the content of the file and created the tree of the python values (dictionaries,
-numpy arrays, etc.). In the second step, the tree is transformed, according to the definitions, to the configuration object.
-If a potential file is parsed, then the third phase occurs: the ASE Atoms object is set up accordingly to the values in the configuration object.</p>
-<p>The grammar is defined accordingly to the constants and/or class methods of the configuration definitions descendants, that customizes the shared base objects, see e.g.
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.input_prameters_definitions</span></code> or
-<a class="reference internal" href="auto/ase2sprkkr.potentials.potential_definitions.html#module-ase2sprkkr.potentials.potential_definitions" title="ase2sprkkr.potentials.potential_definitions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.potentials.potential_definitions</span></code></a></p>
-</section>
-<section id="writing-the-configuration-files">
-<h2>Writing the configuration files<a class="headerlink" href="#writing-the-configuration-files" title="Link to this heading"></a></h2>
-<p>The writing to the file is performed by save_to_file <code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file()</span></code>, which is actually implemented in its descendants. The Options are written accordingly to their definitions and types, see the methods <code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.ValueDefinition.write()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.GrammarType.write()</span></code>.</p>
-<p>Again, the exact way how to write the file - i.e. how to separate name-value pairs, how to separate values each from others etc. is given in the configuration_definition descendants.</p>
-</section>
-<section id="running-the-program">
-<h2>Running the program<a class="headerlink" href="#running-the-program" title="Link to this heading"></a></h2>
-<p>The calculator resolves application defaults, and <code class="docutils literal notranslate"><span class="pre">sprkkr._preparation</span></code>
-materializes the input and potential files. <code class="docutils literal notranslate"><span class="pre">PreparedCalculation</span></code> owns the
-prepared resources, resolves the task’s complete file footprint, and builds a
-KKRunner execution specification. The selected backend executes the command.
-The outputs layer then interprets the outcome using the task’s reader and
-constructs the scientific result.</p>
-<p>KKRunner owns run records, manifest reservations, transfers, supervision and
-reconnect. ASE2SPRKKR owns task definitions, template resolution, scientific
-metadata and historical result reconstruction. Project-backed execution is
-explicit; preserving project definitions and selecting the new run-store
-namespace are application storage policy.</p>
-<p>See <a class="reference internal" href="execution.html"><span class="doc">Execution, persistent runs and KKRunner</span></a> for the current application API and the
+<section id="files-and-processing-maintainers">
+<h2>Files and processing (maintainers)<a class="headerlink" href="#files-and-processing-maintainers" title="Link to this heading"></a></h2>
+<p>Task definitions provide KKRunner with input, output and cache file
+declarations. Scientific format descriptions and result readers belong to
+ASE2SPRKKR, not to the execution library. The files needed for
+reconnection must remain available until postprocessing finishes.
+A required output must be present; optional outputs can be absent.
+Application postprocessing may be retried after interruption, so its
+callbacks should be safe to repeat. See the
 <a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/architecture.html">KKRunner architecture</a>
-for its internal package boundaries and lifecycle contracts.</p>
+before changing this execution boundary.</p>
 </section>
 </section>
 
@@ -216,14 +249,14 @@ for its internal package boundaries and lifecycle contracts.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="how-to-install.html" class="btn btn-neutral float-left" title="More about installing of the ASE2SPRKKR package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli-plugins.html" class="btn btn-neutral float-left" title="CLI command plugins" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="changelog.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

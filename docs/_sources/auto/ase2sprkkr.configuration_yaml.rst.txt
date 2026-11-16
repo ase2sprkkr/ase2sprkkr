@@ -60,6 +60,7 @@ Full name: **ase2sprkkr.configuration\_yaml**
    .. autosummary::
       :toctree:
    
+      InvalidYamlDocumentError
       YamlConfigurationWarning
    
    

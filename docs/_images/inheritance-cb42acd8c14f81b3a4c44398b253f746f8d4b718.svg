@@ -1,0 +1,59 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="27pt" viewBox="0.00 0.00 576.00 27.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.94932 0.94932) rotate(0) translate(4 24.75)">
+<ns0:title>inheritancef685078633</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>parsing_results.ArrayKey</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey" ns1:title="parsing_results.ArrayKey" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="422,-20.75 284.5,-20.75 284.5,0 422,0 422,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="353.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">parsing_results.ArrayKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>parsing_results.DefArrayKey</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.DefArrayKey.html#ase2sprkkr.common.parsing_results.DefArrayKey" ns1:title="Dense-array key accepting both ``NAME`` and ``NAME&lt;number&gt;``." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="598.75,-20.75 444,-20.75 444,0 598.75,0 598.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="521.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">parsing_results.DefArrayKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>parsing_results.ArrayKey-&gt;parsing_results.DefArrayKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M422.3,-10.38C426.61,-10.38 430.98,-10.38 435.36,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="436.01,-12.83 443.01,-10.38 436.01,-7.93 436.01,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>parsing_results.SubKey</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.SubKey.html#ase2sprkkr.common.parsing_results.SubKey" ns1:title="A base class for items that have subkeys" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="262.5,-20.75 133.25,-20.75 133.25,0 262.5,0 262.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="197.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">parsing_results.SubKey</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>parsing_results.SubKey-&gt;parsing_results.ArrayKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M262.59,-10.38C266.9,-10.38 271.27,-10.38 275.64,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="276.27,-12.83 283.27,-10.38 276.27,-7.93 276.27,-12.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>parsing_results.Key</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key" ns1:title="A base class for items, that have to be treated in a special way" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="111.25,-20.75 0,-20.75 0,0 111.25,0 111.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="55.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">parsing_results.Key</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>parsing_results.Key-&gt;parsing_results.SubKey</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M111.65,-10.38C115.96,-10.38 120.34,-10.38 124.73,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="125.42,-12.83 132.41,-10.38 125.41,-7.93 125.42,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

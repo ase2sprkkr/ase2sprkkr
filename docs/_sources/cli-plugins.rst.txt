@@ -47,7 +47,8 @@ The required module members are ``help``, ``description``,
 ``aliases``, ``extra_help`` and ``unknowns`` behave as they do for
 native commands. ``global_args`` contains the global ``debug`` and
 ``profile`` flags. The plugin's argument parser is initialized when its
-command (or alias) is selected.
+command (or alias) is selected. Here ``global_args['profile']`` refers
+to Python profiling, not an SPR-KKR execution profile.
 
 Install the plugin distribution in the same Python environment as
 ASE2SPRKKR, for example with ``pip install my-plugin``. Its commands
@@ -56,7 +57,6 @@ then appear in ``ase2sprkkr --help``.
 Native command names and aliases take precedence over plugin commands.
 If a plugin claims an already registered name or alias, that **command**
 is skipped with a diagnostic on stderr; other plugin commands remain
-available. Plugins are processed in deterministic entry-point target
-order. A plugin whose entry point or command module fails to import is
-also reported and skipped. Command modules should avoid expensive
-top-level imports so that normal CLI startup remains lightweight.
+available. A plugin whose entry point or command module fails to import is
+reported and skipped. Keep expensive imports inside the command's
+``run()`` function so unrelated CLI commands start quickly.

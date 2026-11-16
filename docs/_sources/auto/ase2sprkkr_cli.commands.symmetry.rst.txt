@@ -1,0 +1,45 @@
+symmetry
+========
+
+Full name: **ase2sprkkr\_cli.commands.symmetry**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr_cli.commands.symmetry
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _declared_cif_symmetry
+      _report
+      parser
+      run
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

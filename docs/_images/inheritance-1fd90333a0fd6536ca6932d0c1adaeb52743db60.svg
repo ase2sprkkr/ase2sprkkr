@@ -1,0 +1,20 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="124pt" height="47pt" viewBox="0.00 0.00 124.00 47.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42.75)">
+<ns0:title>inheritance091299d6f3</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>lattice_data.Pearson</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson" ns1:title="This class holds informations about translation symmetry of a lattice with a given" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="115.75,-20.75 0,-20.75 0,0 115.75,0 115.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="57.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">lattice_data.Pearson</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>lattice_data.Pearson-&gt;lattice_data.Pearson</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M39.22,-21.15C31.76,-29.81 37.98,-38.75 57.88,-38.75 71.55,-38.75 78.77,-34.52 79.51,-29.07" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="81.56,-27.54 76.79,-21.86 76.97,-29.27 81.56,-27.54" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

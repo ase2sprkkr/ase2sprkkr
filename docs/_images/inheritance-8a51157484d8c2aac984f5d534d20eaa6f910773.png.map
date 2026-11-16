@@ -1,6 +1,0 @@
-<map id="inheritanceb0ead0930e" name="inheritanceb0ead0930e">
-<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="5,5,81,33"/>
-<area shape="rect" id="node3" title="Abstract base level parser element class." alt="" coords="110,5,257,33"/>
-<area shape="rect" id="node2" title="Abstract subclass of :class:`ParserElement`, for combining and" alt="" coords="287,5,484,33"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.common.grammar.Transparent" target="_top" title="Pyparsing ParseElementEnhance wrongly takes care about whitespaces, if there is" alt="" coords="513,5,674,33"/>
-</map>

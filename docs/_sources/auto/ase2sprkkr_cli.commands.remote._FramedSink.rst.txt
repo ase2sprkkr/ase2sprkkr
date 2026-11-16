@@ -1,0 +1,36 @@
+\_FramedSink
+============
+
+
+.. currentmodule:: ase2sprkkr_cli.commands.remote
+
+.. autoclass:: _FramedSink
+   :members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
+
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

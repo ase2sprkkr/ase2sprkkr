@@ -1,0 +1,53 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="224pt" height="68pt" viewBox="0.00 0.00 224.00 68.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 63.75)">
+<ns0:title>inheritancea90589cd0e</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>ABC</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Helper class that provides a standard way to create an ABC using">
+<ns0:polygon fill="lightgray" stroke="black" points="57.5,-20.75 3.5,-20.75 3.5,0 57.5,0 57.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="30.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ABC</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>PathLike</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:title="Abstract base class for implementing the file system path protocol.">
+<ns0:polygon fill="lightgray" stroke="black" points="139.5,-20.75 83,-20.75 83,0 139.5,0 139.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="111.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">PathLike</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>ABC-&gt;PathLike</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M57.72,-10.38C62.95,-10.38 68.52,-10.38 74.02,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="74.77,-12.83 81.77,-10.38 74.77,-7.93 74.77,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>Directory</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.file_utils.Directory.html#ase2sprkkr.common.file_utils.Directory" ns1:title="Directory" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="61,-59.75 0,-59.75 0,-39 61,-39 61,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="30.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Directory</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>FilePath</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.file_utils.FilePath.html#ase2sprkkr.common.file_utils.FilePath" ns1:title="A path displayed relative to its base directory but resolved absolutely." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="215.75,-20.75 161.5,-20.75 161.5,0 215.75,0 215.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="188.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">FilePath</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>PathLike-&gt;FilePath</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M139.89,-10.38C144.19,-10.38 148.68,-10.38 153.11,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="153.74,-12.83 160.74,-10.38 153.74,-7.93 153.74,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

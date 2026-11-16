@@ -1,0 +1,29 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="403pt" height="29pt" viewBox="0.00 0.00 403.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance73aa2072b7</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>module_registry.ModuleRegistry</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.module_registry.ModuleRegistry.html#ase2sprkkr.common.module_registry.ModuleRegistry" ns1:title="Lazily discover and load one named value from package modules." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="173.5,-20.75 0,-20.75 0,0 173.5,0 173.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="86.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">module_registry.ModuleRegistry</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>reader_registry.OutputReaderRegistry</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.reader_registry.OutputReaderRegistry.html#ase2sprkkr.outputs.reader_registry.OutputReaderRegistry" ns1:title="Load, select and detect ``&lt;Task&gt;OutputReader`` classes." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="395.25,-20.75 195.5,-20.75 195.5,0 395.25,0 395.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="295.38" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">reader_registry.OutputReaderRegistry</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>module_registry.ModuleRegistry-&gt;reader_registry.OutputReaderRegistry</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M173.88,-10.38C178.13,-10.38 182.42,-10.38 186.72,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="187.24,-12.83 194.24,-10.38 187.24,-7.93 187.24,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

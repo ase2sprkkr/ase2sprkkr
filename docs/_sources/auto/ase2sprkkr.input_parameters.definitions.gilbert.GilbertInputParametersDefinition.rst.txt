@@ -6,11 +6,15 @@ GilbertInputParametersDefinition
 
 .. autoclass:: GilbertInputParametersDefinition
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.gilbert.GilbertInputParametersDefinition
       :parts: 2
+
 
    |
 

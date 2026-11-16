@@ -1,0 +1,23 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="125pt" height="68pt" viewBox="0.00 0.00 125.00 68.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 63.75)">
+<ns0:title>inheritance7f96ae2254</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>AsyncioFileReader</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader" ns1:title="File reader that mimics asyncio StreamReader." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="111.25,-20.75 5.25,-20.75 5.25,0 111.25,0 111.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">AsyncioFileReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>ProcessOutputParser</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" ns1:title="Parse asynchronous stdout/stderr streams." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="116.5,-59.75 0,-59.75 0,-39 116.5,-39 116.5,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ProcessOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

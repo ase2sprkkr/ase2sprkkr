@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>First calculation: aluminium SCF and DOS &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=adf6db29" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation and upgrading" href="installation.html" />
+    <link rel="prev" title="ASE2SPRKKR: SPR-KKR from Python and ASE" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">First calculation: SCF to DOS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-the-python-interface-and-spr-kkr">Install the Python interface and SPR-KKR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-an-scf-calculation">Run an SCF calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-a-dos-calculation">Run a DOS calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">First calculation: aluminium SCF and DOS</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quickstart.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="first-calculation-aluminium-scf-and-dos">
+<h1>First calculation: aluminium SCF and DOS<a class="headerlink" href="#first-calculation-aluminium-scf-and-dos" title="Link to this heading"></a></h1>
+<p>This tutorial shows how to run a first SPR-KKR calculation using ASE2SPRKKR
+and reuse the converged potential to calculate the density of states.
+For physics, numerical settings and convergence studies, consult the
+<a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a>.</p>
+<section id="install-the-python-interface-and-spr-kkr">
+<h2>Install the Python interface and SPR-KKR<a class="headerlink" href="#install-the-python-interface-and-spr-kkr" title="Link to this heading"></a></h2>
+<p>Install the native SPR-KKR programs separately, following the
+<a class="reference external" href="https://sprkkr.org/download/">official download instructions</a>.
+Then install the Python interface:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">ase2sprkkr</span>
+<span class="n">ase2sprkkr</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>This tutorial covers the 4.x interface. If only a beta of version 4 is
+available, install it with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--upgrade</span> <span class="pre">--pre</span> <span class="pre">ase2sprkkr</span></code>.
+For more on versions see <a class="reference internal" href="installation.html"><span class="doc">Installation and upgrading</span></a>.</p>
+<p>For a separate Python environment (for example, to avoid dependency
+conflicts), see <a class="reference internal" href="installation.html#installation-venv"><span class="std std-ref">Virtual environments</span></a>.</p>
+<p>Check whether SPR-KKR is available on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, for example with
+<code class="docutils literal notranslate"><span class="pre">command</span> <span class="pre">-v</span> <span class="pre">kkrscf</span></code> on Unix-like systems. If not, configure
+where its executables are installed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">executable_dir</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">sprkkr</span><span class="o">/</span><span class="nb">bin</span>
+</pre></div>
+</div>
+<p>This modifies the active execution profile, which uses ASE’s
+<code class="docutils literal notranslate"><span class="pre">[sprkkr]</span></code> configuration by default.
+If your binaries use a suffix such as <code class="docutils literal notranslate"><span class="pre">kkrscf_v8</span></code>, configure it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">executable_suffix</span> <span class="n">_v8</span>
+</pre></div>
+</div>
+<p>MPI selection is automatic by default; see <a class="reference internal" href="remote.html"><span class="doc">Remote running, MPI and execution profiles</span></a> for
+execution profiles and MPI configuration.</p>
+</section>
+<section id="run-an-scf-calculation">
+<h2>Run an SCF calculation<a class="headerlink" href="#run-an-scf-calculation" title="Link to this heading"></a></h2>
+<p>Save the following in <code class="docutils literal notranslate"><span class="pre">first_calculation.py</span></code> in a writable directory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
+
+<span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">"Al"</span><span class="p">,</span> <span class="s2">"fcc"</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">4.05</span><span class="p">)</span>
+<span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span>
+    <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span>
+    <span class="n">input_parameters</span><span class="o">=</span><span class="s2">"SCF"</span><span class="p">,</span>
+    <span class="n">directory</span><span class="o">=</span><span class="s2">"al-scf"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">scf</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Total energy (eV):"</span><span class="p">,</span> <span class="n">scf</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"SCF converged:"</span><span class="p">,</span> <span class="n">scf</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Iterations:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Resulting potential:"</span><span class="p">,</span> <span class="n">scf</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">scf</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="s2">"SCF did not converge; inspect the native output "</span>
+        <span class="s2">"and convergence parameters before reusing its potential."</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>Run with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">first_calculation.py</span></code>. <code class="docutils literal notranslate"><span class="pre">calculate()</span></code> prepares
+input files, runs the native executable and returns a parsed result.
+Successful process termination does not by itself establish physical
+convergence; inspect <code class="docutils literal notranslate"><span class="pre">scf.converged</span></code> and the native output.</p>
+<p>SPR-KKR potential files (<code class="docutils literal notranslate"><span class="pre">.pot</span></code>) contain atomic-site and electronic
+potential data, including information needed for further calculations.
+They are not the equivalent of VASP’s POTCAR or a PAW dataset.</p>
+</section>
+<section id="run-a-dos-calculation">
+<h2>Run a DOS calculation<a class="headerlink" href="#run-a-dos-calculation" title="Link to this heading"></a></h2>
+<p>Add the following after the SCF convergence check:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dos</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span>
+    <span class="n">input_parameters</span><span class="o">=</span><span class="s2">"DOS"</span><span class="p">,</span>
+    <span class="n">directory</span><span class="o">=</span><span class="s2">"al-dos"</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">scf</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"DOS file:"</span><span class="p">,</span> <span class="n">dos</span><span class="o">.</span><span class="n">dos_filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This runs a different native task with the potential produced by SCF.
+For plotting, install the <a class="reference internal" href="installation.html#installation-optional"><span class="std std-ref">plot extra</span></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="s1">'ase2sprkkr[plot]'</span>
+</pre></div>
+</div>
+<p>Plot the DOS, replacing the path with the <code class="docutils literal notranslate"><span class="pre">dos.dos_filename</span></code>
+printed above:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">plot</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">result</span><span class="o">.</span><span class="n">dos</span>
+<span class="n">ase2sprkkr</span> <span class="n">plot</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">result</span><span class="o">.</span><span class="n">dos</span> <span class="o">--</span><span class="n">show</span><span class="o">-</span><span class="n">values</span>
+<span class="n">ase2sprkkr</span> <span class="n">plot</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">result</span><span class="o">.</span><span class="n">dos</span> <span class="o">-</span><span class="n">o</span> <span class="n">dos</span><span class="o">.</span><span class="n">png</span>
+</pre></div>
+</div>
+<p>For structured result readers and formats see <a class="reference internal" href="result-files.html"><span class="doc">Result files, plots and NeXus export</span></a>.
+For more examples of calculations with ASE2SPRKKR beyond SCF and DOS,
+see the <a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (Eddhib et al., 2026)</a> and the <a class="reference internal" href="examples.html"><span class="doc">Examples by application</span></a> gallery.</p>
+<p>This introductory script is not a recommended set of production numerical
+parameters; see the SPR-KKR manual for physical assumptions and convergence.</p>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<ul>
+<li><p><strong>Executable not found:</strong> check <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, the installation path and
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">config</span> <span class="pre">--show</span></code>.</p></li>
+<li><p><strong>MPI version was not compiled:</strong> if automatic selection cannot use
+the available serial executables, explicitly turn MPI off:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase2sprkkr</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">profiles</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">mpi</span> <span class="n">false</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>SCF did not converge:</strong> inspect the output and adjust relevant
+numerical settings based on the SPR-KKR manual.</p></li>
+<li><p><strong>Migrating from older ASE2SPRKKR:</strong> see
+<a class="reference internal" href="installation.html#installation-upgrade"><span class="std std-ref">upgrading from 3.x</span></a> and run
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">migrate</span></code> if you have legacy user configuration.</p></li>
+</ul>
+<p>Next, see <a class="reference internal" href="usage.html"><span class="doc">Using ASE2SPRKKR</span></a> for task parameters, or <a class="reference internal" href="examples.html"><span class="doc">Examples by application</span></a>
+for more applications.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="ASE2SPRKKR: SPR-KKR from Python and ASE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation and upgrading" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

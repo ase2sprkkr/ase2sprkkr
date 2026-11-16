@@ -1,0 +1,29 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="217pt" height="29pt" viewBox="0.00 0.00 217.00 29.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 24.75)">
+<ns0:title>inheritanced50b9f5056</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>enum.Enum</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Create a collection of name/value pairs.">
+<ns0:polygon fill="lightgray" stroke="black" points="74.5,-20.75 0,-20.75 0,0 74.5,0 74.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="37.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">enum.Enum</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>repetition.Repeated</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.repetition.Repeated.html#ase2sprkkr.common.repetition.Repeated" ns1:title="Describe how repeated configuration items are parsed and stored." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="209.25,-20.75 96.5,-20.75 96.5,0 209.25,0 209.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="152.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">repetition.Repeated</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>enum.Enum-&gt;repetition.Repeated</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M74.83,-10.38C79.13,-10.38 83.6,-10.38 88.14,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="88.58,-12.83 95.58,-10.38 88.58,-7.93 88.58,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

@@ -1,0 +1,74 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="14pt" viewBox="0.00 0.00 576.00 14.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.493045 0.493045) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance20504d551a</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>configuration_definitions.BaseDefinition</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" ns1:title="This class is a member of definition of configuration, that can be both" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="210.25,-20.75 0,-20.75 0,0 210.25,0 210.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="105.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_definitions.BaseDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>configuration_definitions.RealItemDefinition</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" ns1:title="A base class for a configuration definition, either of an option, or of a container." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="462.75,-20.75 232.25,-20.75 232.25,0 462.75,0 462.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="347.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_definitions.RealItemDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>configuration_definitions.BaseDefinition-&gt;configuration_definitions.RealItemDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M210.51,-10.38C214.83,-10.38 219.18,-10.38 223.54,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="224.16,-12.83 231.16,-10.38 224.16,-7.93 224.16,-12.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>value_definitions.ValueDefinition</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" ns1:title="value_definitions.ValueDefinition" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="661.25,-20.75 484.75,-20.75 484.75,0 661.25,0 661.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="573" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">value_definitions.ValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>configuration_definitions.RealItemDefinition-&gt;value_definitions.ValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M463.2,-10.38C467.4,-10.38 471.59,-10.38 475.76,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="476.5,-12.83 483.5,-10.38 476.5,-7.93 476.5,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>output_definitions.OutputValueDefinition</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" ns1:title="Value in an output file, of a form 'NAME &#160;&#160;VALUE'" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="897.25,-20.75 683.25,-20.75 683.25,0 897.25,0 897.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="790.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">output_definitions.OutputValueDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>output_definitions.OutputValueEqualDefinition</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition" ns1:title="Value in an output file, of a form 'NAME=VALUE' (spaces possible)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="1160.25,-20.75 919.25,-20.75 919.25,0 1160.25,0 1160.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="1039.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">output_definitions.OutputValueEqualDefinition</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>output_definitions.OutputValueDefinition-&gt;output_definitions.OutputValueEqualDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M897.65,-10.38C901.96,-10.38 906.3,-10.38 910.65,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="911.25,-12.83 918.25,-10.38 911.25,-7.93 911.25,-12.83" />
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>value_definitions.ValueDefinition-&gt;output_definitions.OutputValueDefinition</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M661.55,-10.38C665.88,-10.38 670.25,-10.38 674.64,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="675.33,-12.83 682.33,-10.38 675.33,-7.93 675.33,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

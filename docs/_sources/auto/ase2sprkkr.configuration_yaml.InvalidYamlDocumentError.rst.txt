@@ -1,0 +1,6 @@
+ase2sprkkr.configuration\_yaml.InvalidYamlDocumentError
+=======================================================
+
+.. currentmodule:: ase2sprkkr.configuration_yaml
+
+.. autoexception:: InvalidYamlDocumentError

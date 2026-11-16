@@ -1,0 +1,71 @@
+remote
+======
+
+Full name: **ase2sprkkr\_cli.commands.remote**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr_cli.commands.remote._FollowSourceAction  ase2sprkkr_cli.commands.remote._FramedSink  ase2sprkkr_cli.commands.remote._TextSink 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr_cli.commands.remote
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _cancel
+      _follow
+      _identity
+      _manager_and_record
+      _observe
+      _persisted_status
+      _scf_summary
+      _snapshot_progress
+      _status
+      _task_is_scf
+      parser
+      run
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      _FollowSourceAction
+      _FramedSink
+      _TextSink
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

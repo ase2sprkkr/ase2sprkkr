@@ -1,0 +1,407 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr_cli.main &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mods.css?v=adf6db29" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr_cli.main</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr_cli.main</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># PYTHON_ARGCOMPLETE_OK</span>
+<span class="sd">"""Lightweight CLI dispatcher, independent of ase2sprkkr imports."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pkgutil</span>
+
+
+<div class="viewcode-block" id="ArgparseError">
+<a class="viewcode-back" href="../../auto/ase2sprkkr_cli.main.ArgparseError.html#ase2sprkkr_cli.main.ArgparseError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArgparseError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">parser</span></div>
+
+
+
+<div class="viewcode-block" id="Parser">
+<a class="viewcode-back" href="../../auto/ase2sprkkr_cli.main.Parser.html#ase2sprkkr_cli.main.Parser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Parser</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+<div class="viewcode-block" id="Parser.error">
+<a class="viewcode-back" href="../../auto/ase2sprkkr_cli.main.Parser.html#ase2sprkkr_cli.main.Parser.error">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ArgparseError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Parser.exit">
+<a class="viewcode-back" href="../../auto/ase2sprkkr_cli.main.Parser.html#ase2sprkkr_cli.main.Parser.exit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ArgparseError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Parser.format_help">
+<a class="viewcode-back" href="../../auto/ase2sprkkr_cli.main.Parser.html#ase2sprkkr_cli.main.Parser.format_help">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">format_help</span><span class="p">()</span>
+        <span class="n">extra_help</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"extra_help"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">extra_help</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">extra</span> <span class="o">=</span> <span class="n">extra_help</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_plugin_warning">
+<a class="viewcode-back" href="../../auto/ase2sprkkr_cli.main._plugin_warning.html#ase2sprkkr_cli.main._plugin_warning">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plugin_warning</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ase2sprkkr: CLI plugin </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_plugin_packages">
+<a class="viewcode-back" href="../../auto/ase2sprkkr_cli.main._plugin_packages.html#ase2sprkkr_cli.main._plugin_packages">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plugin_packages</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Load packages exposed by installed 'ase2sprkkr:cli' entry points."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">entry_points</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="n">entry_points</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="s2">"select"</span><span class="p">):</span>
+            <span class="n">selected</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="s2">"ase2sprkkr"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"cli"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Python 3.9's mapping-style entry_points() result</span>
+            <span class="n">selected</span> <span class="o">=</span> <span class="p">(</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ase2sprkkr"</span><span class="p">,</span> <span class="p">())</span> <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"cli"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">_plugin_warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"discovery failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># A deterministic order makes conflicts between independently installed</span>
+    <span class="c1"># plugins predictable; native commands are always registered first.</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">selected</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">entry</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">package</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s2">"__path__"</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s2">"__name__"</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"entry point must expose a Python package"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">_plugin_warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">value</span><span class="si">!r}</span><span class="s2"> could not be loaded: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">yield</span> <span class="n">package</span></div>
+
+
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../auto/ase2sprkkr_cli.main.run.html#ase2sprkkr_cli.main.run">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"ASE2SPRKKR tool — command-line interface for ASE2SPRKKR functionalities"</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span>
+        <span class="n">epilog</span><span class="o">=</span><span class="s1">'Enable shell completion with: eval "$(register-python-argcomplete ase2sprkkr)"'</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--version"</span><span class="p">,</span> <span class="s2">"-v"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Show ASE2SPRKKR version."</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--debug"</span><span class="p">,</span> <span class="s2">"-G"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Enable debugger on unhandled exceptions."</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--cprofile"</span><span class="p">,</span> <span class="s2">"-P"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"cli_profile"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Profile CLI execution with cProfile."</span><span class="p">)</span>
+    <span class="c1"># Preserve the legacy global spelling, distinct from 'run --profile NAME'.</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--profile"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">"cli_profile"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span><span class="p">)</span>
+    <span class="n">subs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s2">"ase2sprkkr_command"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Use &lt;command&gt; -h for details."</span><span class="p">)</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">commands</span>
+    <span class="k">if</span> <span class="n">argv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+        <span class="n">requested_args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">requested_args</span> <span class="o">=</span> <span class="n">argv</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CLIUsageError</span>
+
+    <span class="n">modules</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">parsers</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">unknowns</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">claimed_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_command</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s2">"parser"</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">command_aliases</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s2">"aliases"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command_aliases</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"aliases must be a list or tuple"</span><span class="p">)</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">command_aliases</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">value</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"-"</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">names</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"command names and aliases must be nonempty strings without a leading '-'"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">names</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"command name and aliases must be distinct"</span><span class="p">)</span>
+            <span class="n">conflicts</span> <span class="o">=</span> <span class="n">claimed_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">conflicts</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"command name/alias conflicts with an existing command: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">conflicts</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">help_text</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">help</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">description</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">help_text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"help and description must be strings"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">parser</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">run</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"parser and run must be callable"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">plugin</span><span class="p">:</span>
+                <span class="k">raise</span>
+            <span class="n">_plugin_warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> skipped: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">help_text</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="n">command_aliases</span><span class="p">,</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">help_text</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">description</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sub</span><span class="o">.</span><span class="n">extra_help</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s2">"extra_help"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># Native commands retain their existing lazy_parser setting. Third-party</span>
+        <span class="c1"># parsers are configured only when requested, keeping unrelated plugin</span>
+        <span class="c1"># dependencies out of ordinary CLI invocations and root --help.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">plugin</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s2">"lazy_parser"</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">value</span> <span class="ow">in</span> <span class="n">requested_args</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">names</span>
+        <span class="p">):</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">parser</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+        <span class="n">modules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">command</span>
+        <span class="n">parsers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub</span>
+        <span class="n">claimed_names</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">command_aliases</span><span class="p">:</span>
+            <span class="n">aliases</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s2">"unknowns"</span><span class="p">):</span>
+            <span class="n">unknowns</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">unknowns</span>
+
+    <span class="k">for</span> <span class="n">discovered</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">commands</span><span class="o">.</span><span class="n">__path__</span><span class="p">):</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">commands</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">discovered</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">register_command</span><span class="p">(</span><span class="n">discovered</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">),</span> <span class="n">command</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">_plugin_packages</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">discovered_modules</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">__path__</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">_plugin_warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">package</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> could not be inspected: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">discovered</span> <span class="ow">in</span> <span class="n">discovered_modules</span><span class="p">:</span>
+            <span class="n">module_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">package</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">discovered</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">command</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">_plugin_warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">module_name</span><span class="si">!r}</span><span class="s2"> could not be imported: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">register_command</span><span class="p">(</span>
+                <span class="n">discovered</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">),</span> <span class="n">command</span><span class="p">,</span>
+                <span class="n">plugin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">package</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"_ARGCOMPLETE"</span><span class="p">):</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">argcomplete</span>
+
+        <span class="n">argcomplete</span><span class="o">.</span><span class="n">autocomplete</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">parser_error</span><span class="p">(</span><span class="n">failed</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">colorama</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fore</span><span class="p">,</span> <span class="n">Style</span><span class="p">,</span> <span class="n">init</span>
+
+        <span class="n">init</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">Fore</span><span class="o">.</span><span class="n">RED</span> <span class="o">+</span> <span class="n">message</span> <span class="o">+</span> <span class="n">Style</span><span class="o">.</span><span class="n">RESET_ALL</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"-"</span> <span class="o">*</span> <span class="mi">30</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">failed</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">args</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_known_args</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ArgparseError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">parser_error</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">" ! </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2"> !"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">():</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ase2sprkkr_command</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="n">aliases</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">selected</span><span class="p">,</span> <span class="n">selected</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">remainder</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">unknowns</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">parser_error</span><span class="p">(</span>
+                    <span class="n">parsers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">selected</span><span class="p">,</span> <span class="n">parser</span><span class="p">),</span>
+                    <span class="sa">f</span><span class="s2">" ! ERROR: Unknown argument(s) </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remainder</span><span class="p">)</span><span class="si">!r}</span><span class="s2"> for </span><span class="si">{</span><span class="n">selected</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">'ase2sprkkr'</span><span class="si">}</span><span class="s2"> !"</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">remainder</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.common.debug</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_debug_hook</span>
+
+            <span class="n">add_debug_hook</span><span class="p">()</span>
+
+        <span class="n">global_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"debug"</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">,</span> <span class="s2">"profile"</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">cli_profile</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">PackageNotFoundError</span><span class="p">,</span> <span class="n">version</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">version</span><span class="p">(</span><span class="s2">"ase2sprkkr"</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">PackageNotFoundError</span><span class="p">:</span>
+                <span class="n">parser_error</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">" ! ASE2SPRKKR is not installed ! "</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">selected</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
+                <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"ase2sprkkr_command"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">,</span> <span class="s2">"debug"</span><span class="p">,</span> <span class="s2">"cli_profile"</span><span class="p">):</span>
+            <span class="nb">delattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">modules</span><span class="p">[</span><span class="n">selected</span><span class="p">]</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">CLIUsageError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">parser_error</span><span class="p">(</span><span class="n">parsers</span><span class="p">[</span><span class="n">selected</span><span class="p">],</span> <span class="sa">f</span><span class="s2">" ! </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2"> !"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">cli_profile</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">cProfile</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pstats</span>
+
+        <span class="n">profiler</span> <span class="o">=</span> <span class="n">cProfile</span><span class="o">.</span><span class="n">Profile</span><span class="p">()</span>
+        <span class="n">profiler</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">execute</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">profiler</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">pstats</span><span class="o">.</span><span class="n">Stats</span><span class="p">(</span><span class="n">profiler</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span><span class="o">.</span><span class="n">sort_stats</span><span class="p">(</span><span class="n">pstats</span><span class="o">.</span><span class="n">SortKey</span><span class="o">.</span><span class="n">CUMULATIVE</span><span class="p">)</span><span class="o">.</span><span class="n">print_stats</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">execute</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

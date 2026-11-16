@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr_cli.commands.nomad &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=adf6db29" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr_cli.commands.nomad</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr_cli.commands.nomad</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="sd">"""</span>
+<span class="sd">This is a script to upload to NOMAD repository.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+
+
+
+
+<span class="n">help</span> <span class="o">=</span> <span class="s2">"Upload given datas to NOMAD"</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\n</span><span class="s2"> Uploads a given output file to a NOMAD. You either have to specify your Nomad username and type your password on the prompt.</span>
+<span class="s2">Or you can authenticate once using -a switch, then the token will be stored. """</span>
+
+
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.nomad.parser.html#ase2sprkkr_cli.commands.nomad.parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+
+    <span class="n">nomad</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">nomad</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--nomad-url"</span><span class="p">,</span> <span class="s2">"-N"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad URL."</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">nomad</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--password"</span><span class="p">,</span>
+        <span class="s2">"-P"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad password. Since there is command-line history in the most of shells, it is not reccomended to use."</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">nomad_auth</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">nomad</span><span class="p">])</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">nomad_auth</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--token"</span><span class="p">,</span> <span class="s2">"-t"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad token. Can be also specified in config.nomad.token."</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--user"</span><span class="p">,</span> <span class="s2">"-u"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad user name. "</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">subs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">"authenticate"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Retrieve and store Nomad token for further passwordless authentication."</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">nomad</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"user"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad user name. "</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"?"</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--delete-credentials"</span><span class="p">,</span> <span class="s2">"-d"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Clear authentication data."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--print-token"</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print the resulting token."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--do-not-store"</span><span class="p">,</span> <span class="s2">"-n"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Only obtain the token, do not store it."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--expires"</span><span class="p">,</span> <span class="s2">"-e"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Validity of the token (in days), the default is one year."</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">365</span>
+    <span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">authenticate</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"token"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print the (currently stored) Nomad authentication token"</span><span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"upload"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Upload a file to nomad"</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">nomad_auth</span><span class="p">])</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"output_files"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"The output file to be uploaded. If you specify more files, they will be uploaded in single upload."</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">upload</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"zip"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Create Nomad archive"</span><span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"zip"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Name of the archive"</span><span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"output_files"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"The output file to be uploaded. If you specify more files, they will be uploaded in single upload."</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">zipp</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># api object used in functions</span>
+<span class="n">api</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="authenticate">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.nomad.authenticate.html#ase2sprkkr_cli.commands.nomad.authenticate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">authenticate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">delete_credentials</span><span class="p">:</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span>
+            <span class="n">token</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"Authentication token to Nomad \(written by 'ase2sprkkr nomad authenticate [^\s]+'\)"</span><span class="p">,</span> <span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">retrieve_token</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">expires</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">3600</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">do_not_store</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span>
+            <span class="n">token</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Authentication token to Nomad (written by 'ase2sprkkr nomad authenticate </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">')"</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">print_token</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="retrieve_token">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.nomad.retrieve_token.html#ase2sprkkr_cli.commands.nomad.retrieve_token">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">retrieve_token</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">getpass</span>
+
+    <span class="n">password</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">password</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">"Nomad password: "</span><span class="p">)</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_authentication_token</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="n">expires</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">token</span></div>
+
+
+
+<div class="viewcode-block" id="get_token">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.nomad.get_token.html#ase2sprkkr_cli.commands.nomad.get_token">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_token</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">retrieve_token</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"No Nomad authentization token: please either supply -u parameter, or run `nomad authenticate`"</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">token</span></div>
+
+
+
+<div class="viewcode-block" id="token">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.nomad.token.html#ase2sprkkr_cli.commands.nomad.token">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">token</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="gather_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.nomad.gather_files.html#ase2sprkkr_cli.commands.nomad.gather_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gather_files</span><span class="p">(</span><span class="n">output_files</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.bindings.nomad.nomad</span><span class="w"> </span><span class="kn">import</span> <span class="n">NomadArchive</span>
+
+    <span class="n">arch</span> <span class="o">=</span> <span class="n">NomadArchive</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">output_files</span><span class="p">:</span>
+        <span class="n">arch</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">arch</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">arch</span></div>
+
+
+
+<div class="viewcode-block" id="upload">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.nomad.upload.html#ase2sprkkr_cli.commands.nomad.upload">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">upload</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">arch</span> <span class="o">=</span> <span class="n">gather_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_files</span><span class="p">)</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">arch</span><span class="o">.</span><span class="n">file</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="zipp">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.nomad.zipp.html#ase2sprkkr_cli.commands.nomad.zipp">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">zipp</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">gather_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_files</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zip</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.nomad.run.html#ase2sprkkr_cli.commands.nomad.run">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+
+    <span class="k">global</span> <span class="n">api</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">api</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.bindings.nomad.nomad_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">NomadApi</span>
+        <span class="n">api</span> <span class="o">=</span> <span class="n">NomadApi</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">nomad_url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
+            <span class="n">api</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">get_token</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

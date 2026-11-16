@@ -6,11 +6,15 @@ PlotControls
 
 .. autoclass:: PlotControls
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.gui.plot.PlotControls
       :parts: 2
+
 
    |
 

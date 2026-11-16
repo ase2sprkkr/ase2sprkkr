@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr_cli.commands.info &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=adf6db29" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">Command-line reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../symmetry.html">Crystal symmetry and cell transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli-plugins.html">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Architecture for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr_cli.commands.info</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr_cli.commands.info</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="sd">"""</span>
+<span class="sd">Show known structured result files, description of InputParameters and so on.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+
+
+
+<span class="n">help</span> <span class="o">=</span> <span class="s2">"Show capabilities of ase2sprkkr (known tasks, result file formats etc.)."</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\n</span><span class="s2"> Example of usage:</span>
+<span class="s2">    #show all tasks</span>
+<span class="s2">    ase2sprkkr info --task</span>
+
+<span class="s2">    #show information about task SCF</span>
+<span class="s2">    ase2sprkkr info --task=scf</span>
+
+<span class="s2">    #show information about section ENERGY in task SCF</span>
+<span class="s2">    ase2sprkkr info --task=scf.energy</span>
+
+<span class="s2">    #find all sections/values with name ENERGY in all tasks</span>
+<span class="s2">    ase2sprkkr info --task=.energy</span>
+<span class="s2">"""</span>
+
+
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.info.parser.html#ase2sprkkr_cli.commands.info.parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--task"</span><span class="p">,</span>
+        <span class="s2">"-t"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Show informations about the known tasks. You can limit the output to a given task/section/option by an optional agrument [TASK]"</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"?"</span><span class="p">,</span>
+        <span class="n">const</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--output-file"</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Show information about known structured result files."</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"?"</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--executables"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Show known SPR-KKR executables and their default output readers."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">argparse</span><span class="p">,</span> <span class="s2">"BooleanOptionalAction"</span><span class="p">,</span> <span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--verbose"</span><span class="p">,</span>
+        <span class="s2">"-v"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Give a more verbose info. It is set automatically, if the output is limited."</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr_cli.commands.info.run.html#ase2sprkkr_cli.commands.info.run">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span><span class="p">,</span> <span class="n">ResultFile</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.executables</span><span class="w"> </span><span class="kn">import</span> <span class="n">executables</span>  <span class="c1"># NOQA</span>
+
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"ASE2SPRKKR</span><span class="se">\n</span><span class="s2">==========</span><span class="se">\n</span><span class="s2">A tool to run SPRKKR calculations</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">info_task</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">filter</span><span class="p">):</span>
+        <span class="n">registry</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">input_parameters_registry</span>
+        <span class="n">task_registry</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">task_registry</span>
+
+        <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s1">'The known SPRKKR tasks (kind of input parameters)</span><span class="se">\n</span><span class="s1">'</span>
+                <span class="s1">'---------------------------------------------------'</span>
+            <span class="p">)</span>
+            <span class="n">tasks</span> <span class="o">=</span> <span class="s1">'the known SPRKKR tasks'</span>
+            <span class="n">anyof</span> <span class="o">=</span> <span class="s1">'any of '</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'.'</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">:</span>
+                <span class="nb">filter</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="nb">filter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+        <span class="n">entries</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">registry</span><span class="o">.</span><span class="n">definition_for_task</span><span class="p">(</span><span class="n">task</span><span class="p">),</span> <span class="n">task</span><span class="o">.</span><span class="n">experimental</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">task_registry</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">name_contains</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="nb">filter</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">entries</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"There is no known SPRKKR task with '</span><span class="si">{</span><span class="nb">filter</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">' in its name"</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="nb">filter</span> <span class="o">==</span> <span class="s1">''</span><span class="p">:</span>
+                <span class="n">tasks</span> <span class="o">=</span> <span class="s1">'the known SPRKKR tasks'</span>
+                <span class="n">anyof</span> <span class="o">=</span> <span class="s1">'any of '</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">entries</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="nb">filter</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
+                <span class="n">tasks</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"the task '</span><span class="si">{</span><span class="n">entries</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="n">anyof</span> <span class="o">=</span> <span class="s1">''</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tasks</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"the tasks containing '</span><span class="si">{</span><span class="nb">filter</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="n">anyof</span> <span class="o">=</span> <span class="s1">'any of '</span>
+            <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"The configuration sections/values '</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">' in </span><span class="si">{</span><span class="n">anyof</span><span class="si">}{</span><span class="n">tasks</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">tasks</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="s1">'-'</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="c1"># Keep the task identity distinct from its possibly shared schema.</span>
+        <span class="n">entries</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">entry</span><span class="p">:</span> <span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">experimental_started</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">task_name</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">experimental</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">members</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">definition</span><span class="o">.</span><span class="n">create_object</span><span class="p">()</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">is_option</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">members</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">experimental</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">experimental_started</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">  Experimental tasks"</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"  ~~~~~~~~~~~~~~~~~~"</span><span class="p">)</span>
+                <span class="n">experimental_started</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="n">members</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">member</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">_definition</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">member</span><span class="o">.</span><span class="n">item_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">member</span><span class="o">.</span><span class="n">get_path</span><span class="p">()</span><span class="si">}</span><span class="s2"> of task </span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2">:"</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">'  '</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">'  '</span> <span class="o">+</span> <span class="n">member</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Task </span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2">:"</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">definition</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">summary</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+                <span class="n">prefix</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">display_name</span>
+                <span class="k">if</span> <span class="n">summary</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">' - '</span><span class="p">):</span>
+                    <span class="n">summary</span> <span class="o">=</span> <span class="n">summary</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="p">:]</span>
+                <span class="k">elif</span> <span class="n">summary</span> <span class="o">==</span> <span class="n">prefix</span><span class="p">:</span>
+                    <span class="n">summary</span> <span class="o">=</span> <span class="s1">''</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">summary</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">summary</span> <span class="k">else</span> <span class="n">task_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"There is no member named '</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">' in </span><span class="si">{</span><span class="n">anyof</span><span class="si">}{</span><span class="n">tasks</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">info_output_file</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">filter</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Known SPR-KKR structured result files</span><span class="se">\n</span><span class="s2">------------------------------------"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="nb">filter</span> <span class="o">=</span> <span class="nb">filter</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">ext</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ResultFile</span><span class="o">.</span><span class="n">definitions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span> <span class="ow">and</span> <span class="p">((</span><span class="nb">filter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">filter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ext</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: "</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">info_executables</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Known SPR-KKR executables</span><span class="se">\n</span><span class="s2">-------------------------"</span><span class="p">)</span>
+        <span class="n">definitions</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">executables</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">name_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="s2">"Executable"</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">definitions</span><span class="p">))</span>
+        <span class="n">reader_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="s2">"Default reader"</span><span class="p">),</span>
+            <span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">default_output_reader</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">definitions</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'Executable'</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">name_width</span><span class="si">}}</span><span class="s2">  "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'Default reader'</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">reader_width</span><span class="si">}}</span><span class="s2">  Description"</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">executable</span> <span class="ow">in</span> <span class="n">definitions</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">executable</span><span class="o">.</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">name_width</span><span class="si">}}</span><span class="s2">  "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">executable</span><span class="o">.</span><span class="n">default_output_reader</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">reader_width</span><span class="si">}}</span><span class="s2">  "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">executable</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+
+    <span class="n">printed</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">filter</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">task</span>
+        <span class="n">info_task</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">filter</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">printed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">filter</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">output_file</span>
+        <span class="n">info_output_file</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">filter</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">printed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">executables</span><span class="p">:</span>
+        <span class="n">info_executables</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">printed</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">printed</span><span class="p">:</span>
+        <span class="n">info_task</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">info_output_file</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

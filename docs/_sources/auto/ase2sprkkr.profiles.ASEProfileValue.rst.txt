@@ -1,0 +1,40 @@
+ASEProfileValue
+===============
+
+
+.. currentmodule:: ase2sprkkr.profiles
+
+.. autoclass:: ASEProfileValue
+   :members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.profiles.ASEProfileValue
+      :parts: 2
+
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

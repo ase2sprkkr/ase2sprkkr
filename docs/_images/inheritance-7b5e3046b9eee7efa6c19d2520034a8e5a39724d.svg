@@ -1,0 +1,419 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="333pt" viewBox="0.00 0.00 576.00 333.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.796405 0.796405) rotate(0) translate(4 414.75)">
+<ns0:title>inheritance0e3b6e4516</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>AlwaysQString</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.common.grammar_types.basic.AlwaysQString" ns1:title="Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="466,-410.75 378.75,-410.75 378.75,-390 466,-390 466,-410.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-397.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">AlwaysQString</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node25" class="node">
+<ns0:title>QString</ns0:title>
+<ns0:g id="a_node25"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.common.grammar_types.basic.QString" ns1:title="Either a quoted string, or just a word (without whitespaces or special chars)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="578.88,-410.75 524.88,-410.75 524.88,-390 578.88,-390 578.88,-410.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="551.88" y="-397.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">QString</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge21" class="edge">
+<ns0:title>AlwaysQString-&gt;QString</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M466.19,-400.38C482.54,-400.38 500.97,-400.38 516.45,-400.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="516.96,-402.83 523.96,-400.38 516.96,-397.93 516.96,-402.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>BaseString</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.BaseString.html#ase2sprkkr.common.grammar_types.basic.BaseString" ns1:title="Base type for string grammar types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="329.38,-351.75 260.88,-351.75 260.88,-331 329.38,-331 329.38,-351.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="295.12" y="-338.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseString</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>BaseString-&gt;AlwaysQString</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M314.89,-352.1C329.59,-360.31 350.67,-371.66 369.75,-380.38 374.34,-382.47 379.22,-384.55 384.07,-386.53" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="383.53,-388.95 390.94,-389.26 385.34,-384.4 383.53,-388.95" />
+</ns0:g>
+
+<ns0:g id="node22" class="node">
+<ns0:title>LineString</ns0:title>
+<ns0:g id="a_node22"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.LineString.html#ase2sprkkr.common.grammar_types.basic.LineString" ns1:title="A string, that takes all up to the end of the line" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="454.75,-371.75 390,-371.75 390,-351 454.75,-351 454.75,-371.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-358.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">LineString</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge18" class="edge">
+<ns0:title>BaseString-&gt;LineString</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M329.69,-346.73C345.76,-349.3 365.1,-352.39 381.87,-355.07" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="381.83,-357.54 389.13,-356.23 382.6,-352.7 381.83,-357.54" />
+</ns0:g>
+
+<ns0:g id="node28" class="node">
+<ns0:title>String</ns0:title>
+<ns0:g id="a_node28"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.String.html#ase2sprkkr.common.grammar_types.basic.String" ns1:title="Just a string (without whitespaces and few special chars)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="449.38,-332.75 395.38,-332.75 395.38,-312 449.38,-312 449.38,-332.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-319.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">String</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge25" class="edge">
+<ns0:title>BaseString-&gt;String</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M329.69,-336.28C347.37,-333.6 369.03,-330.32 386.86,-327.61" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="387.96,-329.92 394.52,-326.45 387.23,-325.08 387.96,-329.92" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>BaseBool</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.BaseBool.html#ase2sprkkr.common.grammar_types.basic.BaseBool" ns1:title="A base type for all kind of boolean values." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="326,-215.75 264.25,-215.75 264.25,-195 326,-195 326,-215.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="295.12" y="-202.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseBool</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node10" class="node">
+<ns0:title>Bool</ns0:title>
+<ns0:g id="a_node10"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.common.grammar_types.basic.Bool" ns1:title="A bool type, whose value is represented by a letter (T or F)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="449.38,-293.75 395.38,-293.75 395.38,-273 449.38,-273 449.38,-293.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-280.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Bool</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge7" class="edge">
+<ns0:title>BaseBool-&gt;Bool</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M307.33,-215.97C321.14,-228.59 345.72,-249.67 369.75,-263.38 375.27,-266.52 381.38,-269.38 387.41,-271.88" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="386.83,-274.29 394.24,-274.58 388.63,-269.73 386.83,-274.29" />
+</ns0:g>
+
+<ns0:g id="node11" class="node">
+<ns0:title>Boolean</ns0:title>
+<ns0:g id="a_node11"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.common.grammar_types.basic.Boolean" ns1:title="A bool type, whose value is represented by a letter (T or F)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="450.25,-254.75 394.5,-254.75 394.5,-234 450.25,-234 450.25,-254.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-241.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Boolean</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge8" class="edge">
+<ns0:title>BaseBool-&gt;Boolean</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M326.44,-214.82C344.48,-220.43 367.44,-227.58 386.26,-233.44" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="386.18,-235.98 393.6,-235.73 387.64,-231.3 386.18,-235.98" />
+</ns0:g>
+
+<ns0:g id="node17" class="node">
+<ns0:title>Flag</ns0:title>
+<ns0:g id="a_node17"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.common.grammar_types.basic.Flag" ns1:title="A boolean value, which is True, if a name of the value appears in the input file." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="449.38,-215.75 395.38,-215.75 395.38,-195 449.38,-195 449.38,-215.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-202.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Flag</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge13" class="edge">
+<ns0:title>BaseBool-&gt;Flag</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M326.44,-205.38C344.65,-205.38 367.88,-205.38 386.8,-205.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="387.4,-207.83 394.4,-205.38 387.4,-202.93 387.4,-207.83" />
+</ns0:g>
+
+<ns0:g id="node18" class="node">
+<ns0:title>IntBool</ns0:title>
+<ns0:g id="a_node18"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.common.grammar_types.basic.IntBool" ns1:title="A bool type, whose value is represented by a letter (1 or 0)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="449.38,-176.75 395.38,-176.75 395.38,-156 449.38,-156 449.38,-176.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-163.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">IntBool</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge14" class="edge">
+<ns0:title>BaseBool-&gt;IntBool</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M326.44,-195.93C344.73,-190.24 368.08,-182.97 387.05,-177.06" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="388.47,-179.19 394.43,-174.77 387.02,-174.51 388.47,-179.19" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>TypedGrammarType</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" ns1:title="TypedGrammarType" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="220.5,-176.75 107,-176.75 107,-156 220.5,-156 220.5,-176.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163.75" y="-163.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TypedGrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>TypedGrammarType-&gt;BaseString</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M172.65,-177.06C194.35,-206.42 255.05,-288.51 281.51,-324.32" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="279.75,-326.05 285.88,-330.22 283.69,-323.14 279.75,-326.05" />
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>TypedGrammarType-&gt;BaseBool</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M200.79,-177.24C218.03,-182.44 238.69,-188.66 256.17,-193.93" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="255.83,-196.39 263.24,-196.06 257.24,-191.7 255.83,-196.39" />
+</ns0:g>
+
+<ns0:g id="node12" class="node">
+<ns0:title>Char</ns0:title>
+<ns0:g id="a_node12"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Char.html#ase2sprkkr.common.grammar_types.basic.Char" ns1:title="Char" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="322.12,-176.75 268.12,-176.75 268.12,-156 322.12,-156 322.12,-176.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="295.12" y="-163.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Char</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge9" class="edge">
+<ns0:title>TypedGrammarType-&gt;Char</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M220.74,-166.38C233.93,-166.38 247.61,-166.38 259.54,-166.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="260.12,-168.83 267.12,-166.38 260.12,-163.93 260.12,-168.83" />
+</ns0:g>
+
+<ns0:g id="node14" class="node">
+<ns0:title>Number</ns0:title>
+<ns0:g id="a_node14"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" ns1:title="Base class for a number - descendants of this class can have minimal and/or maximal possible value." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="322.62,-137.75 267.62,-137.75 267.62,-117 322.62,-117 322.62,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="295.12" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Number</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge19" class="edge">
+<ns0:title>TypedGrammarType-&gt;Number</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M200.79,-155.51C219.07,-150 241.18,-143.33 259.29,-137.87" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="260.59,-140.04 266.58,-135.68 259.17,-135.35 260.59,-140.04" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>BaseRealWithUnits</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits" ns1:title="The base class for float value, which can have units append." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="606.75,-137.75 497,-137.75 497,-117 606.75,-117 606.75,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="551.88" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseRealWithUnits</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node15" class="node">
+<ns0:title>Energy</ns0:title>
+<ns0:g id="a_node15"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Energy.html#ase2sprkkr.common.grammar_types.basic.Energy" ns1:title="The grammar type for energy. The default units are Rydberg, one can specify eV." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="699,-156.75 645,-156.75 645,-136 699,-136 699,-156.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="672" y="-143.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Energy</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge11" class="edge">
+<ns0:title>BaseRealWithUnits-&gt;Energy</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M607.1,-136.1C617.13,-137.71 627.34,-139.35 636.58,-140.84" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="636.71,-143.34 644.01,-142.03 637.49,-138.5 636.71,-143.34" />
+</ns0:g>
+
+<ns0:g id="node26" class="node">
+<ns0:title>RealWithUnits</ns0:title>
+<ns0:g id="a_node26"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.RealWithUnits.html#ase2sprkkr.common.grammar_types.basic.RealWithUnits" ns1:title="A float value with user-defined units" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="714.88,-117.75 629.12,-117.75 629.12,-97 714.88,-97 714.88,-117.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="672" y="-104.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RealWithUnits</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge23" class="edge">
+<ns0:title>BaseRealWithUnits-&gt;RealWithUnits</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M607.1,-118.19C611.53,-117.44 616,-116.69 620.41,-115.94" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="621.54,-118.23 628.04,-114.65 620.72,-113.4 621.54,-118.23" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>Real</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real" ns1:title="A real value" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="449.38,-137.75 395.38,-137.75 395.38,-117 449.38,-117 449.38,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Real</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>Real-&gt;BaseRealWithUnits</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M449.79,-127.38C461.03,-127.38 474.65,-127.38 488.21,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="488.86,-129.83 495.86,-127.38 488.86,-124.93 488.86,-129.83" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>BasicSeparator</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.BasicSeparator.html#ase2sprkkr.common.grammar_types.basic.BasicSeparator" ns1:title="Basic type for separators - fake items in" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="208.5,-78.75 119,-78.75 119,-58 208.5,-58 208.5,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163.75" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BasicSeparator</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node9" class="node">
+<ns0:title>BlankSeparator</ns0:title>
+<ns0:g id="a_node9"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.BlankSeparator.html#ase2sprkkr.common.grammar_types.basic.BlankSeparator" ns1:title="Special class for a blank separator. In fact (with a delimiter) it is a blank line." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="340.62,-98.75 249.62,-98.75 249.62,-78 340.62,-78 340.62,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="295.12" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BlankSeparator</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>BasicSeparator-&gt;BlankSeparator</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M208.91,-75.2C219.19,-76.79 230.25,-78.5 240.87,-80.14" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="241.24,-82.68 248.54,-81.33 241.99,-77.84 241.24,-82.68" />
+</ns0:g>
+
+<ns0:g id="node21" class="node">
+<ns0:title>KeywordSeparator</ns0:title>
+<ns0:g id="a_node21"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.common.grammar_types.basic.KeywordSeparator" ns1:title="Separator with an exact string" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="347.75,-59.75 242.5,-59.75 242.5,-39 347.75,-39 347.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="295.12" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">KeywordSeparator</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge17" class="edge">
+<ns0:title>BasicSeparator-&gt;KeywordSeparator</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M208.91,-61.89C216.93,-60.71 225.41,-59.47 233.8,-58.23" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="234.81,-60.56 241.38,-57.12 234.1,-55.71 234.81,-60.56" />
+</ns0:g>
+
+<ns0:g id="node27" class="node">
+<ns0:title>Separator</ns0:title>
+<ns0:g id="a_node27"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.common.grammar_types.basic.Separator" ns1:title="Special class for a separator inside a section." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="326.75,-20.75 263.5,-20.75 263.5,0 326.75,0 326.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="295.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Separator</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge24" class="edge">
+<ns0:title>BasicSeparator-&gt;Separator</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M200.65,-57.55C207.43,-54.93 214.33,-51.87 220.5,-48.38 231.49,-42.15 231.58,-36.74 242.5,-30.38 246.6,-27.99 251.03,-25.78 255.52,-23.77" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="256.89,-25.85 262.38,-20.86 254.98,-21.33 256.89,-25.85" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>GrammarType</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" ns1:title="Base class for definition of configuration option types" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="85,-78.75 0,-78.75 0,-58 85,-58 85,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="42.5" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">GrammarType</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge26" class="edge">
+<ns0:title>GrammarType-&gt;TypedGrammarType</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M56.72,-79.24C77.78,-96.55 119.06,-130.47 143.44,-150.51" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="142.29,-152.73 149.25,-155.28 145.4,-148.94 142.29,-152.73" />
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>GrammarType-&gt;BasicSeparator</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M85.21,-68.38C93.37,-68.38 102.02,-68.38 110.48,-68.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="111.08,-70.83 118.08,-68.38 111.08,-65.93 111.08,-70.83" />
+</ns0:g>
+
+<ns0:g id="node20" class="node">
+<ns0:title>Keyword</ns0:title>
+<ns0:g id="a_node20"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword" ns1:title="A value, that can take values from the predefined set of strings." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="192.75,-39.75 134.75,-39.75 134.75,-19 192.75,-19 192.75,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="163.75" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Keyword</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge16" class="edge">
+<ns0:title>GrammarType-&gt;Keyword</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M76.72,-57.51C92.21,-52.44 110.69,-46.4 126.54,-41.22" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="127.94,-43.34 133.84,-38.83 126.42,-38.68 127.94,-43.34" />
+</ns0:g>
+
+<ns0:g id="node13" class="node">
+<ns0:title>Date</ns0:title>
+<ns0:g id="a_node13"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Date.html#ase2sprkkr.common.grammar_types.basic.Date" ns1:title="A date value of the form 'DD.MM.YYYY'" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="449.38,-98.75 395.38,-98.75 395.38,-78 449.38,-78 449.38,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Date</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge22" class="edge">
+<ns0:title>Number-&gt;Real</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M322.99,-127.38C341.61,-127.38 366.57,-127.38 386.69,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="387.22,-129.83 394.22,-127.38 387.22,-124.93 387.22,-129.83" />
+</ns0:g>
+
+<ns0:g id="edge10" class="edge">
+<ns0:title>Number-&gt;Date</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M322.99,-119.01C341.69,-113.19 366.79,-105.37 386.96,-99.09" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="388.3,-101.24 394.26,-96.82 386.85,-96.56 388.3,-101.24" />
+</ns0:g>
+
+<ns0:g id="node16" class="node">
+<ns0:title>FixedPointNumber</ns0:title>
+<ns0:g id="a_node16"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.common.grammar_types.basic.FixedPointNumber" ns1:title="FixedPointNumber" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="475,-59.75 369.75,-59.75 369.75,-39 475,-39 475,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="422.38" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">FixedPointNumber</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge12" class="edge">
+<ns0:title>Number-&gt;FixedPointNumber</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M322.93,-120.83C331.54,-117.78 340.67,-113.44 347.75,-107.38 362.58,-94.69 354.92,-82.06 369.75,-69.38 372.04,-67.42 374.54,-65.64 377.17,-64.02" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="378.71,-65.98 383.7,-60.49 376.38,-61.67 378.71,-65.98" />
+</ns0:g>
+
+<ns0:g id="node19" class="node">
+<ns0:title>Integer</ns0:title>
+<ns0:g id="a_node19"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.common.grammar_types.basic.Integer" ns1:title="Signed integer" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="578.88,-98.75 524.88,-98.75 524.88,-78 578.88,-78 578.88,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="551.88" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Integer</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge15" class="edge">
+<ns0:title>FixedPointNumber-&gt;Integer</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M458.89,-60.24C476.91,-65.75 498.7,-72.42 516.55,-77.88" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="516.31,-80.36 523.72,-80.07 517.74,-75.68 516.31,-80.36" />
+</ns0:g>
+
+<ns0:g id="node24" class="node">
+<ns0:title>Unsigned</ns0:title>
+<ns0:g id="a_node24"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned" ns1:title="Unsigned integer (zero is possible)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="582.75,-59.75 521,-59.75 521,-39 582.75,-39 582.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="551.88" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Unsigned</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge27" class="edge">
+<ns0:title>FixedPointNumber-&gt;Unsigned</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M475.23,-49.38C487.66,-49.38 500.71,-49.38 512.41,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="512.9,-51.83 519.9,-49.38 512.9,-46.93 512.9,-51.83" />
+</ns0:g>
+
+<ns0:g id="node23" class="node">
+<ns0:title>ObjectNumber</ns0:title>
+<ns0:g id="a_node23"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber" ns1:title="An abstract class, that describe an unsigned integer, that reffers to an object." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="715.25,-59.75 628.75,-59.75 628.75,-39 715.25,-39 715.25,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="672" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ObjectNumber</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge20" class="edge">
+<ns0:title>Unsigned-&gt;ObjectNumber</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M582.99,-49.38C594.32,-49.38 607.53,-49.38 620.22,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="620.71,-51.83 627.71,-49.38 620.71,-46.93 620.71,-51.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

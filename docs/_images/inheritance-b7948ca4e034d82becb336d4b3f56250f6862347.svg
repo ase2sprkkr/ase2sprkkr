@@ -1,0 +1,110 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="508pt" height="146pt" viewBox="0.00 0.00 508.00 146.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 141.75)">
+<ns0:title>inheritance1bb63a1bdf</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseRepresenter</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="99.25,-137.75 0,-137.75 0,-117 99.25,-117 99.25,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="49.62" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseRepresenter</ns0:text>
+</ns0:g>
+
+<ns0:g id="node9" class="node">
+<ns0:title>SafeRepresenter</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="218.25,-137.75 121.25,-137.75 121.25,-117 218.25,-117 218.25,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="169.75" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SafeRepresenter</ns0:text>
+</ns0:g>
+
+<ns0:g id="edge8" class="edge">
+<ns0:title>BaseRepresenter-&gt;SafeRepresenter</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M99.69,-127.38C103.94,-127.38 108.26,-127.38 112.56,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="113.03,-129.83 120.03,-127.38 113.03,-124.93 113.03,-129.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>BaseResolver</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="211.12,-20.75 128.38,-20.75 128.38,0 211.12,0 211.12,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="169.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseResolver</ns0:text>
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>Resolver</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="307.25,-20.75 248.5,-20.75 248.5,0 307.25,0 307.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="277.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Resolver</ns0:text>
+</ns0:g>
+
+<ns0:g id="edge7" class="edge">
+<ns0:title>BaseResolver-&gt;Resolver</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M211.48,-10.38C220.78,-10.38 230.62,-10.38 239.76,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="240.51,-12.83 247.51,-10.38 240.51,-7.93 240.51,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>Dumper</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="392.5,-78.75 337.5,-78.75 337.5,-58 392.5,-58 392.5,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="365" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Dumper</ns0:text>
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>IndentDumper</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.common.yaml.IndentDumper.html#ase2sprkkr.common.yaml.IndentDumper" ns1:title="Better indentation for YAML, according to" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="500.25,-78.75 414.5,-78.75 414.5,-58 500.25,-58 500.25,-78.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="457.38" y="-65.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">IndentDumper</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>Dumper-&gt;IndentDumper</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M392.63,-68.38C396.86,-68.38 401.35,-68.38 405.92,-68.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="406.42,-70.83 413.42,-68.38 406.42,-65.93 406.42,-70.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>Emitter</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="304.88,-98.75 250.88,-98.75 250.88,-78 304.88,-78 304.88,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="277.88" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Emitter</ns0:text>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>Emitter-&gt;Dumper</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M305.34,-82.16C312.88,-80.39 321.2,-78.43 329.15,-76.56" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="330.26,-78.82 336.52,-74.83 329.14,-74.05 330.26,-78.82" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>Serializer</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="308.75,-59.75 247,-59.75 247,-39 308.75,-39 308.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="277.88" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Serializer</ns0:text>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>Serializer-&gt;Dumper</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M309.13,-56.13C315.58,-57.57 322.44,-59.1 329.05,-60.57" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="329.14,-63.1 336.5,-62.24 330.2,-58.32 329.14,-63.1" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>Representer</ns0:title>
+<ns0:polygon fill="lightgray" stroke="black" points="315.5,-137.75 240.25,-137.75 240.25,-117 315.5,-117 315.5,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="277.88" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Representer</ns0:text>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>Representer-&gt;Dumper</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M300.17,-116.58C305.29,-113.75 310.68,-110.59 315.5,-107.38 325.96,-100.4 336.93,-91.71 345.78,-84.3" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="347.77,-85.83 351.52,-79.43 344.6,-82.09 347.77,-85.83" />
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>Resolver-&gt;Dumper</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M300.14,-21.22C305.27,-24.04 310.66,-27.19 315.5,-30.38 325.65,-37.06 336.35,-45.29 345.1,-52.39" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="344.11,-54.75 351.08,-57.3 347.23,-50.96 344.11,-54.75" />
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>SafeRepresenter-&gt;Representer</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M218.53,-127.38C222.89,-127.38 227.3,-127.38 231.63,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="232.1,-129.83 239.1,-127.38 232.1,-124.93 232.1,-129.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

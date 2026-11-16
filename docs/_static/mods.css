@@ -1,3 +1,15 @@
 .wy-nav-content {
     max-width: 1000px !important;
 }
+
+/* Keep wide inheritance graphs readable: scroll horizontally rather than
+   shrinking their SVG labels to fit the documentation column. */
+.rst-content div.graphviz {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.rst-content div.graphviz > object.graphviz,
+.rst-content div.graphviz > img.graphviz {
+    max-width: none;
+}

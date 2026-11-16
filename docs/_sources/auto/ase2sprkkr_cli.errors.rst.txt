@@ -1,0 +1,41 @@
+errors
+======
+
+Full name: **ase2sprkkr\_cli.errors**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr_cli.errors
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      CLIUsageError
+   
+   
+
+
+  
+  
+  

@@ -11,7 +11,7 @@
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=adf6db29" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -22,8 +22,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Crystal symmetry and cell transformations" href="symmetry.html" />
-    <link rel="prev" title="How to use ASE2SPRKKR" href="usage.html" /> 
+    <link rel="next" title="ASE2SPRKKR architecture for developers" href="philosophy.html" />
+    <link rel="prev" title="Persistent project calculations" href="execution.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,31 +45,48 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="usage.html">How to use the package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Extending the CLI with plugins</a></li>
+              <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">First calculation: SCF to DOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and native executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Python usage and core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples by application</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Workflows and tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="result-files.html">Result files, plotting and NeXus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="symmetry.html">Crystal symmetry and cell transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="execution.html">Execution, persistence and remote runs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote.html">Remote running and execution profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution.html">Persistent project calculations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference and development</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Extending the CLI with plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Architecture for developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Upgrading older ASE2SPRKKR installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optional-dependencies.html">Optional dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2608.05957">ASE2SPRKKR paper (arXiv:2608.05957)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation Environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org/manual/">SPR-KKR manual</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/kkrunner/">KKRunner documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/kkrunner">KKRunner GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
         </div>
@@ -137,31 +154,31 @@ without a <code class="docutils literal notranslate"><span class="pre">parser</s
 <code class="docutils literal notranslate"><span class="pre">aliases</span></code>, <code class="docutils literal notranslate"><span class="pre">extra_help</span></code> and <code class="docutils literal notranslate"><span class="pre">unknowns</span></code> behave as they do for
 native commands. <code class="docutils literal notranslate"><span class="pre">global_args</span></code> contains the global <code class="docutils literal notranslate"><span class="pre">debug</span></code> and
 <code class="docutils literal notranslate"><span class="pre">profile</span></code> flags. The plugin’s argument parser is initialized when its
-command (or alias) is selected.</p>
+command (or alias) is selected. Here <code class="docutils literal notranslate"><span class="pre">global_args['profile']</span></code> refers
+to Python profiling, not an SPR-KKR execution profile.</p>
 <p>Install the plugin distribution in the same Python environment as
 ASE2SPRKKR, for example with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">my-plugin</span></code>. Its commands
 then appear in <code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span> <span class="pre">--help</span></code>.</p>
 <p>Native command names and aliases take precedence over plugin commands.
 If a plugin claims an already registered name or alias, that <strong>command</strong>
 is skipped with a diagnostic on stderr; other plugin commands remain
-available. Plugins are processed in deterministic entry-point target
-order. A plugin whose entry point or command module fails to import is
-also reported and skipped. Command modules should avoid expensive
-top-level imports so that normal CLI startup remains lightweight.</p>
+available. A plugin whose entry point or command module fails to import is
+reported and skipped. Keep expensive imports inside the command’s
+<code class="docutils literal notranslate"><span class="pre">run()</span></code> function so unrelated CLI commands start quickly.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="usage.html" class="btn btn-neutral float-left" title="How to use ASE2SPRKKR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="symmetry.html" class="btn btn-neutral float-right" title="Crystal symmetry and cell transformations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="execution.html" class="btn btn-neutral float-left" title="Persistent project calculations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="philosophy.html" class="btn btn-neutral float-right" title="ASE2SPRKKR architecture for developers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+    <p>&#169; Copyright 2021–2026, Matyáš Novák &amp; Jano Minár.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

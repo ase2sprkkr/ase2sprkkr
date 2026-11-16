@@ -1,0 +1,6 @@
+ase2sprkkr\_cli.errors.CLIUsageError
+====================================
+
+.. currentmodule:: ase2sprkkr_cli.errors
+
+.. autoexception:: CLIUsageError

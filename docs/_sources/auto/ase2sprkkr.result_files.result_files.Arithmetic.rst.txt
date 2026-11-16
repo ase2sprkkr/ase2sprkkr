@@ -6,11 +6,15 @@ Arithmetic
 
 .. autoclass:: Arithmetic
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.result_files.result_files.Arithmetic
       :parts: 2
+
 
    |
 

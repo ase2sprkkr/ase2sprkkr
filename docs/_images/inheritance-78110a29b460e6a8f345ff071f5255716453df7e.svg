@@ -1,0 +1,59 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="21pt" viewBox="0.00 0.00 576.00 21.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.718428 0.718428) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance8801aa60b7</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>default.DefaultOutputParser</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.default.DefaultOutputParser" ns1:title="default.DefaultOutputParser" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="644,-20.75 491.5,-20.75 491.5,0 644,0 644,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="567.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">default.DefaultOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>spec.SpecOutputParser</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.spec.SpecOutputParser.html#ase2sprkkr.outputs.readers.spec.SpecOutputParser" ns1:title="Reader for the main text output produced by KKRSPEC." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="793.75,-20.75 666,-20.75 666,0 793.75,0 793.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="729.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">spec.SpecOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>default.DefaultOutputParser-&gt;spec.SpecOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M644.12,-10.38C648.57,-10.38 653.04,-10.38 657.47,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="658.18,-12.83 665.18,-10.38 658.18,-7.93 658.18,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>sprkkr_output_reader.SprKkrOutputParser</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" ns1:title="sprkkr_output_reader.SprKkrOutputParser" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="469.5,-20.75 251.75,-20.75 251.75,0 469.5,0 469.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="360.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">sprkkr_output_reader.SprKkrOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>sprkkr_output_reader.SprKkrOutputParser-&gt;default.DefaultOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M469.89,-10.38C474.13,-10.38 478.34,-10.38 482.52,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="483.27,-12.83 490.27,-10.38 483.27,-7.93 483.27,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>process_output_reader.ProcessOutputParser</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" ns1:title="Parse asynchronous stdout/stderr streams." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="229.75,-20.75 0,-20.75 0,0 229.75,0 229.75,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="114.88" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">process_output_reader.ProcessOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>process_output_reader.ProcessOutputParser-&gt;sprkkr_output_reader.SprKkrOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M229.9,-10.38C234.28,-10.38 238.67,-10.38 243.06,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="243.71,-12.83 250.71,-10.38 243.71,-7.93 243.71,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

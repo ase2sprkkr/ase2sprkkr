@@ -1,0 +1,44 @@
+run
+===
+
+Full name: **ase2sprkkr\_cli.commands.run**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr_cli.commands.run
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _project_manager
+      parser
+      run
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

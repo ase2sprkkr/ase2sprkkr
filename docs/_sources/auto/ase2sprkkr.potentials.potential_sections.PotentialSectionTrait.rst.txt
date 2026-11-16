@@ -6,11 +6,15 @@ PotentialSectionTrait
 
 .. autoclass:: PotentialSectionTrait
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.potentials.potential_sections.PotentialSectionTrait
       :parts: 2
+
 
    |
 

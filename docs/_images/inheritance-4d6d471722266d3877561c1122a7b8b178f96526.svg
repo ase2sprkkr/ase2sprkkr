@@ -1,0 +1,119 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="37pt" viewBox="0.00 0.00 576.00 37.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.417089 0.417089) rotate(0) translate(4 83.75)">
+<ns0:title>inheritance3b7fcdb2c1</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>abc.ABC</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Helper class that provides a standard way to create an ABC using">
+<ns0:polygon fill="lightgray" stroke="black" points="102.25,-79.75 45.75,-79.75 45.75,-59 102.25,-59 102.25,-79.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="74" y="-66.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">abc.ABC</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>configuration_containers.BaseConfigurationContainer</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" ns1:title="Configuration container, that holds members, either in classical way" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="445.5,-59.75 170,-59.75 170,-39 445.5,-39 445.5,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="307.75" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_containers.BaseConfigurationContainer</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>abc.ABC-&gt;configuration_containers.BaseConfigurationContainer</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M102.49,-67C120.64,-65.44 145.91,-63.26 172.5,-60.96" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="173.27,-63.35 180.03,-60.31 172.85,-58.47 173.27,-63.35" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>configuration.Configuration</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" ns1:title="The common base class for all configurations values and containers. I.e." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="148,-40.75 0,-40.75 0,-20 148,-20 148,-40.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="74" y="-27.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration.Configuration</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>configuration.Configuration-&gt;configuration_containers.BaseConfigurationContainer</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M148.33,-36.39C154.07,-36.86 159.98,-37.34 165.98,-37.83" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="166.28,-40.32 173.45,-38.45 166.68,-35.43 166.28,-40.32" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>configuration.ConfigurationSection</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection" ns1:title="Configuration section to be used in SPRKKR configuration files" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="1373,-39.75 1189,-39.75 1189,-19 1373,-19 1373,-39.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="1281" y="-26.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration.ConfigurationSection</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>configuration_containers.Section</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" ns1:title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="1152,-59.75 977,-59.75 977,-39 1152,-39 1152,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="1064.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_containers.Section</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>configuration_containers.Section-&gt;configuration.ConfigurationSection</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M1152.44,-41.27C1161.69,-40.41 1171.15,-39.52 1180.53,-38.65" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="1181.25,-41.04 1187.99,-37.95 1180.79,-36.16 1181.25,-41.04" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>configuration.ConfigurationSectionTrait</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" ns1:title="configuration.ConfigurationSectionTrait" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="1167,-20.75 962,-20.75 962,0 1167,0 1167,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="1064.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration.ConfigurationSectionTrait</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>configuration.ConfigurationSectionTrait-&gt;configuration.ConfigurationSection</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M1167.41,-19.4C1171.76,-19.79 1176.12,-20.17 1180.46,-20.56" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="1180.84,-23.05 1188.03,-21.23 1181.27,-18.17 1180.84,-23.05" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>configuration_containers.ConfigurationContainer</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" ns1:title="A container for configuration (problem-definition) options and/or sections." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="719,-59.75 467.5,-59.75 467.5,-39 719,-39 719,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="593.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_containers.ConfigurationContainer</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>configuration_containers.BaseConfigurationContainer-&gt;configuration_containers.ConfigurationContainer</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M445.93,-49.38C450.24,-49.38 454.55,-49.38 458.85,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="459.35,-51.83 466.35,-49.38 459.35,-46.93 459.35,-51.83" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>configuration_containers.BaseSection</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" ns1:title="A section of SPRKKR configuration - i.e. part of the configuration file." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="940,-59.75 741,-59.75 741,-39 940,-39 940,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="840.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">configuration_containers.BaseSection</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge7" class="edge">
+<ns0:title>configuration_containers.BaseSection-&gt;configuration_containers.Section</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M940.49,-49.38C949.7,-49.38 959.01,-49.38 968.19,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="968.8,-51.83 975.8,-49.38 968.8,-46.93 968.8,-51.83" />
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>configuration_containers.ConfigurationContainer-&gt;configuration_containers.BaseSection</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M719.39,-49.38C723.71,-49.38 728.02,-49.38 732.31,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="732.76,-51.83 739.76,-49.38 732.76,-46.93 732.76,-51.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

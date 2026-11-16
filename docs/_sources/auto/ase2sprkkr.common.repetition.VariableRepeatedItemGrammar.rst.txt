@@ -6,11 +6,15 @@ VariableRepeatedItemGrammar
 
 .. autoclass:: VariableRepeatedItemGrammar
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.repetition.VariableRepeatedItemGrammar
       :parts: 2
+
 
    |
 

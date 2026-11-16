@@ -6,11 +6,15 @@ SpleedIntensity
 
 .. autoclass:: SpleedIntensity
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.outputs.readers.spec.SpleedIntensity
       :parts: 2
+
 
    |
 

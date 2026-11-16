@@ -1,0 +1,43 @@
+nexus
+=====
+
+Full name: **ase2sprkkr\_cli.commands.nexus**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr_cli.commands.nexus
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      parser
+      run
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

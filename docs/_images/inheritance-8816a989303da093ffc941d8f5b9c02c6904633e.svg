@@ -1,0 +1,116 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="155pt" viewBox="0.00 0.00 576.00 155.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.838428 0.838428) rotate(0) translate(4 180.75)">
+<ns0:title>inheritanceeacb90c91f</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>ABC</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Helper class that provides a standard way to create an ABC using">
+<ns0:polygon fill="lightgray" stroke="black" points="87.5,-59.75 33.5,-59.75 33.5,-39 87.5,-39 87.5,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="60.5" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ABC</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>BaseConfigurationContainer</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" ns1:title="Configuration container, that holds members, either in classical way" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="295.5,-40.75 143,-40.75 143,-20 295.5,-20 295.5,-40.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="219.25" y="-27.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseConfigurationContainer</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>ABC-&gt;BaseConfigurationContainer</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M87.74,-46.19C100.77,-44.62 117.32,-42.61 134.23,-40.56" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="135.13,-42.92 141.79,-39.64 134.54,-38.05 135.13,-42.92" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>ASEProfile</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.profiles.ASEProfile.html#ase2sprkkr.profiles.ASEProfile" ns1:title="Editable, virtual view of ASE's [sprkkr] configuration." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="93.25,-98.75 27.75,-98.75 27.75,-78 93.25,-78 93.25,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="60.5" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ASEProfile</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>ASEProfileValue</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.profiles.ASEProfileValue.html#ase2sprkkr.profiles.ASEProfileValue" ns1:title="Option-like field backed by ASE's own INI configuration." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="265.5,-137.75 173,-137.75 173,-117 265.5,-117 265.5,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="219.25" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ASEProfileValue</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>ReadOnlyProfileValue</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.profiles.ReadOnlyProfileValue.html#ase2sprkkr.profiles.ReadOnlyProfileValue" ns1:title="Small option-like read-only value used by virtual/read-only profiles." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="121,-137.75 0,-137.75 0,-117 121,-117 121,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="60.5" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ReadOnlyProfileValue</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>ReadOnlyProfileValue-&gt;ASEProfileValue</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M121.21,-127.38C135.39,-127.38 150.45,-127.38 164.36,-127.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="165.09,-129.83 172.09,-127.38 165.09,-124.93 165.09,-129.83" />
+</ns0:g>
+
+<ns0:g id="node9" class="node">
+<ns0:title>RepeatedConfigurationContainer</ns0:title>
+<ns0:g id="a_node9"><ns0:a ns1:href="../auto/ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.html#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer" ns1:title="A container for configuration (problem-definition) options and/or sections." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="492.5,-40.75 317.5,-40.75 317.5,-20 492.5,-20 492.5,-40.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="405" y="-27.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">RepeatedConfigurationContainer</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>BaseConfigurationContainer-&gt;RepeatedConfigurationContainer</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M295.78,-30.38C300.07,-30.38 304.4,-30.38 308.74,-30.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="309.33,-32.83 316.33,-30.38 309.33,-27.93 309.33,-32.83" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>Configuration</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" ns1:title="The common base class for all configurations values and containers. I.e." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="101.12,-20.75 19.88,-20.75 19.88,0 101.12,0 101.12,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="60.5" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Configuration</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>Configuration-&gt;BaseConfigurationContainer</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M101.46,-15.47C111.61,-16.77 122.89,-18.21 134.34,-19.67" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="134.68,-22.18 141.93,-20.64 135.3,-17.32 134.68,-22.18" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>LegacyProfile</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.profiles.LegacyProfile.html#ase2sprkkr.profiles.LegacyProfile" ns1:title="Read-only public view of the deprecated execution configuration." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="101.12,-176.75 19.88,-176.75 19.88,-156 101.12,-156 101.12,-176.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="60.5" y="-163.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">LegacyProfile</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>ProfilesConfigurationContainer</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer" ns1:title="Dict-like repeated section with persistent and virtual profile views." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="679,-40.75 514.5,-40.75 514.5,-20 679,-20 679,-40.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="596.75" y="-27.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ProfilesConfigurationContainer</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>RepeatedConfigurationContainer-&gt;ProfilesConfigurationContainer</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M492.82,-30.38C497.16,-30.38 501.53,-30.38 505.88,-30.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="506.46,-32.83 513.46,-30.38 506.46,-27.93 506.46,-32.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

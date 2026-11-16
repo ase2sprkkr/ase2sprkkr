@@ -1,0 +1,131 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="519pt" height="146pt" viewBox="0.00 0.00 519.00 146.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 141.75)">
+<ns0:title>inheritanced70534ce4f</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>ArpesResult</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" ns1:title="ARPES result provides acces to the generated SPC output file" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="231.38,-20.75 156.88,-20.75 156.88,0 231.38,0 231.38,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="194.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ArpesResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node9" class="node">
+<ns0:title>SpecResult</ns0:title>
+<ns0:g id="a_node9"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult" ns1:title="Class representing the results of a spectral function calculation." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="364.25,-20.75 294.25,-20.75 294.25,0 364.25,0 364.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="329.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SpecResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>ArpesResult-&gt;SpecResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M231.85,-10.38C248.52,-10.38 268.33,-10.38 285.65,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="286.17,-12.83 293.17,-10.38 286.17,-7.93 286.17,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>TaskResult</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" ns1:title="A base class for a result of a runned task (kkrscf executable)" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="92.5,-20.75 24,-20.75 24,0 92.5,0 92.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TaskResult</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>TaskResult-&gt;ArpesResult</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M92.69,-10.38C109.61,-10.38 130.39,-10.38 148.64,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="149.07,-12.83 156.07,-10.38 149.07,-7.93 149.07,-12.83" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>DefaultOutputParser</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.default.DefaultOutputParser" ns1:title="DefaultOutputParser" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="386.75,-59.75 271.75,-59.75 271.75,-39 386.75,-39 386.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="329.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">DefaultOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>SpecOutputParser</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.spec.SpecOutputParser.html#ase2sprkkr.outputs.readers.spec.SpecOutputParser" ns1:title="Reader for the main text output produced by KKRSPEC." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="511,-59.75 408.75,-59.75 408.75,-39 511,-39 511,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="459.88" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SpecOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>DefaultOutputParser-&gt;SpecOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M387.04,-49.38C391.39,-49.38 395.78,-49.38 400.14,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="400.7,-51.83 407.7,-49.38 400.7,-46.93 400.7,-51.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>SprKkrOutputParser</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" ns1:title="SprKkrOutputParser" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="249.75,-59.75 138.5,-59.75 138.5,-39 249.75,-39 249.75,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="194.12" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SprKkrOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>SprKkrOutputParser-&gt;DefaultOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M250.04,-49.38C254.32,-49.38 258.66,-49.38 263,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="263.55,-51.83 270.55,-49.38 263.55,-46.93 263.55,-51.83" />
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>KkrOutputReader</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" ns1:title="Parse SPR-KKR output streams into a TaskResult." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="108.25,-98.75 8.25,-98.75 8.25,-78 108.25,-78 108.25,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">KkrOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>SpecOutputReader</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.spec.SpecOutputReader.html#ase2sprkkr.outputs.readers.spec.SpecOutputReader" ns1:title="Process class for spectral function calculations." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="247.5,-98.75 140.75,-98.75 140.75,-78 247.5,-78 247.5,-98.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="194.12" y="-85.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SpecOutputReader</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>KkrOutputReader-&gt;SpecOutputReader</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M108.72,-88.38C116.27,-88.38 124.14,-88.38 131.9,-88.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="132.51,-90.83 139.51,-88.38 132.51,-85.93 132.51,-90.83" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>ProcessOutputParser</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" ns1:title="Parse asynchronous stdout/stderr streams." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="116.5,-59.75 0,-59.75 0,-39 116.5,-39 116.5,-59.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-46.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ProcessOutputParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>ProcessOutputParser-&gt;SprKkrOutputParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M116.8,-49.38C121.12,-49.38 125.49,-49.38 129.84,-49.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="130.41,-51.83 137.41,-49.38 130.41,-46.93 130.41,-51.83" />
+</ns0:g>
+
+<ns0:g id="node10" class="node">
+<ns0:title>SpleedIntensity</ns0:title>
+<ns0:g id="a_node10"><ns0:a ns1:href="../auto/ase2sprkkr.outputs.readers.spec.SpleedIntensity.html#ase2sprkkr.outputs.readers.spec.SpleedIntensity" ns1:title="Numerical I(E) data embedded in a SPLEED calculation's SPEC.out log." target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="104.12,-137.75 12.38,-137.75 12.38,-117 104.12,-117 104.12,-137.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="58.25" y="-124.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SpleedIntensity</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+</ns0:g>
+</ns0:svg>

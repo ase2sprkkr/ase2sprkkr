@@ -1,0 +1,40 @@
+Parser
+======
+
+
+.. currentmodule:: ase2sprkkr_cli.main
+
+.. autoclass:: Parser
+   :members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr_cli.main.Parser
+      :parts: 2
+
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

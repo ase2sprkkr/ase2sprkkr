@@ -1,0 +1,74 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="576pt" height="25pt" viewBox="0.00 0.00 576.00 25.00">
+<ns0:g id="graph0" class="graph" transform="scale(0.859381 0.859381) rotate(0) translate(4 24.75)">
+<ns0:title>inheritance6c4136b035</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>abc.ABC</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Helper class that provides a standard way to create an ABC using">
+<ns0:polygon fill="lightgray" stroke="black" points="56.5,-20.75 0,-20.75 0,0 56.5,0 56.5,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="28.25" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">abc.ABC</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>core.ParserElement</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:title="Abstract base level parser element class.">
+<ns0:polygon fill="lightgray" stroke="black" points="189,-20.75 78.5,-20.75 78.5,0 189,0 189,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="133.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">core.ParserElement</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>abc.ABC-&gt;core.ParserElement</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M56.99,-10.38C61.1,-10.38 65.48,-10.38 69.97,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="70.4,-12.83 77.4,-10.38 70.4,-7.93 70.4,-12.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>core.ParseElementEnhance</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:title="Abstract subclass of :class:`ParserElement`, for combining and">
+<ns0:polygon fill="lightgray" stroke="black" points="359,-20.75 211,-20.75 211,0 359,0 359,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="285" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">core.ParseElementEnhance</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>grammar.Transparent</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar.Transparent.html#ase2sprkkr.common.grammar.Transparent" ns1:title="Pyparsing ParseElementEnhance wrongly takes care about whitespaces, if there is" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="501.25,-20.75 381,-20.75 381,0 501.25,0 501.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="441.12" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">grammar.Transparent</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>core.ParseElementEnhance-&gt;grammar.Transparent</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M359.45,-10.38C363.8,-10.38 368.16,-10.38 372.48,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="372.97,-12.83 379.97,-10.38 372.97,-7.93 372.97,-12.83" />
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>core.ParserElement-&gt;core.ParseElementEnhance</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M189.48,-10.38C193.69,-10.38 197.98,-10.38 202.32,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="202.91,-12.83 209.91,-10.38 202.91,-7.93 202.91,-12.83" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>grammar.TokenConverter</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar.TokenConverter.html#ase2sprkkr.common.grammar.TokenConverter" ns1:title="grammar.TokenConverter" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="662.25,-20.75 523.25,-20.75 523.25,0 662.25,0 662.25,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="592.75" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">grammar.TokenConverter</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>grammar.Transparent-&gt;grammar.TokenConverter</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M501.69,-10.38C505.96,-10.38 510.3,-10.38 514.65,-10.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="515.26,-12.83 522.26,-10.38 515.26,-7.93 515.26,-12.83" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

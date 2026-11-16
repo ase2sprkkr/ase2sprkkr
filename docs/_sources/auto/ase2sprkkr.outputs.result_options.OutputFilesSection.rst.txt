@@ -6,11 +6,15 @@ OutputFilesSection
 
 .. autoclass:: OutputFilesSection
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.outputs.result_options.OutputFilesSection
       :parts: 2
+
 
    |
 

@@ -6,11 +6,15 @@ ProcessOutputParser
 
 .. autoclass:: ProcessOutputParser
    :members:
-   :inherited-members:
+   :exclude-members: _validate_grammar, CubicSpline
+
+
+
 
    .. rubric:: Class hierarchy
    .. inheritance-diagram:: ase2sprkkr.common.process_output_reader.ProcessOutputParser
       :parts: 2
+
 
    |
 

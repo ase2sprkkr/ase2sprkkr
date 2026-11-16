@@ -1,0 +1,155 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="531pt" height="164pt" viewBox="0.00 0.00 531.00 164.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 159.75)">
+<ns0:title>inheritance476c6b1508</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>ABC</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:title="Helper class that provides a standard way to create an ABC using">
+<ns0:polygon fill="lightgray" stroke="black" points="54,-96.75 0,-96.75 0,-76 54,-76 54,-96.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="27" y="-83.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ABC</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>ParserElement</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:title="Abstract base level parser element class.">
+<ns0:polygon fill="lightgray" stroke="black" points="162.5,-96.75 76,-96.75 76,-76 162.5,-76 162.5,-96.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="119.25" y="-83.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ParserElement</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>ABC-&gt;ParserElement</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M54.1,-86.38C58.33,-86.38 62.84,-86.38 67.42,-86.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="67.96,-88.83 74.96,-86.38 67.96,-83.93 67.96,-88.83" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>Forward</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar.Forward.html#ase2sprkkr.common.grammar.Forward" ns1:title="Forward" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="504.12,-155.75 449.12,-155.75 449.12,-135 504.12,-135 504.12,-155.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="476.62" y="-142.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Forward</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>Transparent</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar.Transparent.html#ase2sprkkr.common.grammar.Transparent" ns1:title="Pyparsing ParseElementEnhance wrongly takes care about whitespaces, if there is" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="406.12,-116.75 333.12,-116.75 333.12,-96 406.12,-96 406.12,-116.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="369.62" y="-103.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Transparent</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>Transparent-&gt;Forward</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M399.87,-117.24C412.66,-121.99 427.74,-127.59 441.08,-132.54" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="440.57,-134.97 447.98,-135.11 442.27,-130.37 440.57,-134.97" />
+</ns0:g>
+
+<ns0:g id="node8" class="node">
+<ns0:title>Suppress</ns0:title>
+<ns0:g id="a_node8"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar.Suppress.html#ase2sprkkr.common.grammar.Suppress" ns1:title="Suppress" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="506.75,-116.75 446.5,-116.75 446.5,-96 506.75,-96 506.75,-116.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="476.62" y="-103.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Suppress</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge5" class="edge">
+<ns0:title>Transparent-&gt;Suppress</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M406.47,-106.38C416.58,-106.38 427.62,-106.38 437.85,-106.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="438.46,-108.83 445.46,-106.38 438.46,-103.93 438.46,-108.83" />
+</ns0:g>
+
+<ns0:g id="node9" class="node">
+<ns0:title>TokenConverter</ns0:title>
+<ns0:g id="a_node9"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar.TokenConverter.html#ase2sprkkr.common.grammar.TokenConverter" ns1:title="TokenConverter" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="522.5,-77.75 430.75,-77.75 430.75,-57 522.5,-57 522.5,-77.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="476.62" y="-64.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">TokenConverter</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge7" class="edge">
+<ns0:title>Transparent-&gt;TokenConverter</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M399.87,-95.51C411.93,-91.03 426.05,-85.79 438.8,-81.05" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="440.12,-83.18 445.82,-78.44 438.41,-78.58 440.12,-83.18" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>ParseElementEnhance</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:title="Abstract subclass of :class:`ParserElement`, for combining and">
+<ns0:polygon fill="lightgray" stroke="black" points="308.5,-116.75 184.5,-116.75 184.5,-96 308.5,-96 308.5,-116.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="246.5" y="-103.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">ParseElementEnhance</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge8" class="edge">
+<ns0:title>ParseElementEnhance-&gt;Transparent</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M308.77,-106.38C314.03,-106.38 319.29,-106.38 324.38,-106.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="325,-108.83 332,-106.38 325,-103.93 325,-108.83" />
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>ParserElement-&gt;ParseElementEnhance</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M162.65,-93.15C167,-93.84 171.49,-94.56 176.03,-95.28" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="176.19,-97.79 183.49,-96.47 176.97,-92.95 176.19,-97.79" />
+</ns0:g>
+
+<ns0:g id="node7" class="node">
+<ns0:title>Token</ns0:title>
+<ns0:g id="a_node7"><ns0:a ns1:title="Abstract :class:`ParserElement` subclass, for defining atomic">
+<ns0:polygon fill="lightgray" stroke="black" points="273.5,-77.75 219.5,-77.75 219.5,-57 273.5,-57 273.5,-77.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="246.5" y="-64.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Token</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge6" class="edge">
+<ns0:title>ParserElement-&gt;Token</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M162.65,-79.94C178.46,-77.54 196.2,-74.85 211.19,-72.58" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="211.9,-74.95 218.46,-71.48 211.17,-70.1 211.9,-74.95" />
+</ns0:g>
+
+<ns0:g id="node6" class="node">
+<ns0:title>SkipToRegex</ns0:title>
+<ns0:g id="a_node6"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar.SkipToRegex.html#ase2sprkkr.common.grammar.SkipToRegex" ns1:title="Skip to given regex" target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="408.75,-77.75 330.5,-77.75 330.5,-57 408.75,-57 408.75,-77.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="369.62" y="-64.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SkipToRegex</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>Token-&gt;SkipToRegex</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M273.78,-67.38C287.88,-67.38 305.68,-67.38 322.04,-67.38" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="322.68,-69.83 329.68,-67.38 322.68,-64.93 322.68,-69.83" />
+</ns0:g>
+
+<ns0:g id="node10" class="node">
+<ns0:title>White</ns0:title>
+<ns0:g id="a_node10"><ns0:a ns1:href="../auto/ase2sprkkr.common.grammar.White.html#ase2sprkkr.common.grammar.White" ns1:title="Special matching class for matching whitespace. &#160;Normally," target="_top">
+<ns0:polygon fill="lightgray" stroke="black" points="396.62,-20.75 342.62,-20.75 342.62,0 396.62,0 396.62,-20.75" />
+<ns0:text xml:space="preserve" text-anchor="middle" x="369.62" y="-7.25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">White</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge10" class="edge">
+<ns0:title>Token-&gt;White</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M270.57,-56.52C289.68,-47.53 317,-34.67 337.96,-24.81" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="339.67,-26.71 344.96,-21.51 337.58,-22.28 339.67,-26.71" />
+</ns0:g>
+
+<ns0:g id="edge9" class="edge">
+<ns0:title>White-&gt;White</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M352.38,-21.15C345.49,-29.81 351.23,-38.75 369.62,-38.75 382.27,-38.75 388.94,-34.52 389.63,-29.07" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="391.73,-27.67 387.12,-21.86 387.11,-29.28 391.73,-27.67" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>
