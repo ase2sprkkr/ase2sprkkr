@@ -72,7 +72,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
             options = ('-i', str(key), '-p', port, '-o', 'StrictHostKeyChecking=no', '-o', 'UserKnownHostsFile=/dev/null')
             ssh = ['ssh', *options, 'tester@127.0.0.1']
             _wait_for_ssh(ssh)
-            executor = EndpointClient('process', transport=SshTransport('tester@127.0.0.1', options=options, python_command=('/opt/venv/bin/python3',)))
+            executor = EndpointClient('kkrunner', transport=SshTransport('tester@127.0.0.1', options=options, python_command=('/opt/venv/bin/python3',)))
             profile = SPRKKRProfile(executable_dir='/opt/sprkkr', executable_suffix='', mpi=False, local_root=tmp, remote_root='/home/tester/ase2sprkkr-runs')
             projects = ProjectRepository(tmp / 'projects')
             project = projects.create('SSH integration')
