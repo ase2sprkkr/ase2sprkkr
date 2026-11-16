@@ -244,8 +244,8 @@ while preparing a calculation:
    * - ``%c``
      - Incrementing calculation counter
    * - ``%_``
-     - Optional underscore separator, omitted when adjacent label
-       fields are empty
+     - Underscore separator: omitted at the start of a filename;
+       consecutive ``%_`` separators are collapsed
 
 For example:
 
