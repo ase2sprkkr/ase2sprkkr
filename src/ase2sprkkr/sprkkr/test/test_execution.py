@@ -5,6 +5,8 @@ import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 from kkrunner import ExecutionSpec, RunState
 from kkrunner.client import EndpointClient
 from kkrunner.execution import MpiSpec
@@ -13,6 +15,7 @@ from kkrunner.runs import Run
 from ..profile import SPRKKRProfile
 
 
+@pytest.mark.smoke
 def test_profile_builds_serial_command():
     input_file = SimpleNamespace(name="/tmp/Fe.inp")
     output_file = object()

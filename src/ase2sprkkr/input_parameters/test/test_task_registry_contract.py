@@ -3,6 +3,7 @@ import pytest
 from ..input_parameters import InputParameters
 
 
+@pytest.mark.smoke
 def test_task_registry_unifies_colocated_and_shared_task_declarations():
     task_registry = InputParameters.task_registry
     input_registry = InputParameters.input_parameters_registry

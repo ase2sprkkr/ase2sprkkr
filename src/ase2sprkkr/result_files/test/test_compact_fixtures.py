@@ -14,6 +14,7 @@ from .. import ResultFile
 DATA = Path(__file__).parent / "data"
 
 
+@pytest.mark.smoke
 @pytest.mark.parametrize(
     ("name", "keyword", "shape", "raw_size"),
     (
@@ -36,6 +37,7 @@ def test_compact_bsf_parses_all_native_blocks(name, keyword, shape, raw_size):
         assert np.isfinite(result[channel]()).all()
 
 
+@pytest.mark.smoke
 @pytest.mark.parametrize(
     ("name", "mode", "np_points", "nt_points", "ne_points", "columns"),
     (
@@ -57,6 +59,7 @@ def test_compact_arpes_parses_consistent_native_grid(
     assert np.isfinite(result.POLARIZATION()).all()
 
 
+@pytest.mark.smoke
 @pytest.mark.parametrize(
     ("name", "mode"),
     (
@@ -78,6 +81,7 @@ def test_compactor_round_trip_bsf(tmp_path, name, mode):
     assert result.I().shape == (4, 3, 3)
 
 
+@pytest.mark.smoke
 @pytest.mark.parametrize(
     ("name", "mode"),
     (

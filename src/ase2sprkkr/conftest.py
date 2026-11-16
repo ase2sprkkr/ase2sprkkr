@@ -10,3 +10,7 @@ def pytest_configure(config):
         "markers",
         "slow: marks tests as slow",
     )
+    config.addinivalue_line(
+        "markers",
+        "smoke: representative, self-contained smoke test",
+    )

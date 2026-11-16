@@ -142,6 +142,7 @@ wheel.exclude = [
 [tool.pytest.ini_options]
 markers = [
 	"slow: long-running test (typically over about 1 second)",
+    "smoke: representative, self-contained smoke test",
 ]
 filterwarnings = [
     "ignore:ase2sprkkr.output_files is deprecated:DeprecationWarning",

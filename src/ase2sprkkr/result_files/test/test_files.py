@@ -258,6 +258,7 @@ class TestOutput:
         )
 
 
+@pytest.mark.smoke
 @pytest.mark.parametrize(
     ("filename", "readers", "failing", "options", "expected", "attempted_names"),
     (

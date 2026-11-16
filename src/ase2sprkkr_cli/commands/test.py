@@ -23,7 +23,49 @@ def parser(parser):
         default=True,
     )
     parser.add_argument("--pp", help="Pyparsing verbose stacktrace.", action="store_true")
-    parser.add_argument("--fast", help="Run only tests not marked as slow.", action="store_true")
+    parser.add_argument("--fast", help="Exclude tests marked slow (useful locally; CI runs all tests).", action="store_true")
+    smoke = parser.add_mutually_exclusive_group()
+    smoke.add_argument("--smoke", dest="smoke", action="store_const", const=True,
+                       default=None, help="Run only representative smoke tests.")
+    smoke.add_argument("--no-smoke", dest="smoke", action="store_const", const=False,
+                       help="Exclude smoke tests.")
+
+
+def _pytest_selection(pytest_arguments, *, fast=False, smoke=None):
+    """Compose CLI and forwarded pytest marker filters without overriding -m."""
+    conditions = []
+    if smoke is True:
+        conditions.append("smoke")
+    elif smoke is False:
+        conditions.append("not smoke")
+    if fast:
+        conditions.append("not slow")
+    if not conditions:
+        return list(pytest_arguments)
+
+    # Pytest's -m is a single-valued option: multiple occurrences silently
+    # override one another. Intersect it with our filters instead.
+    forwarded = []
+    i = 0
+    while i < len(pytest_arguments):
+        arg = pytest_arguments[i]
+        if arg in ("-m", "--markexpr"):
+            if i + 1 == len(pytest_arguments):
+                # Leave invalid options to pytest for its normal error handling.
+                forwarded.append(arg)
+                i += 1
+                continue
+            conditions.append(f"({pytest_arguments[i + 1]})")
+            i += 2
+            continue
+        if arg.startswith(("-m=", "--markexpr=")):
+            conditions.append(f"({arg.split('=', 1)[1]})")
+        else:
+            forwarded.append(arg)
+        i += 1
+
+    forwarded.extend(("-m", " and ".join(f"({value})" for value in conditions)))
+    return forwarded
 
 
 def run(args, global_args):
@@ -50,9 +92,7 @@ def run(args, global_args):
         root_path,
         *( Path(i.__file__).parent for i in packages )
     ]
-    if args.fast:
-        pytest_args += ["-m", "not slow"]
-    pytest_args += args.pytest_arguments
+    pytest_args += _pytest_selection(args.pytest_arguments, fast=args.fast, smoke=args.smoke)
     out = subprocess.run(pytest_args)
     exit(out.returncode)
 

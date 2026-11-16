@@ -50,6 +50,7 @@ class TestPotential:
 
         check(grammar)
 
+    @pytest.mark.smoke
     def test_potential_round_trip(self):
         a = 5.64
         atoms = crystal(
