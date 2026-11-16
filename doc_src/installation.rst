@@ -55,6 +55,22 @@ Use ``python -m pip`` with the intended Python interpreter. Do not use
 system restricts installation into the main environment, use the
 :ref:`installation-venv` below.
 
+Conda
+-----
+
+ASE2SPRKKR is also distributed through
+`conda-forge <https://anaconda.org/conda-forge/ase2sprkkr>`_.
+Install the version offered for your platform in a Conda environment::
+
+   conda install conda-forge::ase2sprkkr
+
+The available Conda versions and platforms can differ from PyPI; check
+the linked package listing and ``ase2sprkkr --version``.
+In particular, the newest 4.x beta features described here may not yet
+be available through Conda. If you need a specific prerelease, follow
+the pip instructions above in an appropriate environment instead.
+This installs the Python interface, not the native SPR-KKR programs.
+
 Configure SPR-KKR executables
 -----------------------------
 
