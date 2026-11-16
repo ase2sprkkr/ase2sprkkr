@@ -43,7 +43,7 @@ print("SCF converged:", result.converged)
 print("Potential:", result.potential_filename)
 ```
 
-Always check convergence before reusing an SCF potential for other tasks. The [first-calculation tutorial](doc_src/quickstart.rst) continues with a DOS calculation.
+Always check convergence before reusing an SCF potential for other tasks. The [first-calculation tutorial](doc_src/quickstart.rst) continues with a DOS calculation. For more examples of calculations with ASE2SPRKKR, see the [ASE2SPRKKR paper (Eddhib et al., 2026)](https://arxiv.org/abs/2608.05957).
 
 ## Further documentation
 

@@ -48,6 +48,7 @@ ASE2SPRKKR: SPR-KKR from Python and ASE
    :caption: Links
 
    ASE2SPRKKR homepage <https://ase2sprkkr.github.io/ase2sprkkr/>
+   ASE2SPRKKR paper (arXiv:2608.05957) <https://arxiv.org/abs/2608.05957>
    ASE - Atomic Simulation Environment <https://wiki.fysik.dtu.dk/ase/>
    SPR-KKR <https://sprkkr.org/>
    SPR-KKR manual <https://sprkkr.org/manual/>

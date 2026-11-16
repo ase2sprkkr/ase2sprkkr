@@ -203,6 +203,9 @@ Use the result's potential or ``scf.calculator`` to choose the
 state explicitly.
 
 For the full first-calculation walkthrough, see :doc:`quickstart`.
+For more examples of calculations beyond SCF and DOS, see the
+`ASE2SPRKKR paper (Eddhib et al., 2026)
+<https://arxiv.org/abs/2608.05957>`_ and :doc:`examples`.
 
 To generate native input files **without executing SPR-KKR**:
 

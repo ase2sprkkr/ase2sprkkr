@@ -69,7 +69,9 @@ A short SCF calculation starts with ASE atoms:
 
 Always check convergence before reusing an SCF potential for other
 tasks. The `first-calculation tutorial <doc_src/quickstart.rst>`_
-continues with a DOS calculation.
+continues with a DOS calculation. For more examples of calculations
+with ASE2SPRKKR, see the `ASE2SPRKKR paper (Eddhib et al., 2026)
+<https://arxiv.org/abs/2608.05957>`_.
 
 Further documentation
 ---------------------

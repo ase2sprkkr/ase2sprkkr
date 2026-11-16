@@ -102,6 +102,10 @@ printed above::
    ase2sprkkr plot path/to/result.dos -o dos.png
 
 For structured result readers and formats see :doc:`result-files`.
+For more examples of calculations with ASE2SPRKKR beyond SCF and DOS,
+see the `ASE2SPRKKR paper (Eddhib et al., 2026)
+<https://arxiv.org/abs/2608.05957>`_ and the :doc:`examples` gallery.
+
 This introductory script is not a recommended set of production numerical
 parameters; see the SPR-KKR manual for physical assumptions and convergence.
 

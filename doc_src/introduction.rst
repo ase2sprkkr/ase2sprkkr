@@ -37,6 +37,7 @@ Begin with :doc:`quickstart` to run an SCF-to-DOS example, then
 Useful links
 ------------
 
+* `ASE2SPRKKR paper (arXiv:2608.05957) <https://arxiv.org/abs/2608.05957>`_
 * `SPR-KKR download/access <https://sprkkr.org/download/>`_
 * `SPR-KKR manual <https://sprkkr.org/manual/>`_
 * `Source code and issue tracker <https://github.com/ase2sprkkr/ase2sprkkr>`_
