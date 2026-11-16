@@ -2,11 +2,17 @@
 
 Full name: **{{ fullname | escape }}**
 
-{% if classes %}
+{# Sphinx excludes private classes from inheritance diagrams by default.
+   Do not generate an empty diagram for a module with only private classes. #}
+{% set hierarchy_classes = [] %}
+{% for item in classes if not item.startswith('_') %}
+{% set _ = hierarchy_classes.append(fullname ~ '.' ~ item) %}
+{% endfor %}
+{% if hierarchy_classes %}
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram:: {% for item in classes %} {{fullname}}.{{ item }} {% endfor %}
+.. inheritance-diagram:: {{ hierarchy_classes | join(' ') }}
       :parts: 1
 
 |
