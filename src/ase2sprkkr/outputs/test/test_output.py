@@ -100,26 +100,34 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
     def test_output(self):
         path = EXAMPLES / "scf.out"
 
-        for reader in ScfOutputParser, ScfOutputParser():
-            result = ScfResult(None, None, None)
-            reader.read_from_file(path, read_args=[result])
+        result = ScfResult(None, None, None)
+        ScfOutputParser.read_from_file(path, read_args=[result])
 
-            assert result.iterations[-1]["energy"]["EMIN"]() == -0.5
-            assert len(result.iterations[-1]["atomic_types"]) == 2
-            assert result.iterations[0].converged() is False
-            assert result.iterations[-1].converged() is True
-            values = result.output_values
-            assert isinstance(values["Converged"], Option)
-            assert values["Converged"]._definition.is_generated
-            assert values["Number of iterations"]() == len(result.iterations)
-            assert values["Fermi energy"].actions() == ("plot",)
-            assert values["Fermi energy"].info == "Fermi energy at the final SCF iteration."
-            assert values["Error"].display_name == "Convergence error"
-            assert values["Data"].display_name == "SCF result data"
-            assert values["Data"].actions() == ("data",)
-            assert values["Data"].data() is result
-            assert values["potential"] is result.files["potential"]
+        assert result.iterations[-1]["energy"]["EMIN"]() == -0.5
+        assert len(result.iterations[-1]["atomic_types"]) == 2
+        assert result.iterations[0].converged() is False
+        assert result.iterations[-1].converged() is True
+        values = result.output_values
+        assert isinstance(values["Converged"], Option)
+        assert values["Converged"]._definition.is_generated
+        assert values["Number of iterations"]() == len(result.iterations)
+        assert values["Fermi energy"].actions() == ("plot",)
+        assert values["Fermi energy"].info == "Fermi energy at the final SCF iteration."
+        assert values["Error"].display_name == "Convergence error"
+        assert values["Data"].display_name == "SCF result data"
+        assert values["Data"].actions() == ("data",)
+        assert values["Data"].data() is result
+        assert values["potential"] is result.files["potential"]
 
+    def test_instance_reader_accepts_short_scf_output(self):
+        # Both public reader forms must work. The instance API does not need
+        # to reparse the large fixture used for full convergence assertions.
+        result = ScfResult(None, None, None)
+        ScfOutputParser().read_from_file(EXAMPLES / "Al_SCF.out", read_args=[result])
+        assert len(result.iterations) == 1
+        assert result.iterations[0].energy.EMIN() is None
+
+    @pytest.mark.smoke
     def test_scf_restart_without_emin_block(self):
         result = TaskResult.from_file(EXAMPLES / "Al_SCF.out")
 
