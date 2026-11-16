@@ -39,14 +39,14 @@ def test_backend_selection_is_independent_of_ssh_transport():
     assert client.transport.python_command == ("python3", "-I")
     assert client.backend.name == "direct"
 
-    managed = create_client_from_profile(replace(profile, backend="process"))
-    assert managed.backend.name == "process"
+    managed = create_client_from_profile(replace(profile, backend="kkrunner"))
+    assert managed.backend.name == "kkrunner"
     assert managed.transport == client.transport
 
 
 def test_ssh_default_is_managed_and_legacy_psij_is_supported():
     ssh = SPRKKRProfile(executor="ssh", host="example.org")
-    assert ssh.backend_config.name == "process"
+    assert ssh.backend_config.name == "kkrunner"
     psij = SPRKKRProfile(executor="psij", psij_backend="slurm")
     assert psij.backend_config.name == "psij"
     assert psij.backend_config.options == (("executor_name", "slurm"), ("url", None))

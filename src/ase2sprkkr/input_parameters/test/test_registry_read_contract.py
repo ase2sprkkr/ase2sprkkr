@@ -142,6 +142,10 @@ def test_read_for_task_accepts_explicit_unregistered_schema(monkeypatch):
         ("BSFKK", "bsf.inp", "BSFEK"),
     ),
 )
+@pytest.mark.filterwarnings("ignore:^Set finite positive incident EMINEV:ase2sprkkr.common.warnings.DataValidityError")
+@pytest.mark.filterwarnings("ignore:^This SPLEED definition uses fixed finite incidence angles:ase2sprkkr.common.warnings.DataValidityError")
+@pytest.mark.filterwarnings("ignore:^Fixed-angle SPLEED requires NT=NP=1:ase2sprkkr.common.warnings.DataValidityError")
+@pytest.mark.filterwarnings("ignore:^This dedicated definition requires TASK SPLEED:ase2sprkkr.common.warnings.DataValidityError")
 def test_read_for_task_rejects_real_shared_schema_mismatch(
     requested, filename, task_name
 ):
@@ -212,6 +216,7 @@ def test_shared_task_default_is_materialized_when_writing(requested):
 @pytest.mark.parametrize(
     ("requested", "ne"), (("BSFEK", 200), ("BSFKK", 1))
 )
+@pytest.mark.filterwarnings("ignore:^K1 and K2 are endpoints relative to KA:ase2sprkkr.common.warnings.DataValidityError")
 def test_bsf_task_default_is_materialized_when_writing(requested, ne):
     parameters = InputParameters.create(requested)
     parameters.CONTROL.POTFIL = "case.pot"

@@ -172,7 +172,8 @@ def test_spectra_stay_owned_by_the_existing_spec_registration(tmp_path):
     spc.write_bytes(b"SPC result")
 
     result = ArpesResult(parameters, None, str(tmp_path), task_name="ARPES")
-    result.complete(None, 0)
+    with pytest.warns(RuntimeWarning, match="missing required output"):
+        result.complete(None, 0)
     # SPC is registered by ArpesResult, not added under an unrelated filename.
     assert spc.name not in result.files
     assert "SPC" in result.output_values
@@ -188,7 +189,8 @@ def test_spec_header_only_spc_is_not_promoted_to_spectrum(tmp_path):
 
     result = SpecResult(parameters, None, str(tmp_path), task_name="SPLEED")
     result._file_content = ""
-    result.complete(None, 0)
+    with pytest.warns(RuntimeWarning, match="missing required output"):
+        result.complete(None, 0)
     assert spc.name not in result.files
     assert "SPC" not in result.output_values
 

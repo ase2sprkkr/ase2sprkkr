@@ -414,6 +414,9 @@ def test_read_for_distinct_task_requires_matching_native_identity():
 
 
 
+@pytest.mark.filterwarnings("ignore:^Set finite positive incident EMINEV:ase2sprkkr.common.warnings.DataValidityError")
+@pytest.mark.filterwarnings("ignore:^This SPLEED definition uses fixed finite incidence angles:ase2sprkkr.common.warnings.DataValidityError")
+@pytest.mark.filterwarnings("ignore:^Fixed-angle SPLEED requires NT=NP=1:ase2sprkkr.common.warnings.DataValidityError")
 def test_expected_task_does_not_supply_missing_shared_task_selector():
     """An expected task only fills a missing selector in incomplete mode."""
     from pathlib import Path

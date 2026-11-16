@@ -104,7 +104,8 @@ def test_yaml_does_not_persist_implicit_profile_mpi_defaults(tmp_path):
 def test_yaml_persists_legacy_backing_profile(tmp_path):
     path = tmp_path / "config.yaml"
     config = fresh_config()
-    config.running.mpi.set(8)
+    with pytest.warns(FutureWarning, match="config.executables.dir is deprecated"):
+        config.running.mpi.set(8)
     config.running.mpi_warning.set(False)
     config.executables.dir.set("/opt/legacy")
 
@@ -134,7 +135,8 @@ def test_set_permanent_writes_typed_yaml(tmp_path, monkeypatch):
     monkeypatch.setattr(configuration, "user_preferences_file", lambda: str(path))
     config = fresh_config()
 
-    config.running.mpi.set_permanent(6)
+    with pytest.warns(FutureWarning, match="config.executables.dir is deprecated"):
+        config.running.mpi.set_permanent(6)
     config.nomad.token.set_permanent("secret")
 
     data = load_yaml_document(path)
@@ -272,7 +274,8 @@ def test_legacy_python_generated_options_load_into_legacy_profile(tmp_path, monk
     monkeypatch.setattr(configuration, "user_preferences_file", lambda: str(yaml_path))
     monkeypatch.setattr(configuration, "legacy_user_preferences_file", lambda: str(legacy_path))
 
-    configuration.load_user_preferences()
+    with pytest.warns(FutureWarning, match="config.executables.dir is deprecated"):
+        configuration.load_user_preferences()
 
     assert config.executables.suffix() == "_legacy"
     assert config.executables.dir() == "/opt/sprkkr"

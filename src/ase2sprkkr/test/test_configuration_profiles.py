@@ -291,8 +291,9 @@ def test_incomplete_ase_section_is_not_an_available_profile(monkeypatch):
     config = fresh_config()
 
     assert "ase" not in config.profiles
-    with pytest.raises(KeyError):
-        config.profiles["ase"]
+    # The incomplete configuration is not selectable for execution, but
+    # the virtual ASE view remains available so it can be configured.
+    assert config.profiles["ase"].command() is None
 
 
 def test_profile_resolution_precedence(monkeypatch):

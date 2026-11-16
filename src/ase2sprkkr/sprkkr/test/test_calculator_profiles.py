@@ -140,7 +140,7 @@ def test_ssh_profile_uses_managed_remote_execution_by_default():
     )
     assert isinstance(client, EndpointClient)
     assert isinstance(client.transport, SshTransport)
-    assert client.backend.name == "process"
+    assert client.backend.name == "kkrunner"
 
 
 def test_ssh_profile_can_use_psij_on_target():

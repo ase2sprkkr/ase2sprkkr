@@ -145,6 +145,9 @@ markers = [
 ]
 filterwarnings = [
     "ignore:ase2sprkkr.output_files is deprecated:DeprecationWarning",
+    # Warnings emitted inside pinned third-party APIs; do not hide our own warnings.
+    "ignore:^Set OLD_ERROR_HANDLING to false and catch the errors directly:DeprecationWarning:spglib",
+    "ignore:^Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:ase.io.ulm",
 ]
 
 [tool.ruff]

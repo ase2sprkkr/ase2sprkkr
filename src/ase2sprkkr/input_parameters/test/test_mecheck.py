@@ -5,6 +5,12 @@ import pytest
 from ase2sprkkr.common.warnings import DataValidityError, DataValidityWarning
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 
+# Round-trip tests intentionally use the MECHECK BAND default energies.
+# Dedicated diagnostic tests below still explicitly assert other warnings.
+pytestmark = pytest.mark.filterwarnings(
+    "ignore:^MECHECK BAND uses TASK.ERYDI:ase2sprkkr.common.warnings.DataValidityWarning"
+)
+
 
 def parameters():
     p = InputParameters.create("MECHECK")

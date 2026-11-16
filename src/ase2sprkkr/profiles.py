@@ -18,6 +18,7 @@ import warnings
 import pyparsing as pp
 
 from .common.configuration_transaction import ConfigurationTransaction
+from .common.grammar_types import Bool, CustomMixed
 from .common.repeated_configuration_containers import RepeatedConfigurationContainer
 
 
@@ -459,6 +460,15 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
     def _parse_ase_value(section, name, option, value):
         """Parse one ASE INI value using the common profile type contract."""
         value_type = option._definition.type
+        # ASE INI uses "true"/"false", whereas the SPR-KKR Bool grammar
+        # accepts only T/F. Parse typed boolean alternatives before a mixed
+        # grammar can interpret the word as a one-element string array.
+        if (
+            isinstance(value_type, CustomMixed)
+            and any(candidate is Bool.I for candidate in value_type.types)
+            and value.strip().lower() in ("true", "false")
+        ):
+            return section.getboolean(name)
         try:
             return value_type.parse(value)
         except pp.ParseBaseException as exc:

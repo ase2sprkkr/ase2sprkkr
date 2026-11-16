@@ -62,6 +62,7 @@ def test_exclude():
         p.validate("save")
 
 
+@pytest.mark.filterwarnings("ignore:^JXC task does not support SREL:ase2sprkkr.common.warnings.DataValidityWarning")
 @pytest.mark.parametrize("mode", ["NREL", "SREL", "SP-SREL"])
 def test_reject_non_frel(mode):
     p = parameters()
@@ -70,6 +71,7 @@ def test_reject_non_frel(mode):
         p.validate("save")
 
 
+@pytest.mark.filterwarnings("ignore:^JXC task does not support non-magnetic:ase2sprkkr.common.warnings.DataValidityWarning")
 def test_reject_nonmag():
     p = parameters()
     p.CONTROL.NONMAG.set(True)

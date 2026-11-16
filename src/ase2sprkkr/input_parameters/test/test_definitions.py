@@ -8,7 +8,7 @@ import pyparsing as pp
 import pytest
 
 from ...common.grammar_types import Keyword
-from ...common.warnings import DataValidityError
+from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition
@@ -39,7 +39,9 @@ class TestDefinitions:
         ip.CONTROL.ADSI = "CUSTOM"
         assert ip.CONTROL.ADSI() == "CUSTOM"
 
-        parsed = InputParameters.definition("SCF").read_from_string(ip.to_string())
+        # This test checks ADSI preservation with an intentionally missing POTFIL.
+        with pytest.warns(DataValidityError, match="CONTROL.POTFIL"):
+            parsed = InputParameters.definition("SCF").read_from_string(ip.to_string())
         assert parsed.CONTROL.ADSI() == "CUSTOM"
 
     def test_task_files_and_schema_overrides(self, tmp_path):
@@ -184,14 +186,16 @@ class TestDefinitions:
         assert bsfkk.name == "bsf"
         assert bsfkk.task_name == "BSFKK"
         assert bsfkk.ENERGY.NE().tolist() == [1]
-        bsfkk.ENERGY.NE = 2
+        with pytest.warns(DataValidityWarning, match="ENERGY.NE selects BSF-EK"):
+            bsfkk.ENERGY.NE = 2
         assert bsfkk.ENERGY.NE().tolist() == [2]
         assert bsfkk.task_name == "BSFEK"
 
         bsfek = InputParameters.create("BSFEK")
         assert bsfek.task_name == "BSFEK"
         assert bsfek.ENERGY.NE().tolist() == [200]
-        bsfek.ENERGY.NE = 1
+        with pytest.warns(DataValidityWarning, match="ENERGY.NE selects BSF-KK"):
+            bsfek.ENERGY.NE = 1
         assert bsfek.ENERGY.NE().tolist() == [1]
         assert bsfek.task_name == "BSFKK"
 
@@ -284,6 +288,13 @@ class TestDefinitions:
         with pytest.raises(DataValidityError, match="NKDIR cannot be greater than 9"):
             ip.TASK.NKDIR = 10
 
+    # This test checks default input serialization, not whether incomplete
+    # physical defaults are suitable for a production calculation.
+    @pytest.mark.filterwarnings("ignore:^CHISPN, CHIVV and numbered NEF arrays are required:ase2sprkkr.common.warnings.DataValidityError")
+    @pytest.mark.filterwarnings("ignore:^PNMAX=0 collapses the longitudinal grid:ase2sprkkr.common.warnings.DataValidityWarning")
+    @pytest.mark.filterwarnings("ignore:^MECHECK BAND uses TASK.ERYDI:ase2sprkkr.common.warnings.DataValidityWarning")
+    @pytest.mark.filterwarnings("ignore:^Choose EMIN for the bottom of the positron band:ase2sprkkr.common.warnings.DataValidityWarning")
+    @pytest.mark.filterwarnings("ignore:^Choose integration bounds for the positron band:ase2sprkkr.common.warnings.DataValidityWarning")
     def test_defaults(self):
         for name in InputParameters.task_registry.names():
             ip = InputParameters.for_task(name)

@@ -26,6 +26,10 @@ class TestOutput:
                 continue
 
             extension = path.rsplit(".", 1)[1]
+            if extension == "nxs":
+                # NeXus is an exported binary HDF5 format, not a native
+                # text result file parsed by ResultFile.
+                continue
             output = ResultFile.from_file(path, unknown=False)
             if extension == "spc":
                 assert output.KEYWORD() == "ARPES"

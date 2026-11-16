@@ -9,6 +9,12 @@ from ase.build import bulk
 from ...input_parameters.input_parameters import InputParameters
 from ..calculator import SPRKKR
 
+# The filename tests deliberately write valid-but-default longitudinal grids.
+# Their purpose is file placement, not the physical adequacy of PNMAX=0.
+pytestmark = pytest.mark.filterwarnings(
+    "ignore:^PNMAX=0 collapses the longitudinal grid:ase2sprkkr.common.warnings.DataValidityWarning"
+)
+
 
 @pytest.fixture(scope="module")
 def li_bulk():

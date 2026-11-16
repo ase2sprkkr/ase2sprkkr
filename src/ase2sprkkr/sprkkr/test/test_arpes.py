@@ -29,4 +29,4 @@ def test_arpes_run(calc_args):
     arpes_calculator.set("NKTAB", 10)
 
     arpes_output = arpes_calculator.calculate(**calc_args())
-    assert isinstance(arpes_output.spc.ENERGY(), np.ndarray)
+    assert isinstance(arpes_output.spectra[0].ENERGY(), np.ndarray)

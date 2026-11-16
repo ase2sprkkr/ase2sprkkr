@@ -51,7 +51,8 @@ def test_strict_site_types_vs_occupation():
     original.sites
     assert original.sites[0].site_type is not original.sites[1].site_type
     strict = analyze_symmetry(original).find_primitive(original)
-    relaxed = analyze_symmetry(original, equivalence="occupation").find_primitive(original)
+    with pytest.warns(RuntimeWarning, match="Occupation equivalence discarded"):
+        relaxed = analyze_symmetry(original, equivalence="occupation").find_primitive(original)
     assert len(strict) == 2
     assert len(relaxed) == 1
 
@@ -63,7 +64,8 @@ def test_occupation_copy_independence():
     original.sites[0].occupation = {"Fe": 0.5, "Ni": 0.5}
     original.sites[1].occupation = {"Ni": 0.5, "Fe": 0.5}
     old_type = original.sites[0].site_type
-    result = analyze_symmetry(original, equivalence="occupation").find_primitive(original)
+    with pytest.warns(RuntimeWarning, match="Occupation equivalence discarded"):
+        result = analyze_symmetry(original, equivalence="occupation").find_primitive(original)
     assert len(result) == 1
     assert result.sites[0].occupation.to_dict(True) == {"Fe": 0.5, "Ni": 0.5}
     assert result.sites[0].site_type is not old_type

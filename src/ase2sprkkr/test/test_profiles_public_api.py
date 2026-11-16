@@ -26,7 +26,8 @@ def test_profile_collection_exposes_only_public_views(monkeypatch):
     config = fresh_config()
     local = config.profiles.add("local")
     local.mpi.set(2)
-    config.running.mpi.set(4)
+    with pytest.warns(FutureWarning, match="config.executables.dir is deprecated"):
+        config.running.mpi.set(4)
 
     names = list(config.profiles)
     items = dict(config.profiles.items())
@@ -72,7 +73,8 @@ def test_reserved_profiles_cannot_be_set_publicly():
 
 def test_public_profile_replace_preserves_legacy_backing():
     config = fresh_config()
-    config.running.mpi.set(4)
+    with pytest.warns(FutureWarning, match="config.executables.dir is deprecated"):
+        config.running.mpi.set(4)
     config.profiles.add("old").mpi.set(2)
 
     config.profiles.set({"new": {"mpi": 3}}, unknown="fail")
@@ -84,7 +86,8 @@ def test_public_profile_replace_preserves_legacy_backing():
 
 def test_generic_lookup_does_not_expose_legacy_backing():
     config = fresh_config()
-    config.running.mpi.set(4)
+    with pytest.warns(FutureWarning, match="config.executables.dir is deprecated"):
+        config.running.mpi.set(4)
 
     with pytest.raises(KeyError):
         config.profiles.get_member("legacy.mpi", unknown="fail")

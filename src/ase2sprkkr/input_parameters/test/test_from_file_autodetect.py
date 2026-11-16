@@ -369,6 +369,11 @@ def test_incomplete_autodetect_does_not_guess_scf_or_shared_task():
         InputParameters.from_file(io.StringIO(incomplete), allow_incomplete=True)
 
 
+@pytest.mark.filterwarnings("ignore:^Missing non-optional input item TASK.TASK:ase2sprkkr.common.warnings.DataValidityError")
+@pytest.mark.filterwarnings("ignore:^Set finite positive incident EMINEV:ase2sprkkr.common.warnings.DataValidityError")
+@pytest.mark.filterwarnings("ignore:^This SPLEED definition uses fixed finite incidence angles:ase2sprkkr.common.warnings.DataValidityError")
+@pytest.mark.filterwarnings("ignore:^Fixed-angle SPLEED requires NT=NP=1:ase2sprkkr.common.warnings.DataValidityError")
+@pytest.mark.filterwarnings("ignore:^This dedicated definition requires TASK SPLEED:ase2sprkkr.common.warnings.DataValidityError")
 def test_incomplete_explicit_task_retains_identity_checks():
     from ..task_definition import TaskMismatchError
 

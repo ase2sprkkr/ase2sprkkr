@@ -221,8 +221,13 @@ class RawData(GrammarType):
         self.forward << self._n_lines_grammar(lines)
 
     def __del__(self):
-        if self._line_dependency is not None:
-            self._line_dependency.unbind()
+        # Construction can fail before RawData.__init__ initializes this field.
+        try:
+            dependency = self._line_dependency
+        except AttributeError:
+            return
+        if dependency is not None:
+            dependency.unbind()
 
     def copy(self):
         out = super().copy()

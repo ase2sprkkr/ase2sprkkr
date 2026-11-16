@@ -161,8 +161,9 @@ def test_atomic_output_on_failure(tmp_path):
     target.write_bytes(b"do not overwrite")
     invalid=SPC()
     invalid.raw=np.ones((4,7))
-    with pytest.raises(ValueError,match="8 columns"):
-        write_arpes_nexus(invalid,target)
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        with pytest.raises(ValueError, match="8 columns"):
+            write_arpes_nexus(invalid, target)
     assert target.read_bytes()==b"do not overwrite"
     assert list(tmp_path.iterdir())==[target]
 

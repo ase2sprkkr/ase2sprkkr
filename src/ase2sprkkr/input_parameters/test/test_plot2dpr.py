@@ -48,6 +48,7 @@ def test_plot_selection(keyword, tmp_path):
     assert InputParameters.from_file(path).TASK.TASK() == keyword
 
 
+@pytest.mark.filterwarnings("ignore:^ASA PLOT2DRHO still writes potential:ase2sprkkr.common.warnings.DataValidityWarning")
 def test_density_selection_warns_about_asa():
     p = parameters()
     p.TASK.TASK = "PLOT2DRHO"

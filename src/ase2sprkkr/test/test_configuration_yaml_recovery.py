@@ -58,6 +58,7 @@ def test_invalid_profile_does_not_disable_other_profiles(
     assert invalid_name not in config.profiles._values
 
 
+@pytest.mark.filterwarnings("ignore:^config.executables.dir is deprecated:FutureWarning")
 def test_invalid_section_option_does_not_disable_siblings(tmp_path):
     path = tmp_path / "config.yaml"
     path.write_text(
@@ -70,12 +71,13 @@ def test_invalid_section_option_does_not_disable_siblings(tmp_path):
     )
 
     config = fresh_config()
+    initial_print_output = config.running.print_output()
     with pytest.warns(YamlConfigurationWarning, match="running.print_output"):
         load_configuration_yaml(config, path)
 
     assert config.running.mpi_warning() is False
     assert config.nomad.token() == "valid-token"
-    assert config.running.print_output() == "info"
+    assert config.running.print_output() == initial_print_output
 
 
 @pytest.mark.parametrize(
@@ -152,6 +154,7 @@ def test_save_preserves_invalid_and_unknown_raw_yaml(tmp_path, local_preexisting
     assert "# keep broken profile" in text
 
 
+@pytest.mark.filterwarnings("ignore:^config.executables.dir is deprecated:FutureWarning")
 def test_save_preserves_only_invalid_children_of_known_section(tmp_path):
     path = tmp_path / "config.yaml"
     path.write_text(
