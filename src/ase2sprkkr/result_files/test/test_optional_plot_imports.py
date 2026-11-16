@@ -21,6 +21,9 @@ definitions = ResultFile.definitions
 assert 'spc' in definitions
 assert 'bsf' in definitions
 assert 'dos' in definitions
+assert 'sfn' in definitions
+assert 'matplotlib' not in sys.modules
+assert 'scipy.interpolate' not in sys.modules
 """
     completed = subprocess.run(
         [sys.executable, "-c", script], capture_output=True, text=True, check=False

@@ -16,7 +16,6 @@ from ...common.dependencies import DependentValue
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
 from ...common.grammar import line_end
 from ...common.grammar_types import Integer, NumpyArray, Real
-from ...gui.plot import Multiplot, single_plot
 
 
 class _SFNValueDefinition(ResultFileValueDefinition):
@@ -333,6 +332,8 @@ class ShapeFunctionMesh:
 
         from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
+        from ...gui.plot import single_plot
+
         with single_plot(
             axis=axis,
             projection="3d",
@@ -405,6 +406,8 @@ class ShapeFunctionMesh:
     ):
         """Plot isosurfaces of the reconstructed shape function."""
 
+        from ...gui.plot import single_plot
+
         with single_plot(
             axis=axis,
             projection="3d",
@@ -473,6 +476,8 @@ class ShapeFunctionMesh:
     ):
         """Plot a planar section through the reconstructed shape function."""
 
+        from ...gui.plot import single_plot
+
         with single_plot(
             axis=axis,
             filename=filename,
@@ -514,6 +519,8 @@ class ShapeFunctionMesh:
         figsize=(7, 4),
     ):
         """Plot the radial spherical-harmonic coefficients."""
+
+        from ...gui.plot import single_plot
 
         with single_plot(
             axis=axis,
@@ -1090,6 +1097,8 @@ class SFNResultFile(ResultFile):
         selected = self._selected_meshes(mesh)
         if figsize is None:
             figsize = lambda size: (6 * size[1], 5 * size[0])
+        from ...gui.plot import Multiplot
+
         with Multiplot(
             layout=layout,
             number_of_plots=len(selected),
@@ -1138,6 +1147,8 @@ class SFNResultFile(ResultFile):
         _, _, _, cell, _ = self._cell_context(selected, conventional)
         if figsize is None:
             figsize = lambda size: (6 * size[1], 5 * size[0])
+        from ...gui.plot import Multiplot
+
         with Multiplot(
             layout=layout,
             number_of_plots=len(selected),
@@ -1195,6 +1206,8 @@ class SFNResultFile(ResultFile):
         """Plot the periodically tiled meshes clipped to one cell."""
 
         selected = self._selected_meshes(mesh)
+        from ...gui.plot import Multiplot
+
         with Multiplot(
             layout=layout,
             number_of_plots=1,
@@ -1253,6 +1266,8 @@ class SFNResultFile(ResultFile):
         _, _, _, cell, _ = self._cell_context(selected, conventional)
         if figsize is None:
             figsize = lambda size: (6 * size[1], 5 * size[0])
+        from ...gui.plot import Multiplot
+
         with Multiplot(
             layout=layout,
             number_of_plots=len(selected),
@@ -1319,6 +1334,8 @@ class SFNResultFile(ResultFile):
         selected = self._selected_meshes(mesh)
         if figsize is None:
             figsize = lambda size: (6 * size[1], 5 * size[0])
+        from ...gui.plot import Multiplot
+
         with Multiplot(
             layout=layout,
             number_of_plots=len(selected),
@@ -1364,6 +1381,8 @@ class SFNResultFile(ResultFile):
         selected = self._selected_meshes(mesh)
         if figsize is None:
             figsize = lambda size: (6 * size[1], 4 * size[0])
+        from ...gui.plot import Multiplot
+
         with Multiplot(
             layout=layout,
             number_of_plots=len(selected),
